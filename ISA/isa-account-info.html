@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ISA 계좌정보</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1a73e8;
+            --primary-light: #e8f0fe;
+            --positive: #e53935;
+            --negative: #1976d2;
+            --menu-red: #d32f2f;
+            --bg-primary: #f5f6f8;
+            --bg-card: #ffffff;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --text-muted: #9ca3af;
+            --border: #e5e7eb;
+            --shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            max-width: 480px;
+            margin: 0 auto;
+            min-height: 100vh;
+            padding-top: 56px;
+            padding-bottom: 70px;
+        }
+
+        /* Top Navigation Bar */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 480px;
+            height: 56px;
+            background: white;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .top-nav-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            padding: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.7;
+        }
+
+        .back-btn:hover {
+            opacity: 1;
+        }
+
+        .top-nav-submenu {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            flex: 1;
+            justify-content: flex-start;
+            margin-left: 12px;
+        }
+
+        .top-nav-submenu-item {
+            font-size: 13px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 6px 10px;
+            border-radius: 14px;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .top-nav-submenu-item:hover {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .top-nav-submenu-item.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Bottom Tab Bar */
+        .bottom-tab-bar {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 480px;
+            height: 70px;
+            background: white;
+            display: flex;
+            align-items: stretch;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .tab-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: color 0.2s;
+            padding: 8px 4px;
+        }
+
+        .tab-item.active {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .tab-item:hover {
+            color: var(--primary);
+        }
+
+        .tab-label {
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .menu-tab {
+            flex: 0.8;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        .menu-button-box {
+            background: var(--menu-red);
+            border-radius: 10px;
+            padding: 8px 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hamburger-icon {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            margin-bottom: 3px;
+        }
+
+        .hamburger-line {
+            width: 18px;
+            height: 2px;
+            background: white;
+            border-radius: 1px;
+        }
+
+        .menu-label {
+            font-size: 10px;
+            font-weight: 600;
+            color: white;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 16px;
+        }
+
+        /* Account Header - 다른 화면과 동일한 스타일 */
+        .account-header {
+            background: white;
+            border-radius: 16px;
+            padding: 16px 20px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow);
+        }
+
+        .account-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .account-number {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .account-name {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .account-type {
+            background: var(--bg-primary);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        /* Section */
+        .section {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow);
+        }
+
+        .section-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-title-text {
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+        /* Document Dropdown */
+        .doc-dropdown-container {
+            position: relative;
+        }
+
+        .doc-dropdown-btn {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 6px 10px;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .doc-dropdown-btn:hover {
+            background: var(--bg-primary);
+            color: var(--primary);
+        }
+
+        .doc-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 4px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            min-width: 160px;
+            overflow: hidden;
+            display: none;
+            z-index: 100;
+        }
+
+        .doc-dropdown.show {
+            display: block;
+            animation: fadeIn 0.2s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .doc-dropdown-item {
+            padding: 12px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.2s;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .doc-dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .doc-dropdown-item:hover {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        /* Info Table */
+        .info-table {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .info-row {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            width: 120px;
+            padding: 14px 16px;
+            background: var(--bg-primary);
+            font-size: 14px;
+            color: var(--text-secondary);
+            flex-shrink: 0;
+        }
+
+        .info-value {
+            flex: 1;
+            padding: 14px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            text-align: right;
+        }
+
+        /* Payment Info - 뺄셈 형식 */
+        .payment-calc {
+            padding: 16px 0;
+        }
+
+        .payment-calc-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+        }
+
+        .payment-calc-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .payment-calc-value {
+            font-size: 14px;
+            font-weight: 500;
+            text-align: right;
+        }
+
+        .payment-calc-row.sub .payment-calc-label {
+            color: var(--text-muted);
+        }
+
+        .payment-calc-row.sub .payment-calc-value {
+            color: var(--text-muted);
+        }
+
+        .payment-calc-divider {
+            border-top: 1px solid var(--border);
+            margin: 8px 0;
+        }
+
+        .payment-calc-row.total {
+            padding-top: 12px;
+        }
+
+        .payment-calc-row.total .payment-calc-label {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .payment-calc-row.total .payment-calc-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .payment-note {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-align: right;
+            margin-top: 4px;
+        }
+
+        /* Year Table */
+        .year-table {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .year-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .year-row:last-child {
+            border-bottom: none;
+        }
+
+        .year-row:nth-child(odd) {
+            background: var(--bg-primary);
+        }
+
+        .year-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .year-value {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* Notes */
+        .notes {
+            margin-top: 16px;
+            padding: 16px;
+            background: var(--bg-primary);
+            border-radius: 10px;
+        }
+
+        .note-item {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .note-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .note-bullet {
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <nav class="top-nav">
+        <div class="top-nav-left">
+            <button class="back-btn" onclick="goBack()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M15 18l-6-6 6-6"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="top-nav-submenu">
+            <span class="top-nav-submenu-item" onclick="location.href='isa-balance.html'">ISA잔고</span>
+            <span class="top-nav-submenu-item" onclick="location.href='isa-history.html'">거래내역</span>
+            <span class="top-nav-submenu-item" onclick="location.href='isa-tax-saving.html'">절세현황</span>
+            <span class="top-nav-submenu-item active">계좌정보</span>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Account Header -->
+        <div class="account-header">
+            <div class="account-row">
+                <span class="account-number">6496-1234</span>
+                <span class="account-name">홍길동</span>
+                <span class="account-type">중개형</span>
+                <span class="account-type">농어민</span>
+            </div>
+        </div>
+
+        <!-- 기본정보 Section -->
+        <div class="section">
+            <div class="section-title">
+                <span class="section-title-text">기본정보</span>
+                <div class="doc-dropdown-container">
+                    <div class="doc-dropdown-btn" onclick="toggleDocDropdown(event)">
+                        <span>설명서</span>
+                        <span>▼</span>
+                    </div>
+                    <div class="doc-dropdown" id="docDropdown">
+                        <div class="doc-dropdown-item" onclick="openDocument('terms')">중개형ISA 약관</div>
+                        <div class="doc-dropdown-item" onclick="openDocument('guide')">중개형ISA 설명서</div>
+                    </div>
+                </div>
+            </div>
+            <div class="info-table">
+                <div class="info-row">
+                    <div class="info-label">계좌개설일</div>
+                    <div class="info-value">2025.11.12</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">의무가입일자</div>
+                    <div class="info-value">2028.11.12</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">만기일자</div>
+                    <div class="info-value">2075.11.12</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">가입유형</div>
+                    <div class="info-value">ISA일반</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 납입가능금액 Section -->
+        <div class="section">
+            <div class="section-title">
+                <span class="section-title-text">납입가능금액</span>
+            </div>
+            
+            <!-- Payment Calculation -->
+            <div class="payment-calc">
+                <div class="payment-calc-row">
+                    <span class="payment-calc-label">납입한도</span>
+                    <span class="payment-calc-value">20,000,000원</span>
+                </div>
+                <div class="payment-calc-row sub">
+                    <span class="payment-calc-label">(-납입금)</span>
+                    <span class="payment-calc-value">(522,028원)</span>
+                </div>
+                <div class="payment-calc-divider"></div>
+                <div class="payment-calc-row total">
+                    <span class="payment-calc-label">납입가능금액</span>
+                    <span class="payment-calc-value">19,477,972원</span>
+                </div>
+                <div class="payment-note">(10,000원 출금가능)</div>
+            </div>
+        </div>
+
+        <!-- 연도별 납입금액 Section -->
+        <div class="section">
+            <div class="section-title">
+                <span class="section-title-text">연도별 납입금액</span>
+            </div>
+            <div class="year-table">
+                <div class="year-row">
+                    <span class="year-label">2025년(1년차)</span>
+                    <span class="year-value">522,028원</span>
+                </div>
+                <div class="year-row">
+                    <span class="year-label">2026년(2년차)</span>
+                    <span class="year-value">0원</span>
+                </div>
+                <div class="year-row">
+                    <span class="year-label">2027년(3년차)</span>
+                    <span class="year-value">0원</span>
+                </div>
+                <div class="year-row">
+                    <span class="year-label">2028년(4년차)</span>
+                    <span class="year-value">0원</span>
+                </div>
+                <div class="year-row">
+                    <span class="year-label">2029년(5년차)</span>
+                    <span class="year-value">0원</span>
+                </div>
+                <div class="year-row">
+                    <span class="year-label">2030년~(6년차~)</span>
+                    <span class="year-value">0원</span>
+                </div>
+            </div>
+
+            <!-- Notes -->
+            <div class="notes">
+                <div class="note-item">
+                    <span class="note-bullet">•</span>
+                    <span>미납입금액은 다음 연도로 이연 가능합니다.</span>
+                </div>
+                <div class="note-item">
+                    <span class="note-bullet">•</span>
+                    <span>계약기간 총 납입한도 = 2천만원*[1+계약기간 경과연수(최대4년)]</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bottom Tab Bar -->
+    <nav class="bottom-tab-bar">
+        <div class="menu-tab" onclick="openSideMenu()">
+            <div class="menu-button-box">
+                <div class="hamburger-icon">
+                    <div class="hamburger-line"></div>
+                    <div class="hamburger-line"></div>
+                    <div class="hamburger-line"></div>
+                </div>
+                <span class="menu-label">메뉴</span>
+            </div>
+        </div>
+        <div class="tab-item" onclick="location.href='isa-home.html'">
+            <span class="tab-label">ISA홈</span>
+        </div>
+        <div class="tab-item active">
+            <span class="tab-label">ISA계좌</span>
+        </div>
+        <div class="tab-item" onclick="switchTab('isa-join')">
+            <span class="tab-label">ISA가입/이전</span>
+        </div>
+        <div class="tab-item" onclick="switchTab('isa-task')">
+            <span class="tab-label">ISA업무</span>
+        </div>
+    </nav>
+
+    <script>
+        function goBack() {
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                location.href = 'isa-home.html';
+            }
+        }
+
+        function openSideMenu() {
+            alert('메뉴가 열립니다.');
+        }
+
+        function switchTab(tabName) {
+            alert(`${tabName} 탭으로 이동합니다.`);
+        }
+
+        // Document dropdown toggle
+        function toggleDocDropdown(event) {
+            event.stopPropagation();
+            const dropdown = document.getElementById('docDropdown');
+            dropdown.classList.toggle('show');
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.doc-dropdown-container')) {
+                document.getElementById('docDropdown').classList.remove('show');
+            }
+        });
+
+        function openDocument(type) {
+            document.getElementById('docDropdown').classList.remove('show');
+            if (type === 'terms') {
+                alert('중개형ISA 약관을 확인합니다.');
+            } else if (type === 'guide') {
+                alert('중개형ISA 설명서를 확인합니다.');
+            }
+        }
+    </script>
+</body>
+</html>

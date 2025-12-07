@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>절세현황</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1a73e8;
+            --primary-light: #e8f0fe;
+            --accent: #ff6b35;
+            --positive: #e53935;
+            --negative: #1976d2;
+            --menu-red: #d32f2f;
+            --bg-primary: #f5f6f8;
+            --bg-card: #ffffff;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --text-muted: #9ca3af;
+            --border: #e5e7eb;
+            --shadow: 0 2px 8px rgba(0,0,0,0.06);
+            --shadow-lg: 0 4px 16px rgba(0,0,0,0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            max-width: 480px;
+            margin: 0 auto;
+            min-height: 100vh;
+            padding-top: 56px;
+            padding-bottom: 70px;
+        }
+
+        /* Top Navigation Bar */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 480px;
+            height: 56px;
+            background: white;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            padding: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 8px;
+        }
+
+        .nav-title {
+            font-size: 17px;
+            font-weight: 600;
+        }
+
+        .top-nav-submenu {
+            display: flex;
+            gap: 4px;
+            margin-left: 8px;
+        }
+
+        .top-nav-submenu-item {
+            font-size: 13px;
+            color: var(--text-secondary);
+            padding: 6px 10px;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .top-nav-submenu-item:hover {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .top-nav-submenu-item.active {
+            background: var(--primary-light);
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        /* Bottom Tab Bar */
+        .bottom-tab-bar {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 480px;
+            height: 70px;
+            background: white;
+            display: flex;
+            align-items: stretch;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .tab-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: color 0.2s;
+        }
+
+        .tab-item.active {
+            color: var(--primary);
+        }
+
+        .tab-icon {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+
+        .tab-label {
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .menu-tab {
+            flex: 0.8;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .menu-button-box {
+            background: var(--menu-red);
+            border-radius: 10px;
+            padding: 8px 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .hamburger-icon {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            margin-bottom: 3px;
+        }
+
+        .hamburger-line {
+            width: 18px;
+            height: 2px;
+            background: white;
+            border-radius: 1px;
+        }
+
+        .menu-label {
+            font-size: 10px;
+            font-weight: 600;
+            color: white;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 16px;
+        }
+
+        /* Section Title */
+        .section-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title::before {
+            content: '•';
+            color: var(--primary);
+            font-size: 20px;
+        }
+
+        /* Tax Effect Table */
+        .tax-table {
+            background: var(--bg-card);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            margin-bottom: 24px;
+        }
+
+        .table-header {
+            display: flex;
+            background: var(--bg-primary);
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .table-header-cell {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-align: center;
+        }
+
+        .table-header-cell:first-child {
+            flex: 1;
+            text-align: left;
+        }
+
+        .table-header-cell:not(:first-child) {
+            width: 90px;
+        }
+
+        .table-header-cell.isa {
+            color: var(--primary);
+        }
+
+        /* Table Row */
+        .table-row {
+            display: flex;
+            align-items: center;
+            padding: 14px 16px;
+            /* border-bottom: 1px solid var(--border); */
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .table-row:hover {
+            background: var(--bg-primary);
+        }
+
+        .table-row.no-expand {
+            cursor: default;
+        }
+
+        .table-row.no-expand:hover {
+            background: transparent;
+        }
+
+        .row-label {
+            flex: 1;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .row-label .toggle-icon {
+            font-size: 10px;
+            color: var(--text-muted);
+            transition: transform 0.3s;
+        }
+
+        .row-label .toggle-icon.expanded {
+            transform: rotate(180deg);
+        }
+
+        .row-value {
+            width: 90px;
+            text-align: right;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .row-value.isa {
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        .row-value.negative {
+            color: var(--positive);
+        }
+
+        .row-value.blue {
+            color: var(--negative);
+        }
+
+        /* Expandable Content */
+        .expand-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            background: var(--bg-primary);
+        }
+
+        .expand-content.expanded {
+            max-height: 500px;
+        }
+
+        .sub-row {
+            display: flex;
+            align-items: center;
+            padding: 10px 16px 10px 32px;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .sub-row:last-child {
+            border-bottom: none;
+        }
+
+        .sub-label {
+            flex: 1;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .sub-label.highlight {
+            color: #f59e0b;
+        }
+
+        .sub-value {
+            width: 90px;
+            text-align: right;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .sub-value.negative {
+            color: #ef4444;
+        }
+
+        /* Summary Row */
+        .summary-row {
+            display: flex;
+            align-items: center;
+            padding: 14px 16px;
+            /* background: var(--bg-primary); */
+            border-bottom: 1px solid var(--border);
+        }
+
+        /* .summary-row .row-label {
+            font-weight: 700;
+        }
+
+        .summary-row .row-value {
+            font-weight: 700;
+        } */
+
+        /* Total Row */
+        .total-section {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            padding: 16px;
+        }
+
+        .total-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .total-row .row-label {
+            font-weight: 700;
+            color: #92400e;
+        }
+
+        .total-row .row-value {
+            font-weight: 700;
+            color: #92400e;
+        }
+
+        .savings-highlight {
+            background: rgba(255,255,255,0.7);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .savings-label {
+            font-size: 13px;
+            color: #92400e;
+            margin-bottom: 4px;
+        }
+
+        .savings-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #d97706;
+        }
+
+        /* Yearly Chart Section */
+        .yearly-section {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .yearly-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .yearly-title::before {
+            content: '•';
+            color: var(--primary);
+            font-size: 20px;
+        }
+
+        .chart-container {
+            margin-bottom: 20px;
+        }
+
+        .bar-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .bar-year {
+            width: 70px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .bar-track {
+            flex: 1;
+            height: 28px;
+            background: var(--bg-primary);
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #1a73e8 0%, #60a5fa 100%);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+            transition: width 0.8s ease-out;
+        }
+
+        .bar-value {
+            font-size: 12px;
+            font-weight: 600;
+            color: white;
+            white-space: nowrap;
+        }
+
+        /* Total Summary */
+        .total-summary {
+            background: var(--primary-light);
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .total-summary-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .total-summary-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation -->
+    <nav class="top-nav">
+        <button class="back-btn" onclick="goBack()">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M15 18l-6-6 6-6"/>
+            </svg>
+        </button>
+        <div class="top-nav-submenu">
+            <span class="top-nav-submenu-item" onclick="location.href='isa-balance.html'">ISA잔고</span>
+            <span class="top-nav-submenu-item" onclick="location.href='isa-history.html'">거래내역</span>
+            <span class="top-nav-submenu-item active">절세현황</span>
+            <span class="top-nav-submenu-item" onclick="location.href='isa-account-info.html'">계좌정보</span>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- 절세효과 섹션 -->
+        <h2 class="section-title">절세효과</h2>
+        
+        <div class="tax-table">
+            <!-- 테이블 헤더 -->
+            <div class="table-header">
+                <span class="table-header-cell"></span>
+                <span class="table-header-cell">일반계좌</span>
+                <span class="table-header-cell isa">ISA계좌</span>
+            </div>
+
+            <!-- 과세소득 (펼침/접힘) -->
+            <div class="table-row" onclick="toggleSection('income')">
+                <span class="row-label">
+                    과세소득
+                    <span class="toggle-icon" id="toggle-income">▼</span>
+                </span>
+                <span class="row-value">5,000,000</span>
+                <span class="row-value isa">5,000,000</span>
+            </div>
+            <div class="expand-content" id="content-income">
+                <div class="sub-row">
+                    <span class="sub-label">배당소득</span>
+                    <span class="sub-value">500,000</span>
+                    <span class="sub-value">500,000</span>
+                </div>
+                <div class="sub-row" style="padding-left: 48px;">
+                    <span class="sub-label">주식배당금</span>
+                    <span class="sub-value">300,000</span>
+                    <span class="sub-value">300,000</span>
+                </div>
+                <div class="sub-row" style="padding-left: 48px;">
+                    <span class="sub-label">ETF분배금</span>
+                    <span class="sub-value">150,000</span>
+                    <span class="sub-value">150,000</span>
+                </div>
+                <div class="sub-row" style="padding-left: 48px;">
+                    <span class="sub-label">리츠분배금</span>
+                    <span class="sub-value">50,000</span>
+                    <span class="sub-value">50,000</span>
+                </div>
+                <div class="sub-row">
+                    <span class="sub-label">이자소득</span>
+                    <span class="sub-value">200,000</span>
+                    <span class="sub-value">200,000</span>
+                </div>
+                <div class="sub-row" style="padding-left: 48px;">
+                    <span class="sub-label">예금이자</span>
+                    <span class="sub-value">100,000</span>
+                    <span class="sub-value">100,000</span>
+                </div>
+                <div class="sub-row" style="padding-left: 48px;">
+                    <span class="sub-label">예탁금이용료</span>
+                    <span class="sub-value">50,000</span>
+                    <span class="sub-value">50,000</span>
+                </div>
+                <div class="sub-row" style="padding-left: 48px;">
+                    <span class="sub-label">RP매매차익</span>
+                    <span class="sub-value">30,000</span>
+                    <span class="sub-value">30,000</span>
+                </div>
+                <div class="sub-row" style="padding-left: 48px;">
+                    <span class="sub-label">채권이자</span>
+                    <span class="sub-value">20,000</span>
+                    <span class="sub-value">20,000</span>
+                </div>
+                <div class="sub-row">
+                    <span class="sub-label">매매차익</span>
+                    <span class="sub-value">4,300,000</span>
+                    <span class="sub-value">4,300,000</span>
+                </div>
+                <div class="sub-row" style="padding-left: 48px;">
+                    <span class="sub-label">해외펀드/ETF</span>
+                    <span class="sub-value">2,000,000</span>
+                    <span class="sub-value">2,000,000</span>
+                </div>
+                <div class="sub-row" style="padding-left: 48px;">
+                    <span class="sub-label">채권형펀드/ETF</span>
+                    <span class="sub-value">1,500,000</span>
+                    <span class="sub-value">1,500,000</span>
+                </div>
+                <div class="sub-row" style="padding-left: 48px;">
+                    <span class="sub-label">파생ETF</span>
+                    <span class="sub-value">500,000</span>
+                    <span class="sub-value">500,000</span>
+                </div>
+                <div class="sub-row" style="padding-left: 48px;">
+                    <span class="sub-label">ELS/DLS</span>
+                    <span class="sub-value">300,000</span>
+                    <span class="sub-value">300,000</span>
+                </div>
+            </div>
+
+            <!-- 손실상계 (펼침/접힘) -->
+            <div class="table-row" onclick="toggleSection('loss')">
+                <span class="row-label" style="color: #ef4444;">
+                    (-) 손실상계
+                    <span class="toggle-icon" id="toggle-loss">▼</span>
+                </span>
+                <span class="row-value">-</span>
+                <span class="row-value isa negative">-1,200,000</span>
+            </div>
+            <div class="expand-content" id="content-loss">
+                <div class="sub-row">
+                    <span class="sub-label">매매차익</span>
+                    <span class="sub-value">-</span>
+                    <span class="sub-value negative">-1,200,000</span>
+                </div>
+                <div class="sub-row" style="padding-left: 48px;">
+                    <span class="sub-label">해외펀드/ETF</span>
+                    <span class="sub-value">-</span>
+                    <span class="sub-value negative">-500,000</span>
+                </div>
+                <div class="sub-row" style="padding-left: 48px;">
+                    <span class="sub-label highlight">채권형펀드/ETF</span>
+                    <span class="sub-value">-</span>
+                    <span class="sub-value negative">-300,000</span>
+                </div>
+                <div class="sub-row" style="padding-left: 48px;">
+                    <span class="sub-label highlight">파생ETF</span>
+                    <span class="sub-value">-</span>
+                    <span class="sub-value negative">-200,000</span>
+                </div>
+                <div class="sub-row" style="padding-left: 48px;">
+                    <span class="sub-label">ELS/DLS</span>
+                    <span class="sub-value">-</span>
+                    <span class="sub-value negative">-100,000</span>
+                </div>
+                <div class="sub-row" style="padding-left: 48px;">
+                    <span class="sub-label">국내주식손실</span>
+                    <span class="sub-value">-</span>
+                    <span class="sub-value negative">-100,000</span>
+                </div>
+            </div>
+
+            <!-- 비과세 -->
+            <div class="table-row no-expand">
+                <span class="row-label" style="color: #3b82f6;">(-) 비과세</span>
+                <span class="row-value">-</span>
+                <span class="row-value blue">-2,000,000</span>
+            </div>
+
+            <!-- 과세표준 -->
+            <div class="summary-row">
+                <span class="row-label">과세표준</span>
+                <span class="row-value" style="font-weight: 700;">5,000,000</span>
+                <span class="row-value isa" style="font-weight: 700;">1,800,000</span>
+            </div>
+
+            <!-- 세율 -->
+            <div class="table-row no-expand">
+                <span class="row-label">(X) 세율</span>
+                <span class="row-value">15.4%</span>
+                <span class="row-value isa">9.9%</span>
+            </div>
+
+            <!-- 총 세액 및 절세금액 -->
+            <div class="total-section">
+                <div class="total-row">
+                    <span class="row-label">총 세액</span>
+                    <span class="row-value" style="color: #92400e; width: 90px;">770,000원</span>
+                    <span class="row-value" style="color: #d97706; width: 90px; font-weight: 700;">178,200원</span>
+                </div>
+                <div class="savings-highlight">
+                    <div class="savings-label">ISA를 통한 절세금액</div>
+                    <div class="savings-value">591,800원</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 연도별 절세금액 -->
+        <div class="yearly-section">
+            <h2 class="yearly-title">연도별 절세금액</h2>
+            
+            <div class="chart-container">
+                <div class="bar-item">
+                    <span class="bar-year">2025년</span>
+                    <div class="bar-track">
+                        <div class="bar-fill" style="width: 100%;">
+                            <span class="bar-value">1,000,000원</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bar-item">
+                    <span class="bar-year">2024년</span>
+                    <div class="bar-track">
+                        <div class="bar-fill" style="width: 80%;">
+                            <span class="bar-value">800,000원</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bar-item">
+                    <span class="bar-year">2023년</span>
+                    <div class="bar-track">
+                        <div class="bar-fill" style="width: 70%;">
+                            <span class="bar-value">700,000원</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bar-item">
+                    <span class="bar-year">2022년</span>
+                    <div class="bar-track">
+                        <div class="bar-fill" style="width: 90%;">
+                            <span class="bar-value">900,000원</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bar-item">
+                    <span class="bar-year">2021년</span>
+                    <div class="bar-track">
+                        <div class="bar-fill" style="width: 99%;">
+                            <span class="bar-value">990,000원</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="total-summary">
+                <span class="total-summary-label">누적 절세금액</span>
+                <span class="total-summary-value">4,390,000원</span>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bottom Tab Bar -->
+    <nav class="bottom-tab-bar">
+        <div class="menu-tab" onclick="openMenu()">
+            <div class="menu-button-box">
+                <div class="hamburger-icon">
+                    <div class="hamburger-line"></div>
+                    <div class="hamburger-line"></div>
+                    <div class="hamburger-line"></div>
+                </div>
+                <span class="menu-label">메뉴</span>
+            </div>
+        </div>
+        <div class="tab-item" onclick="location.href='isa-home.html'">
+            <span class="tab-icon">🏠</span>
+            <span class="tab-label">ISA홈</span>
+        </div>
+        <div class="tab-item active">
+            <span class="tab-icon">💼</span>
+            <span class="tab-label">ISA계좌</span>
+        </div>
+        <div class="tab-item" onclick="navigateTo('isa-join')">
+            <span class="tab-icon">📝</span>
+            <span class="tab-label">ISA가입</span>
+        </div>
+        <div class="tab-item" onclick="navigateTo('isa-task')">
+            <span class="tab-icon">⚙️</span>
+            <span class="tab-label">ISA업무</span>
+        </div>
+    </nav>
+
+    <script>
+        function goBack() {
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                location.href = 'isa-home.html';
+            }
+        }
+
+        function openMenu() {
+            alert('메뉴가 열립니다.');
+        }
+
+        function navigateTo(page) {
+            alert(`${page} 페이지로 이동합니다.`);
+        }
+
+        function toggleSection(sectionId) {
+            const content = document.getElementById(`content-${sectionId}`);
+            const toggle = document.getElementById(`toggle-${sectionId}`);
+            
+            if (content && toggle) {
+                content.classList.toggle('expanded');
+                toggle.classList.toggle('expanded');
+            }
+        }
+
+        // 페이지 로드 시 애니메이션
+        document.addEventListener('DOMContentLoaded', function() {
+            // 막대 차트 애니메이션
+            const bars = document.querySelectorAll('.bar-fill');
+            bars.forEach((bar, index) => {
+                const width = bar.style.width;
+                bar.style.width = '0';
+                setTimeout(() => {
+                    bar.style.width = width;
+                }, 100 + index * 100);
+            });
+        });
+    </script>
+</body>
+</html>
