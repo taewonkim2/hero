@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>펀드 잔고 - MTS</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Material Design 그림자 */
+        .elevation-1 {
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+        }
+
+        .elevation-2 {
+            box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+        }
+
+        .elevation-3 {
+            box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+        }
+
+        /* 헤더 */
+        .header {
+            position: sticky;
+            top: 0;
+            background: #ffffff;
+            z-index: 100;
+            padding: 16px;
+            transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            padding: 8px;
+            margin-left: -8px;
+            color: #424242;
+            font-size: 24px;
+            border-radius: 50%;
+            transition: background-color 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+        }
+
+        .back-btn:active {
+            background-color: rgba(0,0,0,0.05);
+        }
+
+        .header-title {
+            font-size: 20px;
+            font-weight: 500;
+            color: #212121;
+            letter-spacing: 0.15px;
+        }
+
+        .menu-btn {
+            background: none;
+            border: none;
+            padding: 8px;
+            margin-right: -8px;
+            color: #757575;
+            font-size: 20px;
+        }
+
+        /* 계좌 선택 드롭다운 */
+        .account-selector {
+            position: relative;
+        }
+
+        .account-dropdown {
+            width: 100%;
+            padding: 12px 36px 12px 16px;
+            background: #f5f5f5;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #424242;
+            appearance: none;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+            font-weight: 500;
+        }
+
+        .account-dropdown:focus {
+            outline: none;
+            background: #eeeeee;
+        }
+
+        .dropdown-arrow {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            color: #757575;
+            transition: transform 0.3s ease;
+        }
+
+        /* 총 평가 정보 */
+        .total-evaluation {
+            background: white;
+            padding: 24px 20px;
+            text-align: center;
+            margin-bottom: 8px;
+            animation: slideUp 0.5s cubic-bezier(0.4, 0.0, 0.2, 1);
+        }
+
+        .total-label {
+            font-size: 14px;
+            color: #757575;
+            margin-bottom: 12px;
+            letter-spacing: 0.25px;
+        }
+
+        .total-amount {
+            font-size: 32px;
+            font-weight: 700;
+            color: #212121;
+            margin-bottom: 16px;
+            letter-spacing: -0.5px;
+        }
+
+        .profit-info {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            font-size: 15px;
+        }
+
+        .profit-amount {
+            color: #f44336;
+            font-weight: 500;
+        }
+
+        .profit-rate {
+            color: #f44336;
+            font-weight: 500;
+        }
+
+        /* 펀드 리스트 */
+        .fund-list {
+            background: white;
+            animation: slideUp 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
+        }
+
+        .list-header {
+            padding: 16px 20px 8px;
+            font-size: 12px;
+            color: #9e9e9e;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        /* 펀드 아이템 */
+        .fund-item-wrapper {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .fund-item {
+            display: flex;
+            align-items: center;
+            padding: 16px 20px;
+            background: white;
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+            transform: translateX(0);
+            z-index: 2;
+        }
+
+        .fund-item.highlighted {
+            animation: highlight 0.8s cubic-bezier(0.4, 0.0, 0.2, 1);
+        }
+
+        @keyframes highlight {
+            0% {
+                transform: translateX(0) scale(1);
+                background-color: white;
+            }
+            50% {
+                transform: translateX(0) scale(1.02);
+                background-color: #e3f2fd;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            }
+            100% {
+                transform: translateX(0) scale(1);
+                background-color: white;
+            }
+        }
+
+        .fund-item.swiped-left {
+            transform: translateX(-160px);
+        }
+
+        .fund-item.swiped-right {
+            transform: translateX(160px);
+        }
+
+        .fund-item::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 60px;
+            right: 20px;
+            height: 1px;
+            background: #e0e0e0;
+        }
+
+        .fund-item:last-child::after {
+            display: none;
+        }
+
+        /* 스와이프 액션 버튼 */
+        .swipe-actions {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            display: flex;
+            align-items: center;
+            z-index: 1;
+        }
+
+        .swipe-actions.left {
+            left: 0;
+        }
+
+        .swipe-actions.right {
+            right: 0;
+        }
+
+        .action-btn {
+            padding: 0 30px;
+            height: 100%;
+            border: none;
+            color: white;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .action-btn.buy {
+            background: #f44336;
+        }
+
+        .action-btn.buy:active {
+            background: #d32f2f;
+        }
+
+        .action-btn.sell {
+            background: #2196f3;
+        }
+
+        .action-btn.sell:active {
+            background: #1976d2;
+        }
+
+        /* 펀드 로고 */
+        .fund-logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+            transition: transform 0.3s ease;
+        }
+
+        .fund-logo.usa {
+            background: linear-gradient(135deg, #4169E1, #DC143C);
+        }
+
+        .fund-logo.korea {
+            background: linear-gradient(135deg, #003478, #C60C30);
+        }
+
+        .fund-logo.asia {
+            background: linear-gradient(135deg, #FF9933, #138808);
+        }
+
+        .fund-logo.global {
+            background: linear-gradient(135deg, #00BCD4, #4CAF50);
+        }
+
+        .fund-logo.europe {
+            background: linear-gradient(135deg, #003399, #FFCC00);
+        }
+
+        .fund-logo.tech {
+            background: linear-gradient(135deg, #9C27B0, #673AB7);
+        }
+
+        .fund-logo.healthcare {
+            background: linear-gradient(135deg, #00ACC1, #00897B);
+        }
+
+        .fund-logo.energy {
+            background: linear-gradient(135deg, #FFA726, #FF7043);
+        }
+
+        /* 펀드 정보 */
+        .fund-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .fund-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: #212121;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .fund-company {
+            font-size: 12px;
+            color: #9e9e9e;
+        }
+
+        /* 펀드 금액 정보 */
+        .fund-amount {
+            text-align: right;
+        }
+
+        .holding-amount {
+            font-size: 15px;
+            font-weight: 600;
+            color: #212121;
+            margin-bottom: 4px;
+        }
+
+        .fund-profit {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 8px;
+            font-size: 12px;
+        }
+
+        .fund-profit-amount {
+            color: #f44336;
+        }
+
+        .fund-profit-amount.negative {
+            color: #2196f3;
+        }
+
+        .fund-profit-rate {
+            color: #f44336;
+        }
+
+        .fund-profit-rate.negative {
+            color: #2196f3;
+        }
+
+        /* 애니메이션 */
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(0);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        /* 리플 효과 */
+        .ripple {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ripple::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(0,0,0,0.1);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .ripple:active::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        /* 로딩 효과 */
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0% {
+                background-position: 200% 0;
+            }
+            100% {
+                background-position: -200% 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 헤더 -->
+    <div class="header elevation-2">
+        <div class="header-content">
+            <button class="back-btn ripple" onclick="goBack()">←</button>
+            <div class="header-title">펀드 잔고</div>
+            <button class="menu-btn">⋮</button>
+        </div>
+        <div class="account-selector">
+            <select class="account-dropdown" id="accountSelect">
+                <option>종합계좌 123-45-678901</option>
+                <option>연금계좌 234-56-789012</option>
+                <option>ISA계좌 345-67-890123</option>
+            </select>
+            <span class="dropdown-arrow">▼</span>
+        </div>
+    </div>
+
+    <!-- 총 평가 정보 -->
+    <div class="total-evaluation elevation-1">
+        <div class="total-label">펀드 평가금액</div>
+        <div class="total-amount">25,847,320원</div>
+        <div class="profit-info">
+            <span class="profit-amount">▲ 3,421,580</span>
+            <span class="profit-rate">+15.25%</span>
+        </div>
+    </div>
+
+    <!-- 펀드 리스트 -->
+    <div class="fund-list elevation-1">
+        <div class="list-header">보유 펀드 15개</div>
+        
+        <!-- 강조 표시될 펀드 (첫번째) -->
+        <div class="fund-item-wrapper">
+            <div class="swipe-actions left">
+                <button class="action-btn buy">추가매수</button>
+            </div>
+            <div class="swipe-actions right">
+                <button class="action-btn sell">매도</button>
+            </div>
+            <div class="fund-item highlighted" id="target-fund" data-swipeable="true">
+                <div class="fund-logo global">🌍</div>
+                <div class="fund-info">
+                    <div class="fund-name">미래에셋 글로벌 혁신기업 ESG</div>
+                    <div class="fund-company">미래에셋자산운용</div>
+                </div>
+                <div class="fund-amount">
+                    <div class="holding-amount">3,458,200원</div>
+                    <div class="fund-profit">
+                        <span class="fund-profit-amount">▲528,200</span>
+                        <span class="fund-profit-rate">+18.04%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 나머지 펀드들 -->
+        <div class="fund-item-wrapper">
+            <div class="swipe-actions left">
+                <button class="action-btn buy">추가매수</button>
+            </div>
+            <div class="swipe-actions right">
+                <button class="action-btn sell">매도</button>
+            </div>
+            <div class="fund-item" data-swipeable="true">
+                <div class="fund-logo korea">🇰🇷</div>
+                <div class="fund-info">
+                    <div class="fund-name">삼성 KODEX 200</div>
+                    <div class="fund-company">삼성자산운용</div>
+                </div>
+                <div class="fund-amount">
+                    <div class="holding-amount">2,890,500원</div>
+                    <div class="fund-profit">
+                        <span class="fund-profit-amount">▲342,100</span>
+                        <span class="fund-profit-rate">+13.42%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="fund-item-wrapper">
+            <div class="swipe-actions left">
+                <button class="action-btn buy">추가매수</button>
+            </div>
+            <div class="swipe-actions right">
+                <button class="action-btn sell">매도</button>
+            </div>
+            <div class="fund-item" data-swipeable="true">
+                <div class="fund-logo usa">🇺🇸</div>
+                <div class="fund-info">
+                    <div class="fund-name">KB 나스닥 100 인덱스</div>
+                    <div class="fund-company">KB자산운용</div>
+                </div>
+                <div class="fund-amount">
+                    <div class="holding-amount">2,145,800원</div>
+                    <div class="fund-profit">
+                        <span class="fund-profit-amount">▲445,800</span>
+                        <span class="fund-profit-rate">+26.22%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="fund-item-wrapper">
+            <div class="swipe-actions left">
+                <button class="action-btn buy">추가매수</button>
+            </div>
+            <div class="swipe-actions right">
+                <button class="action-btn sell">매도</button>
+            </div>
+            <div class="fund-item" data-swipeable="true">
+                <div class="fund-logo tech">💻</div>
+                <div class="fund-info">
+                    <div class="fund-name">신한 AI 혁신기술</div>
+                    <div class="fund-company">신한자산운용</div>
+                </div>
+                <div class="fund-amount">
+                    <div class="holding-amount">1,876,000원</div>
+                    <div class="fund-profit">
+                        <span class="fund-profit-amount">▲298,500</span>
+                        <span class="fund-profit-rate">+18.92%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="fund-item-wrapper">
+            <div class="swipe-actions left">
+                <button class="action-btn buy">추가매수</button>
+            </div>
+            <div class="swipe-actions right">
+                <button class="action-btn sell">매도</button>
+            </div>
+            <div class="fund-item" data-swipeable="true">
+                <div class="fund-logo asia">🌏</div>
+                <div class="fund-info">
+                    <div class="fund-name">한국투자 아시아 성장주</div>
+                    <div class="fund-company">한국투자신탁운용</div>
+                </div>
+                <div class="fund-amount">
+                    <div class="holding-amount">1,654,300원</div>
+                    <div class="fund-profit">
+                        <span class="fund-profit-amount negative">▼54,300</span>
+                        <span class="fund-profit-rate negative">-3.18%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="fund-item-wrapper">
+            <div class="swipe-actions left">
+                <button class="action-btn buy">추가매수</button>
+            </div>
+            <div class="swipe-actions right">
+                <button class="action-btn sell">매도</button>
+            </div>
+            <div class="fund-item" data-swipeable="true">
+                <div class="fund-logo healthcare">🏥</div>
+                <div class="fund-info">
+                    <div class="fund-name">하나 글로벌 헬스케어</div>
+                    <div class="fund-company">하나자산운용</div>
+                </div>
+                <div class="fund-amount">
+                    <div class="holding-amount">1,543,200원</div>
+                    <div class="fund-profit">
+                        <span class="fund-profit-amount">▲187,600</span>
+                        <span class="fund-profit-rate">+13.84%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="fund-item-wrapper">
+            <div class="swipe-actions left">
+                <button class="action-btn buy">추가매수</button>
+            </div>
+            <div class="swipe-actions right">
+                <button class="action-btn sell">매도</button>
+            </div>
+            <div class="fund-item" data-swipeable="true">
+                <div class="fund-logo europe">🇪🇺</div>
+                <div class="fund-info">
+                    <div class="fund-name">미래에셋 유럽 블루칩</div>
+                    <div class="fund-company">미래에셋자산운용</div>
+                </div>
+                <div class="fund-amount">
+                    <div class="holding-amount">1,432,100원</div>
+                    <div class="fund-profit">
+                        <span class="fund-profit-amount">▲156,700</span>
+                        <span class="fund-profit-rate">+12.28%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="fund-item-wrapper">
+            <div class="swipe-actions left">
+                <button class="action-btn buy">추가매수</button>
+            </div>
+            <div class="swipe-actions right">
+                <button class="action-btn sell">매도</button>
+            </div>
+            <div class="fund-item" data-swipeable="true">
+                <div class="fund-logo energy">⚡</div>
+                <div class="fund-info">
+                    <div class="fund-name">KB 신재생에너지</div>
+                    <div class="fund-company">KB자산운용</div>
+                </div>
+                <div class="fund-amount">
+                    <div class="holding-amount">1,387,900원</div>
+                    <div class="fund-profit">
+                        <span class="fund-profit-amount">▲278,400</span>
+                        <span class="fund-profit-rate">+25.09%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="fund-item-wrapper">
+            <div class="swipe-actions left">
+                <button class="action-btn buy">추가매수</button>
+            </div>
+            <div class="swipe-actions right">
+                <button class="action-btn sell">매도</button>
+            </div>
+            <div class="fund-item" data-swipeable="true">
+                <div class="fund-logo korea">🏢</div>
+                <div class="fund-info">
+                    <div class="fund-name">삼성 한국형 가치주</div>
+                    <div class="fund-company">삼성자산운용</div>
+                </div>
+                <div class="fund-amount">
+                    <div class="holding-amount">1,298,600원</div>
+                    <div class="fund-profit">
+                        <span class="fund-profit-amount">▲98,600</span>
+                        <span class="fund-profit-rate">+8.21%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="fund-item-wrapper">
+            <div class="swipe-actions left">
+                <button class="action-btn buy">추가매수</button>
+            </div>
+            <div class="swipe-actions right">
+                <button class="action-btn sell">매도</button>
+            </div>
+            <div class="fund-item" data-swipeable="true">
+                <div class="fund-logo global">💰</div>
+                <div class="fund-info">
+                    <div class="fund-name">한투 글로벌 리츠</div>
+                    <div class="fund-company">한국투자신탁운용</div>
+                </div>
+                <div class="fund-amount">
+                    <div class="holding-amount">1,234,500원</div>
+                    <div class="fund-profit">
+                        <span class="fund-profit-amount negative">▼34,500</span>
+                        <span class="fund-profit-rate negative">-2.72%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="fund-item-wrapper">
+            <div class="swipe-actions left">
+                <button class="action-btn buy">추가매수</button>
+            </div>
+            <div class="swipe-actions right">
+                <button class="action-btn sell">매도</button>
+            </div>
+            <div class="fund-item" data-swipeable="true">
+                <div class="fund-logo usa">📈</div>
+                <div class="fund-info">
+                    <div class="fund-name">신한 S&P 500 인덱스</div>
+                    <div class="fund-company">신한자산운용</div>
+                </div>
+                <div class="fund-amount">
+                    <div class="holding-amount">1,187,300원</div>
+                    <div class="fund-profit">
+                        <span class="fund-profit-amount">▲213,800</span>
+                        <span class="fund-profit-rate">+21.99%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="fund-item-wrapper">
+            <div class="swipe-actions left">
+                <button class="action-btn buy">추가매수</button>
+            </div>
+            <div class="swipe-actions right">
+                <button class="action-btn sell">매도</button>
+            </div>
+            <div class="fund-item" data-swipeable="true">
+                <div class="fund-logo korea">🏦</div>
+                <div class="fund-info">
+                    <div class="fund-name">NH-Amundi 국내채권</div>
+                    <div class="fund-company">NH-Amundi자산운용</div>
+                </div>
+                <div class="fund-amount">
+                    <div class="holding-amount">1,098,200원</div>
+                    <div class="fund-profit">
+                        <span class="fund-profit-amount">▲45,200</span>
+                        <span class="fund-profit-rate">+4.29%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="fund-item-wrapper">
+            <div class="swipe-actions left">
+                <button class="action-btn buy">추가매수</button>
+            </div>
+            <div class="swipe-actions right">
+                <button class="action-btn sell">매도</button>
+            </div>
+            <div class="fund-item" data-swipeable="true">
+                <div class="fund-logo tech">🤖</div>
+                <div class="fund-info">
+                    <div class="fund-name">미래에셋 글로벌 메타버스</div>
+                    <div class="fund-company">미래에셋자산운용</div>
+                </div>
+                <div class="fund-amount">
+                    <div class="holding-amount">987,600원</div>
+                    <div class="fund-profit">
+                        <span class="fund-profit-amount">▲178,900</span>
+                        <span class="fund-profit-rate">+22.12%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="fund-item-wrapper">
+            <div class="swipe-actions left">
+                <button class="action-btn buy">추가매수</button>
+            </div>
+            <div class="swipe-actions right">
+                <button class="action-btn sell">매도</button>
+            </div>
+            <div class="fund-item" data-swipeable="true">
+                <div class="fund-logo asia">🏭</div>
+                <div class="fund-info">
+                    <div class="fund-name">하나 차이나 전략</div>
+                    <div class="fund-company">하나자산운용</div>
+                </div>
+                <div class="fund-amount">
+                    <div class="holding-amount">876,400원</div>
+                    <div class="fund-profit">
+                        <span class="fund-profit-amount negative">▼123,600</span>
+                        <span class="fund-profit-rate negative">-12.36%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="fund-item-wrapper">
+            <div class="swipe-actions left">
+                <button class="action-btn buy">추가매수</button>
+            </div>
+            <div class="swipe-actions right">
+                <button class="action-btn sell">매도</button>
+            </div>
+            <div class="fund-item" data-swipeable="true">
+                <div class="fund-logo global">🛡️</div>
+                <div class="fund-info">
+                    <div class="fund-name">KB 글로벌 ESG 채권</div>
+                    <div class="fund-company">KB자산운용</div>
+                </div>
+                <div class="fund-amount">
+                    <div class="holding-amount">798,300원</div>
+                    <div class="fund-profit">
+                        <span class="fund-profit-amount">▲28,300</span>
+                        <span class="fund-profit-rate">+3.67%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 페이지 로드 시 타겟 펀드 강조 애니메이션
+        window.addEventListener('load', function() {
+            // URL 파라미터 확인 (선택된 펀드인지)
+            const urlParams = new URLSearchParams(window.location.search);
+            const fromSubscribed = urlParams.get('fund') === 'mirae-global-esg';
+            
+            if (fromSubscribed) {
+                // 스크롤하여 해당 펀드가 중앙에 오도록
+                setTimeout(() => {
+                    const targetFund = document.getElementById('target-fund');
+                    targetFund.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 100);
+            }
+        });
+
+        // 스와이프 기능
+        let startX = null;
+        let currentX = null;
+        let currentFund = null;
+
+        document.querySelectorAll('[data-swipeable]').forEach(item => {
+            item.addEventListener('touchstart', handleTouchStart, { passive: true });
+            item.addEventListener('touchmove', handleTouchMove, { passive: true });
+            item.addEventListener('touchend', handleTouchEnd);
+            
+            // 마우스 이벤트 (데스크톱 테스트용)
+            item.addEventListener('mousedown', handleMouseDown);
+            item.addEventListener('mousemove', handleMouseMove);
+            item.addEventListener('mouseup', handleMouseUp);
+            item.addEventListener('mouseleave', handleMouseUp);
+        });
+
+        function handleStart(x, element) {
+            startX = x;
+            currentFund = element;
+            currentFund.style.transition = 'none';
+        }
+
+        function handleMove(x) {
+            if (!startX || !currentFund) return;
+            
+            currentX = x;
+            const diffX = currentX - startX;
+            
+            // 스와이프 제한
+            if (Math.abs(diffX) < 160) {
+                currentFund.style.transform = `translateX(${diffX}px)`;
+            }
+        }
+
+        function handleEnd() {
+            if (!startX || !currentFund) return;
+            
+            const diffX = currentX - startX;
+            currentFund.style.transition = 'transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1)';
+            
+            // 스와이프 임계값
+            if (diffX > 80) {
+                // 오른쪽 스와이프 - 매도 버튼 표시
+                currentFund.classList.add('swiped-right');
+                currentFund.classList.remove('swiped-left');
+            } else if (diffX < -80) {
+                // 왼쪽 스와이프 - 추가매수 버튼 표시
+                currentFund.classList.add('swiped-left');
+                currentFund.classList.remove('swiped-right');
+            } else {
+                // 원위치로
+                currentFund.style.transform = 'translateX(0)';
+                currentFund.classList.remove('swiped-left', 'swiped-right');
+            }
+            
+            startX = null;
+            currentX = null;
+            currentFund = null;
+        }
+
+        // 터치 이벤트
+        function handleTouchStart(e) {
+            handleStart(e.touches[0].clientX, e.currentTarget);
+        }
+
+        function handleTouchMove(e) {
+            handleMove(e.touches[0].clientX);
+        }
+
+        function handleTouchEnd(e) {
+            handleEnd();
+        }
+
+        // 마우스 이벤트
+        let isMouseDown = false;
+
+        function handleMouseDown(e) {
+            isMouseDown = true;
+            handleStart(e.clientX, e.currentTarget);
+        }
+
+        function handleMouseMove(e) {
+            if (!isMouseDown) return;
+            handleMove(e.clientX);
+        }
+
+        function handleMouseUp(e) {
+            if (!isMouseDown) return;
+            isMouseDown = false;
+            handleEnd();
+        }
+
+        // 액션 버튼 클릭
+        document.querySelectorAll('.action-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const action = this.classList.contains('buy') ? '추가매수' : '매도';
+                const fundName = this.closest('.fund-item-wrapper').querySelector('.fund-name').textContent;
+                
+                if (action === '추가매수') {
+                    if(confirm(`${fundName}\n추가매수 하시겠습니까?`)) {
+                        alert('추가매수 화면으로 이동합니다.');
+                        // 원위치로
+                        const fundItem = this.closest('.fund-item-wrapper').querySelector('.fund-item');
+                        fundItem.style.transform = 'translateX(0)';
+                        fundItem.classList.remove('swiped-left', 'swiped-right');
+                    }
+                } else {
+                    if(confirm(`${fundName}\n매도 하시겠습니까?`)) {
+                        alert('매도 화면으로 이동합니다.');
+                        // 원위치로
+                        const fundItem = this.closest('.fund-item-wrapper').querySelector('.fund-item');
+                        fundItem.style.transform = 'translateX(0)';
+                        fundItem.classList.remove('swiped-left', 'swiped-right');
+                    }
+                }
+            });
+        });
+
+        // 펀드 아이템 클릭 (스와이프 중이 아닐 때)
+        document.querySelectorAll('.fund-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                // 스와이프 상태면 클릭 무시
+                if (this.classList.contains('swiped-left') || this.classList.contains('swiped-right')) {
+                    return;
+                }
+                
+                const fundName = this.querySelector('.fund-name').textContent;
+                console.log('펀드 상세:', fundName);
+                // 펀드 상세 페이지로 이동
+            });
+        });
+
+        // 계좌 선택 변경
+        document.getElementById('accountSelect').addEventListener('change', function() {
+            console.log('계좌 변경:', this.value);
+            // 계좌별 잔고 재조회
+        });
+
+        // 뒤로가기
+        function goBack() {
+            window.location.href = 'mts_mobile_main_page.html';
+        }
+
+        // Material Design 리플 효과
+        document.querySelectorAll('.ripple').forEach(element => {
+            element.addEventListener('click', function(e) {
+                const ripple = document.createElement('span');
+                const rect = this.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+                
+                ripple.style.width = ripple.style.height = size + 'px';
+                ripple.style.left = x + 'px';
+                ripple.style.top = y + 'px';
+                ripple.classList.add('ripple-effect');
+                
+                this.appendChild(ripple);
+                
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
+            });
+        });
+    </script>
+</body>
+</html>

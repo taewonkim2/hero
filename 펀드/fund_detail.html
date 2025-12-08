@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>삼성 반도체 대표기업 펀드 - MTS</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f5f6fa;
+            padding-bottom: 70px; /* 하단 고정 버튼 공간 */
+            min-height: 100vh;
+        }
+
+        /* 헤더 */
+        .header {
+            position: sticky;
+            top: 0;
+            background: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            z-index: 100;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            padding: 5px;
+            color: #333;
+            font-size: 24px;
+        }
+
+        .header-title {
+            flex: 1;
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .share-btn {
+            background: none;
+            border: none;
+            padding: 5px;
+            color: #666;
+            font-size: 20px;
+        }
+
+        /* 펀드 기본 정보 */
+        .fund-basic-info {
+            background: white;
+            padding: 20px 15px;
+            margin-bottom: 10px;
+        }
+
+        .fund-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .fund-company {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .fund-current-value {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .current-price {
+            font-size: 28px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .price-unit {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .price-change {
+            display: flex;
+            gap: 15px;
+            font-size: 14px;
+        }
+
+        .change-amount {
+            color: #ff5252;
+        }
+
+        .change-percent {
+            color: #ff5252;
+            font-weight: 500;
+        }
+
+        /* 차트 섹션 */
+        .chart-section {
+            background: white;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+
+        .chart-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .chart-tab {
+            padding: 10px 15px;
+            border: none;
+            background: none;
+            color: #666;
+            font-size: 14px;
+            font-weight: 500;
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        .chart-tab.active {
+            color: #4285f4;
+        }
+
+        .chart-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #4285f4;
+        }
+
+        .chart-container {
+            height: 200px;
+            position: relative;
+            margin-bottom: 10px;
+        }
+
+        .chart-canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .chart-period-selector {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .period-btn {
+            padding: 6px 12px;
+            border: 1px solid #e0e0e0;
+            background: white;
+            border-radius: 15px;
+            font-size: 12px;
+            color: #666;
+            transition: all 0.3s;
+        }
+
+        .period-btn.active {
+            background: #4285f4;
+            color: white;
+            border-color: #4285f4;
+        }
+
+        /* 수익률 정보 */
+        .returns-info {
+            background: white;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .returns-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .return-item {
+            text-align: center;
+        }
+
+        .return-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .return-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: #ff5252;
+        }
+
+        .return-value.negative {
+            color: #4834d4;
+        }
+
+        /* 펀드 상세 정보 */
+        .fund-details {
+            background: white;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .detail-value {
+            font-size: 14px;
+            color: #333;
+            font-weight: 500;
+            text-align: right;
+        }
+
+        /* 투자 포트폴리오 */
+        .portfolio-section {
+            background: white;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+
+        .portfolio-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .portfolio-item:last-child {
+            border-bottom: none;
+        }
+
+        .portfolio-stock {
+            flex: 1;
+        }
+
+        .stock-name {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 3px;
+        }
+
+        .stock-code {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .portfolio-weight {
+            font-size: 14px;
+            color: #4285f4;
+            font-weight: 600;
+        }
+
+        /* 운용 보고서 */
+        .report-section {
+            background: white;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+
+        .report-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .report-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .report-title {
+            font-size: 14px;
+            color: #333;
+        }
+
+        .report-date {
+            font-size: 12px;
+            color: #666;
+            margin-top: 3px;
+        }
+
+        .report-download {
+            color: #4285f4;
+            font-size: 20px;
+        }
+
+        /* 하단 고정 버튼 */
+        .bottom-fixed {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 10px 15px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .subscribe-button {
+            width: 100%;
+            padding: 15px;
+            background: #ff5252;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .subscribe-button:active {
+            transform: scale(0.98);
+            background: #e04848;
+        }
+
+        /* 로딩 스피너 */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f0f0f0;
+            border-top: 3px solid #4285f4;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+    </style>
+</head>
+<body>
+    <!-- 헤더 -->
+    <div class="header">
+        <button class="back-btn" onclick="goBack()">←</button>
+        <div class="header-title">삼성 반도체 대표기업 펀드</div>
+        <button class="share-btn">⎘</button>
+    </div>
+
+    <!-- 펀드 기본 정보 -->
+    <div class="fund-basic-info">
+        <div class="fund-name">삼성 반도체 대표기업 펀드</div>
+        <div class="fund-company">삼성자산운용 | 주식형 | KR5223941234</div>
+        <div class="fund-current-value">
+            <span class="current-price">1,458.32</span>
+            <span class="price-unit">원</span>
+        </div>
+        <div class="price-change">
+            <span class="change-amount">▲ 28.45</span>
+            <span class="change-percent">+1.99%</span>
+        </div>
+    </div>
+
+    <!-- 차트 섹션 -->
+    <div class="chart-section">
+        <div class="chart-tabs">
+            <button class="chart-tab active" onclick="switchTab('price', this)">기준가</button>
+            <button class="chart-tab" onclick="switchTab('return', this)">수익률</button>
+            <button class="chart-tab" onclick="switchTab('asset', this)">순자산</button>
+        </div>
+        <div class="chart-container">
+            <canvas id="fundChart" class="chart-canvas"></canvas>
+        </div>
+        <div class="chart-period-selector">
+            <button class="period-btn" onclick="changePeriod('1M', this)">1개월</button>
+            <button class="period-btn" onclick="changePeriod('3M', this)">3개월</button>
+            <button class="period-btn" onclick="changePeriod('6M', this)">6개월</button>
+            <button class="period-btn active" onclick="changePeriod('1Y', this)">1년</button>
+            <button class="period-btn" onclick="changePeriod('3Y', this)">3년</button>
+        </div>
+    </div>
+
+    <!-- 수익률 정보 -->
+    <div class="returns-info">
+        <div class="section-title">수익률 현황</div>
+        <div class="returns-grid">
+            <div class="return-item">
+                <div class="return-label">1개월</div>
+                <div class="return-value">+3.5%</div>
+            </div>
+            <div class="return-item">
+                <div class="return-label">3개월</div>
+                <div class="return-value">+8.2%</div>
+            </div>
+            <div class="return-item">
+                <div class="return-label">6개월</div>
+                <div class="return-value">+15.4%</div>
+            </div>
+            <div class="return-item">
+                <div class="return-label">1년</div>
+                <div class="return-value">+22.3%</div>
+            </div>
+            <div class="return-item">
+                <div class="return-label">3년</div>
+                <div class="return-value">+45.8%</div>
+            </div>
+            <div class="return-item">
+                <div class="return-label">설정 이후</div>
+                <div class="return-value">+68.2%</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 펀드 상세 정보 -->
+    <div class="fund-details">
+        <div class="section-title">펀드 정보</div>
+        <div class="detail-row">
+            <span class="detail-label">설정일</span>
+            <span class="detail-value">2019.03.15</span>
+        </div>
+        <div class="detail-row">
+            <span class="detail-label">펀드규모</span>
+            <span class="detail-value">890억원</span>
+        </div>
+        <div class="detail-row">
+            <span class="detail-label">기준가격</span>
+            <span class="detail-value">1,458.32원</span>
+        </div>
+        <div class="detail-row">
+            <span class="detail-label">총보수</span>
+            <span class="detail-value">연 1.45%</span>
+        </div>
+        <div class="detail-row">
+            <span class="detail-label">판매보수</span>
+            <span class="detail-value">연 0.70%</span>
+        </div>
+        <div class="detail-row">
+            <span class="detail-label">환매수수료</span>
+            <span class="detail-value">90일 미만 0.5%</span>
+        </div>
+        <div class="detail-row">
+            <span class="detail-label">펀드매니저</span>
+            <span class="detail-value">김철수, 이영희</span>
+        </div>
+    </div>
+
+    <!-- 투자 포트폴리오 TOP 10 -->
+    <div class="portfolio-section">
+        <div class="section-title">주요 투자종목 TOP 10</div>
+        <div class="portfolio-item">
+            <div class="portfolio-stock">
+                <div class="stock-name">삼성전자</div>
+                <div class="stock-code">005930</div>
+            </div>
+            <div class="portfolio-weight">35.2%</div>
+        </div>
+        <div class="portfolio-item">
+            <div class="portfolio-stock">
+                <div class="stock-name">SK하이닉스</div>
+                <div class="stock-code">000660</div>
+            </div>
+            <div class="portfolio-weight">28.5%</div>
+        </div>
+        <div class="portfolio-item">
+            <div class="portfolio-stock">
+                <div class="stock-name">삼성전자우</div>
+                <div class="stock-code">005935</div>
+            </div>
+            <div class="portfolio-weight">8.3%</div>
+        </div>
+        <div class="portfolio-item">
+            <div class="portfolio-stock">
+                <div class="stock-name">DB하이텍</div>
+                <div class="stock-code">000990</div>
+            </div>
+            <div class="portfolio-weight">5.2%</div>
+        </div>
+        <div class="portfolio-item">
+            <div class="portfolio-stock">
+                <div class="stock-name">리노공업</div>
+                <div class="stock-code">058470</div>
+            </div>
+            <div class="portfolio-weight">4.8%</div>
+        </div>
+        <div class="portfolio-item">
+            <div class="portfolio-stock">
+                <div class="stock-name">테크윙</div>
+                <div class="stock-code">089030</div>
+            </div>
+            <div class="portfolio-weight">3.5%</div>
+        </div>
+        <div class="portfolio-item">
+            <div class="portfolio-stock">
+                <div class="stock-name">원익IPS</div>
+                <div class="stock-code">240810</div>
+            </div>
+            <div class="portfolio-weight">3.2%</div>
+        </div>
+        <div class="portfolio-item">
+            <div class="portfolio-stock">
+                <div class="stock-name">한미반도체</div>
+                <div class="stock-code">042700</div>
+            </div>
+            <div class="portfolio-weight">2.8%</div>
+        </div>
+        <div class="portfolio-item">
+            <div class="portfolio-stock">
+                <div class="stock-name">심텍</div>
+                <div class="stock-code">222800</div>
+            </div>
+            <div class="portfolio-weight">2.5%</div>
+        </div>
+        <div class="portfolio-item">
+            <div class="portfolio-stock">
+                <div class="stock-name">아이에스동서</div>
+                <div class="stock-code">010780</div>
+            </div>
+            <div class="portfolio-weight">2.1%</div>
+        </div>
+    </div>
+
+    <!-- 운용보고서 -->
+    <div class="report-section">
+        <div class="section-title">운용보고서</div>
+        <div class="report-item">
+            <div>
+                <div class="report-title">2024년 3분기 운용보고서</div>
+                <div class="report-date">2024.10.15</div>
+            </div>
+            <div class="report-download">📥</div>
+        </div>
+        <div class="report-item">
+            <div>
+                <div class="report-title">2024년 2분기 운용보고서</div>
+                <div class="report-date">2024.07.15</div>
+            </div>
+            <div class="report-download">📥</div>
+        </div>
+        <div class="report-item">
+            <div>
+                <div class="report-title">2024년 1분기 운용보고서</div>
+                <div class="report-date">2024.04.15</div>
+            </div>
+            <div class="report-download">📥</div>
+        </div>
+    </div>
+
+    <!-- 하단 고정 가입 버튼 -->
+    <div class="bottom-fixed">
+        <button class="subscribe-button" onclick="subscribeFund()">펀드 가입하기</button>
+    </div>
+
+    <script>
+        // 차트 그리기 (간단한 시뮬레이션)
+        function drawChart() {
+            const canvas = document.getElementById('fundChart');
+            const ctx = canvas.getContext('2d');
+            
+            // Canvas 크기 설정
+            canvas.width = canvas.offsetWidth * 2;
+            canvas.height = canvas.offsetHeight * 2;
+            ctx.scale(2, 2);
+            
+            // 차트 그리기
+            ctx.clearRect(0, 0, canvas.offsetWidth, canvas.offsetHeight);
+            ctx.beginPath();
+            ctx.strokeStyle = '#4285f4';
+            ctx.lineWidth = 2;
+            
+            // 샘플 데이터로 선 그리기
+            const points = [
+                {x: 10, y: 150},
+                {x: 50, y: 140},
+                {x: 90, y: 130},
+                {x: 130, y: 120},
+                {x: 170, y: 100},
+                {x: 210, y: 90},
+                {x: 250, y: 70},
+                {x: 290, y: 50},
+                {x: 330, y: 40}
+            ];
+            
+            ctx.moveTo(points[0].x, points[0].y);
+            points.forEach(point => {
+                ctx.lineTo(point.x, point.y);
+            });
+            ctx.stroke();
+            
+            // 그라데이션 채우기
+            const gradient = ctx.createLinearGradient(0, 0, 0, 180);
+            gradient.addColorStop(0, 'rgba(66, 133, 244, 0.2)');
+            gradient.addColorStop(1, 'rgba(66, 133, 244, 0)');
+            
+            ctx.lineTo(330, 180);
+            ctx.lineTo(10, 180);
+            ctx.closePath();
+            ctx.fillStyle = gradient;
+            ctx.fill();
+        }
+
+        // 페이지 로드시 차트 그리기
+        window.onload = function() {
+            drawChart();
+        };
+
+        // 창 크기 변경시 차트 다시 그리기
+        window.onresize = function() {
+            drawChart();
+        };
+
+        // 탭 전환
+        function switchTab(tabName, element) {
+            // 모든 탭 비활성화
+            document.querySelectorAll('.chart-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            // 선택한 탭 활성화
+            element.classList.add('active');
+            
+            // 차트 다시 그리기 (실제로는 다른 데이터로)
+            drawChart();
+        }
+
+        // 기간 변경
+        function changePeriod(period, element) {
+            // 모든 기간 버튼 비활성화
+            document.querySelectorAll('.period-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            // 선택한 기간 활성화
+            element.classList.add('active');
+            
+            // 차트 다시 그리기 (실제로는 해당 기간 데이터로)
+            drawChart();
+        }
+
+        // 뒤로가기
+        function goBack() {
+            // 실제로는 이전 페이지로 이동
+            window.location.href = 'mts_mobile_main_page.html';
+        }
+
+        // 펀드 가입
+        function subscribeFund() {
+            if(confirm('삼성 반도체 대표기업 펀드에 가입하시겠습니까?\n\n최소 가입금액: 10만원\n환매수수료: 90일 미만 0.5%')) {
+                alert('펀드 가입 절차를 진행합니다.\n본인인증 페이지로 이동합니다.');
+                // 실제로는 가입 프로세스로 이동
+            }
+        }
+
+        // 공유하기
+        document.querySelector('.share-btn').addEventListener('click', function() {
+            if (navigator.share) {
+                navigator.share({
+                    title: '삼성 반도체 대표기업 펀드',
+                    text: '1년 수익률 +22.3%! 반도체 대표기업에 투자하는 펀드입니다.',
+                    url: window.location.href
+                });
+            } else {
+                alert('펀드 정보가 클립보드에 복사되었습니다.');
+            }
+        });
+
+        // 운용보고서 다운로드
+        document.querySelectorAll('.report-download').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                alert('운용보고서를 다운로드합니다.');
+            });
+        });
+    </script>
+</body>
+</html>
