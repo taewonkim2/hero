@@ -501,7 +501,7 @@
                     <path d="M15 18l-6-6 6-6"></path>
                 </svg>
             </button>
-            <span class="page-title">RP 구매가능 종목</span>
+            <span class="page-title">RP매수</span>
         </div>
     </nav>
 
@@ -721,14 +721,11 @@
         <div class="tab-item" onclick="switchTab('rp-home', this)">
             <span class="tab-label">RP홈</span>
         </div>
-        <div class="tab-item" onclick="switchTab('rp-holdings', this)">
-            <span class="tab-label">RP보유</span>
+        <div class="tab-item" onclick="switchTab('rp-balance', this)">
+            <span class="tab-label">RP보유/거래내역</span>
         </div>
-        <div class="tab-item active" onclick="switchTab('rp-products', this)">
-            <span class="tab-label">RP상품</span>
-        </div>
-        <div class="tab-item" onclick="switchTab('rp-orders', this)">
-            <span class="tab-label">주문내역</span>
+        <div class="tab-item active" onclick="switchTab('rp-buy', this)">
+            <span class="tab-label">RP매수</span>
         </div>
     </nav>
 
@@ -786,8 +783,8 @@
 
             if (tabName === 'rp-home') {
                 window.location.href = 'rp_home.html';
-            } else {
-                console.log(`Switching to tab: ${tabName}`);
+            } else if (tabName === 'rp-balance') {
+                window.location.href = 'rp_balance.html';
             }
         }
 
@@ -798,8 +795,7 @@
         }
 
         function viewHolding(rpId) {
-            console.log(`Navigating to holding detail for: ${rpId}`);
-            alert(`${rpId} 보유종목 상세조회 화면으로 이동합니다. (미기획)`);
+            window.location.href = 'rp_balance_detail.html?id=' + rpId;
         }
 
         // Toggle rate view

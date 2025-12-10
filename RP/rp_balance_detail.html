@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>보유종목 상세</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1a73e8;
+            --positive: #e53935;
+            --negative: #1976d2;
+            --bg-primary: #f5f6f8;
+            --bg-card: #ffffff;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --text-muted: #9ca3af;
+            --border: #e5e7eb;
+            --krw-color: #1a73e8;
+            --usd-color: #10b981;
+            --jpy-color: #f59e0b;
+            --eur-color: #8b5cf6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            max-width: 480px;
+            margin: 0 auto;
+            min-height: 100vh;
+            padding-top: 56px;
+            padding-bottom: 90px;
+        }
+
+        .dday{
+            display: inline-block;
+            border-radius: 10px;
+            background-color: red;
+            padding: 4px 8px 4px 8px;
+            color: white;
+            font-size: 12px;
+            margin-left: 6px;
+        }
+        /* Top Navigation Bar */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 480px;
+            height: 56px;
+            background: white;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            z-index: 1000;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .top-nav-left{
+            display:flex;
+            align-items:center;
+            gap:8px
+        }
+        .top-nav-header {
+            height: 56px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            justify-content: space-between;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            padding: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .page-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-left: 8px;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 16px;
+        }
+
+        /* Section Card */
+        .section-card {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            margin-bottom: 16px;
+        }
+
+        /* Product Header - rp_balance.html 스타일 */
+        .product-header {
+            display: flex;
+            align-items: center;
+            padding: 16px 0;
+            margin-bottom: 8px;
+        }
+
+        .rp-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 700;
+            margin-right: 14px;
+            flex-shrink: 0;
+        }
+
+        .rp-icon.krw {
+            background: linear-gradient(135deg, #e8f0fe 0%, #c2d9ff 100%);
+            color: var(--krw-color);
+        }
+
+        .rp-icon.usd {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            color: var(--usd-color);
+        }
+
+        .rp-icon.jpy {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            color: var(--jpy-color);
+        }
+
+        .rp-icon.eur {
+            background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
+            color: var(--eur-color);
+        }
+
+        .product-info {
+            flex: 1;
+        }
+
+        .product-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 2px;
+        }
+
+        .product-status {
+            font-size: 13px;
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        /* Info Row */
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+        }
+
+        .info-row.main {
+            padding: 16px 0;
+        }
+
+        .info-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .info-icon {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 1px solid var(--text-muted);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+
+        .info-value {
+            font-size: 14px;
+            font-weight: 400;
+            color: var(--positive);
+            text-align: right;
+        }
+
+        .info-value.large {
+            font-size: 14px;
+            font-weight: 400;
+            color:black;
+        }
+
+        .info-value.highlight {
+            color: var(--positive);
+        }
+
+        .info-value.rate {
+            color: var(--positive);
+            font-weight: 600;
+        }
+
+        /* Divider */
+        .divider {
+            height: 1px;
+            background: var(--border);
+            margin: 12px 0;
+        }
+
+        /* Sub Info */
+        .sub-info {
+            padding-left: 12px;
+            border-left: 2px solid var(--border);
+            margin: 8px 0 16px 0;
+        }
+
+        .sub-info .info-row {
+            padding: 6px 0;
+        }
+
+        .sub-info .info-label,
+        .sub-info .info-value {
+            font-size: 13px;
+            /* color: var(--text-muted); */
+            color:black;
+        }
+
+        /* Warning Message */
+        .warning-message {
+            background: #fff7ed;
+            border-radius: 12px;
+            padding: 14px 16px;
+            margin: 12px 0;
+            text-align: center;
+        }
+
+        .warning-text {
+            font-size: 13px;
+            color: #ea580c;
+            font-weight: 500;
+        }
+
+        /* Bottom Buttons */
+        .bottom-buttons {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 480px;
+            padding: 16px 20px;
+            background: white;
+            display: flex;
+            gap: 12px;
+            z-index: 1000;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+
+        .btn-buy {
+            background: red;
+            color: white;
+        }
+
+        .btn-sell {
+            background: blue;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <nav class="top-nav">
+        <div class = "top-nav-header">
+            <button class="back-btn" onclick="goBack()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M15 18l-6-6 6-6"></path>
+                </svg>
+            </button>
+            <span class="page-title">보유종목상세</span>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Product Header & Evaluation Info -->
+        <section class="section-card">
+            <div class="product-header">
+                <div class="rp-icon krw" id="productIcon">₩</div>
+                <div class="product-info">
+                    <div class="product-name" id="productName">원화RP (31일)</div>
+                    <!-- <div class="product-status">투자 중</div> -->
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- Evaluation Info -->
+            <div class="info-row main">
+                <span class="info-label">내 평가금액 <span class="info-icon">i</span></span>
+                <span class="info-value large" id="evalAmount">10,001원</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">투자원금</span>
+                <span class="info-value" id="investAmount" style="color:black;">10,000원</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">평가손익</span>
+                <span class="info-value highlight" id="profitLoss">1원 (+0.01%)</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">약정이율 <span class="info-icon">i</span></span>
+                <span class="info-value rate" id="interestRate">2.40%</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">중도상환이율 <span class="info-icon">i</span></span>
+                <span class="info-value rate" id="interestRate">2.40%</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">만기 후 이율 <span class="info-icon">i</span></span>
+                <span class="info-value rate" id="interestRate">2.40%</span>
+            </div>
+        </section>
+
+        <!-- Date Info -->
+        <section class="section-card">
+            <div class="info-row">
+                <span class="info-label">매수일</span>
+                <span class="info-value" id="purchaseDate" style="color:black;">2025.12.08 <span class="dday">D-20</span></span>
+                <!-- <span class="info-value" id="maturityDate">2026.01.08 <span class = "dday">D-20</span></span> -->
+            </div>
+            <div class="info-row">
+                <span class="info-label">만기일 <span class="info-icon">i</span></span>
+                <span class="info-value" id="maturityDate" style="color:black;">2026.01.08 <span class="dday">D-30</span></span>
+            </div>
+        </section>
+
+        <!-- Expected Amount -->
+        <section class="section-card">
+            <div class="info-row main">
+                <span class="info-label">만기예상금액 (세전) <span class="info-icon">i</span></span>
+                <span class="info-value large" id="expectedAmount">10,020원</span>
+            </div>
+            <div class="info-row main">
+                <span class="info-label">지금 해지하면 (세후) <span class="info-icon">i</span></span>
+                <span class="info-value large" id="terminationAmount">10,000원</span>
+            </div>
+            <div class="warning-message">
+                <span class="warning-text">지금 해지하면 약정이자가 줄어들 수 있어요.</span>
+            </div>
+            </div>
+        </section>
+
+        <!-- Early Termination -->
+        <!-- <section class="section-card">
+            <!-- <div class="info-row main">
+                <span class="info-label">지금 해지하면 (세후) <span class="info-icon">i</span></span>
+                <span class="info-value large" id="terminationAmount">10,000원</span>
+            </div> -->
+            <!-- <div class="sub-info">
+                <div class="info-row">
+                    <span class="info-label">과표금액</span>
+                    <span class="info-value" id="taxBase">0원</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">소득세</span>
+                    <span class="info-value" id="incomeTax">0원</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">지방소득세</span>
+                    <span class="info-value" id="localTax">0원</span>
+                </div>
+            </div>
+            <div class="warning-message">
+                <span class="warning-text">지금 해지하면 약정이자가 줄어들 수 있어요.</span>
+            </div>
+        </section> -->
+    </main>
+
+    <!-- Bottom Buttons -->
+    <div class="bottom-buttons">
+        <button class="btn btn-buy" onclick="addPurchase()">추가매수하기</button>
+        <button class="btn btn-sell" onclick="sellRP()">매도하기</button>
+    </div>
+
+    <script>
+        // Get URL parameters
+        function getUrlParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        // Initialize page with data based on ID
+        function initPage() {
+            const rpId = getUrlParam('id');
+
+            // Sample data based on rpId
+            const rpData = {
+                'krw-31': {
+                    iconSymbol: '₩',
+                    iconClass: 'krw',
+                    name: '원화RP (31일)',
+                    evalAmount: '5,252,000원',
+                    investAmount: '5,200,000원',
+                    profitLoss: '52,000원 (+1.01%)',
+                    interestRate: '2.40%',
+                    purchaseDate: '2025.12.08',
+                    maturityDate: '2026.01.08',
+                    expectedAmount: '5,262,000원',
+                    terminationAmount: '5,200,000원'
+                },
+                'krw-flex': {
+                    iconSymbol: '₩',
+                    iconClass: 'krw',
+                    name: '원화RP (수시)',
+                    evalAmount: '2,518,750원',
+                    investAmount: '2,500,000원',
+                    profitLoss: '18,750원 (+0.76%)',
+                    interestRate: '2.35%',
+                    purchaseDate: '2025.11.15',
+                    maturityDate: '수시',
+                    expectedAmount: '2,530,000원',
+                    terminationAmount: '2,518,750원'
+                },
+                'krw-1y': {
+                    iconSymbol: '₩',
+                    iconClass: 'krw',
+                    name: '퍼스트 발행어음 특판 (1년)',
+                    evalAmount: '3,008,500원',
+                    investAmount: '3,000,000원',
+                    profitLoss: '8,500원 (+0.28%)',
+                    interestRate: '3.40%',
+                    purchaseDate: '2025.12.08',
+                    maturityDate: '2026.12.08',
+                    expectedAmount: '3,102,000원',
+                    terminationAmount: '3,000,000원'
+                },
+                'usd-31': {
+                    iconSymbol: '$',
+                    iconClass: 'usd',
+                    name: '외화RP (USD) (31일)',
+                    evalAmount: '$3,552.50',
+                    investAmount: '$3,500.00',
+                    profitLoss: '$52.50 (+1.52%)',
+                    interestRate: '3.85%',
+                    purchaseDate: '2025.12.08',
+                    maturityDate: '2026.01.08',
+                    expectedAmount: '$3,565.00',
+                    terminationAmount: '$3,500.00'
+                },
+                'usd-flex': {
+                    iconSymbol: '$',
+                    iconClass: 'usd',
+                    name: '외화RP (USD) (수시)',
+                    evalAmount: '$1,216.80',
+                    investAmount: '$1,200.00',
+                    profitLoss: '$16.80 (+1.42%)',
+                    interestRate: '3.65%',
+                    purchaseDate: '2025.11.20',
+                    maturityDate: '수시',
+                    expectedAmount: '$1,225.00',
+                    terminationAmount: '$1,216.80'
+                },
+                'usd-90': {
+                    iconSymbol: '$',
+                    iconClass: 'usd',
+                    name: '외화RP (USD) (90일)',
+                    evalAmount: '$2,019.20',
+                    investAmount: '$2,000.00',
+                    profitLoss: '$19.20 (+0.96%)',
+                    interestRate: '3.90%',
+                    purchaseDate: '2025.12.08',
+                    maturityDate: '2026.03.08',
+                    expectedAmount: '$2,058.50',
+                    terminationAmount: '$2,000.00'
+                },
+                'jpy-31': {
+                    iconSymbol: '¥',
+                    iconClass: 'jpy',
+                    name: '외화RP (JPY) (31일)',
+                    evalAmount: '¥500,350',
+                    investAmount: '¥500,000',
+                    profitLoss: '¥350 (+0.07%)',
+                    interestRate: '0.85%',
+                    purchaseDate: '2025.12.08',
+                    maturityDate: '2026.01.08',
+                    expectedAmount: '¥500,425',
+                    terminationAmount: '¥500,000'
+                },
+                'jpy-flex': {
+                    iconSymbol: '¥',
+                    iconClass: 'jpy',
+                    name: '외화RP (JPY) (수시)',
+                    evalAmount: '¥300,162',
+                    investAmount: '¥300,000',
+                    profitLoss: '¥162 (+0.05%)',
+                    interestRate: '0.65%',
+                    purchaseDate: '2025.11.25',
+                    maturityDate: '수시',
+                    expectedAmount: '¥300,325',
+                    terminationAmount: '¥300,162'
+                },
+                'eur-31': {
+                    iconSymbol: '€',
+                    iconClass: 'eur',
+                    name: '외화RP (EUR) (31일)',
+                    evalAmount: '€1,503.12',
+                    investAmount: '€1,500.00',
+                    profitLoss: '€3.12 (+0.21%)',
+                    interestRate: '2.50%',
+                    purchaseDate: '2025.12.08',
+                    maturityDate: '2026.01.08',
+                    expectedAmount: '€1,506.25',
+                    terminationAmount: '€1,500.00'
+                },
+                'eur-flex': {
+                    iconSymbol: '€',
+                    iconClass: 'eur',
+                    name: '외화RP (EUR) (수시)',
+                    evalAmount: '€801.53',
+                    investAmount: '€800.00',
+                    profitLoss: '€1.53 (+0.19%)',
+                    interestRate: '2.30%',
+                    purchaseDate: '2025.11.28',
+                    maturityDate: '수시',
+                    expectedAmount: '€803.07',
+                    terminationAmount: '€801.53'
+                }
+            };
+
+            const data = rpData[rpId] || rpData['krw-31'];
+
+            // Update DOM
+            const iconEl = document.getElementById('productIcon');
+            iconEl.textContent = data.iconSymbol;
+            iconEl.className = 'rp-icon ' + data.iconClass;
+
+            document.getElementById('productName').textContent = data.name;
+            document.getElementById('evalAmount').textContent = data.evalAmount;
+            document.getElementById('investAmount').textContent = data.investAmount;
+            document.getElementById('profitLoss').textContent = data.profitLoss;
+            document.getElementById('interestRate').textContent = data.interestRate;
+            document.getElementById('purchaseDate').innerHTML = data.purchaseDate + ' <span class="dday">D-20</span>';
+            document.getElementById('maturityDate').innerHTML = data.maturityDate + ' <span class="dday">D-30</span>';
+            document.getElementById('expectedAmount').textContent = data.expectedAmount;
+            document.getElementById('terminationAmount').textContent = data.terminationAmount;
+        }
+
+        // Navigation
+        function goBack() {
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                window.location.href = 'rp_balance.html';
+            }
+        }
+
+        // Actions
+        function addPurchase() {
+            alert('추가매수 화면으로 이동합니다. (미기획)');
+        }
+
+        function sellRP() {
+            alert('매도 화면으로 이동합니다. (미기획)');
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', initPage);
+    </script>
+</body>
+</html>

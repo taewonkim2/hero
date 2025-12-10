@@ -715,13 +715,38 @@
                     <path d="M15 18l-6-6 6-6"></path>
                 </svg>
             </button>
-            <span class="page-title">RP</span>
+            <span class="page-title">RP홈</span>
         </div>
     </nav>
 
     <!-- Main Content -->
     <main class="main-content">
         <!-- Account Selector -->
+        <!-- <section class="account-selector animate-in">
+            <div class="account-switch-row">
+                <div class="switch-container" onclick="toggleAccountMode()">
+                    <span class="switch-text" id="switchText">전체</span>
+                    <div class="switch-dots">
+                        <div class="switch-dot active" id="dotTop"></div>
+                        <div class="switch-dot" id="dotBottom"></div>
+                    </div>
+                </div>
+                <select class="account-dropdown" id="accountSelect" disabled>
+                    <option value="all">전체 계좌</option>
+                    <option value="acc1">123-456-789012 (종합계좌)</option>
+                    <option value="acc2">987-654-321098 (ISA계좌)</option>
+                    <option value="acc3">456-789-123456 (연금저축)</option>
+                </select>
+                <input type="password" class="password-input" id="passwordInput" placeholder="비밀번호" disabled>
+            </div>
+        </section> -->
+
+        <!-- RP Holdings Section -->
+        <section class="section-card animate-in delay-1">
+            <div class="section-header">
+                <span class="section-title">RP보유종목</span>
+                <span class="section-more" onclick="navigateTo('rp-holdings')">전체보기 ›</span>
+            </div>
         <section class="account-selector animate-in">
             <div class="account-switch-row">
                 <div class="switch-container" onclick="toggleAccountMode()">
@@ -740,14 +765,6 @@
                 <input type="password" class="password-input" id="passwordInput" placeholder="비밀번호" disabled>
             </div>
         </section>
-
-        <!-- RP Holdings Section -->
-        <section class="section-card animate-in delay-1">
-            <div class="section-header">
-                <span class="section-title">RP보유종목</span>
-                <span class="section-more" onclick="navigateTo('rp-holdings')">전체보기 ›</span>
-            </div>
-
             <!-- Total Summary -->
             <div class="total-summary">
                 <div class="total-label">전체 보유금액</div>
@@ -763,13 +780,13 @@
                 <div class="filter-chip active" onclick="filterHoldings('all', this)">전체</div>
                 <div class="filter-chip" onclick="filterHoldings('krw', this)">원화</div>
                 <div class="filter-chip" onclick="filterHoldings('usd', this)">달러</div>
-                <div class="filter-chip" onclick="filterHoldings('usd', this)">엔</div>
-                <div class="filter-chip" onclick="filterHoldings('usd', this)">유로</div>
+                <div class="filter-chip" onclick="filterHoldings('jpy', this)">엔</div>
+                <div class="filter-chip" onclick="filterHoldings('eur', this)">유로</div>
             </div>
 
             <!-- Holdings List -->
             <div class="holdings-list" id="holdingsList">
-                <div class="rp-item" data-type="krw">
+                <div class="rp-item" data-type="krw" onclick="viewBalanceDetail('krw-31')" style="cursor:pointer;">
                     <div class="rp-icon krw">₩</div>
                     <div class="rp-info">
                         <div class="rp-name">원화RP</div>
@@ -779,13 +796,9 @@
                         <div class="rp-amount">5,200,000원</div>
                         <div class="rp-profit positive">+52,000원 (+1.01%)</div>
                     </div>
-                    <div class="rp-actions">
-                        <!-- <button class="btn-action btn-sell" onclick="sellRP('krw-31')">매도</button>
-                        <button class="btn-action btn-buy" onclick="buyRP('krw-31')">매수</button> -->
-                    </div>
                 </div>
 
-                <div class="rp-item" data-type="krw">
+                <div class="rp-item" data-type="krw" onclick="viewBalanceDetail('krw-flex')" style="cursor:pointer;">
                     <div class="rp-icon krw">₩</div>
                     <div class="rp-info">
                         <div class="rp-name">원화RP</div>
@@ -795,13 +808,9 @@
                         <div class="rp-amount">2,500,000원</div>
                         <div class="rp-profit positive">+18,750원 (+0.76%)</div>
                     </div>
-                    <div class="rp-actions">
-                        <!-- <button class="btn-action btn-sell" onclick="sellRP('krw-flex')">매도</button>
-                        <button class="btn-action btn-buy" onclick="buyRP('krw-flex')">매수</button> -->
-                    </div>
                 </div>
 
-                <div class="rp-item" data-type="usd">
+                <div class="rp-item" data-type="usd" onclick="viewBalanceDetail('usd-31')" style="cursor:pointer;">
                     <div class="rp-icon usd">$</div>
                     <div class="rp-info">
                         <div class="rp-name">외화RP(USD)</div>
@@ -811,13 +820,9 @@
                         <div class="rp-amount">$3,500.00</div>
                         <div class="rp-profit positive">+$52.50 (+1.52%)</div>
                     </div>
-                    <div class="rp-actions">
-                        <!-- <button class="btn-action btn-sell" onclick="sellRP('usd-toss')">매도</button>
-                        <button class="btn-action btn-buy" onclick="buyRP('usd-toss')">매수</button> -->
-                    </div>
                 </div>
 
-                <div class="rp-item" data-type="usd">
+                <div class="rp-item" data-type="usd" onclick="viewBalanceDetail('usd-flex')" style="cursor:pointer;">
                     <div class="rp-icon usd">$</div>
                     <div class="rp-info">
                         <div class="rp-name">외화RP(USD)</div>
@@ -826,10 +831,6 @@
                     <div class="rp-value">
                         <div class="rp-amount">$1,200.00</div>
                         <div class="rp-profit positive">+$16.80 (+1.42%)</div>
-                    </div>
-                    <div class="rp-actions">
-                        <!-- <button class="btn-action btn-sell" onclick="sellRP('usd-flex')">매도</button>
-                        <button class="btn-action btn-buy" onclick="buyRP('usd-flex')">매수</button> -->
                     </div>
                 </div>
             </div>
@@ -847,8 +848,8 @@
                 <div class="filter-chip active" onclick="filterAvailable('all', this)">전체</div>
                 <div class="filter-chip" onclick="filterAvailable('krw', this)">원화</div>
                 <div class="filter-chip" onclick="filterAvailable('usd', this)">달러</div>
-                <div class="filter-chip" onclick="filterAvailable('usd', this)">엔화</div>
-                <div class="filter-chip" onclick="filterAvailable('usd', this)">유로</div>
+                <div class="filter-chip" onclick="filterAvailable('jpy', this)">엔화</div>
+                <div class="filter-chip" onclick="filterAvailable('eur', this)">유로</div>
             </div>
 
             <!-- Available RP List -->
@@ -935,60 +936,54 @@
             </div>
 
             <div class="filter-chips">
-                <div class="filter-chip active" onclick="filterAvailable('all', this)">전체</div>
-                <div class="filter-chip" onclick="filterAvailable('krw', this)">원화</div>
-                <div class="filter-chip" onclick="filterAvailable('usd', this)">달러</div>
-                <div class="filter-chip" onclick="filterAvailable('usd', this)">엔화</div>
-                <div class="filter-chip" onclick="filterAvailable('usd', this)">유로</div>
+                <div class="filter-chip active" onclick="filterOrders('all', this)">전체</div>
+                <div class="filter-chip" onclick="filterOrders('krw', this)">원화</div>
+                <div class="filter-chip" onclick="filterOrders('usd', this)">달러</div>
+                <div class="filter-chip" onclick="filterOrders('jpy', this)">엔화</div>
+                <div class="filter-chip" onclick="filterOrders('eur', this)">유로</div>
             </div>
 
             <!-- Order List -->
             <div class="order-list" id="orderList">
-                <div class="order-item">
+                <div class="order-item" data-type="krw" onclick="viewOrderDetail('order1')" style="cursor:pointer;">
                     <div class="rp-icon krw">₩</div>
                     <div class="rp-info">
                         <div class="rp-name">원화RP(31일형)</div>
-                        <!-- <div class="rp-maturity">2025.01.08 <span class="days">(D-30)</span></div> -->
                         <div class="order-time">09:15:32 <span class = "gubun-buy"> 매수 </span></div>
                     </div>
                     <div class="rp-value">
                         <div class="rp-amount">1,000,000원</div>
-                        <!-- <div class="rp-profit positive">+0원 (0%)</div> -->
                     </div>
                     <div class="rp-actions">
-                        <button class="btn-action btn-cancel" onclick="cancelOrder('order1')">취소</button>
+                        <button class="btn-action btn-cancel" onclick="event.stopPropagation(); cancelOrder('order1')">취소</button>
                     </div>
                 </div>
 
-                <div class="order-item">
+                <div class="order-item" data-type="usd" onclick="viewOrderDetail('order2')" style="cursor:pointer;">
                     <div class="rp-icon usd">$</div>
                     <div class="rp-info">
                         <div class="rp-name">외화RP(USD)(31일형)</div>
-                        <!-- <div class="rp-maturity">2025.01.08 <span class="days">(D-30)</span></div> -->
                         <div class="order-time">10:23:45 <span class = "gubun-sell">매도</span></div>
                     </div>
                     <div class="rp-value">
                         <div class="rp-amount">$500.00</div>
-                        <!-- <div class="rp-profit positive">+$0.00 (0%)</div> -->
                     </div>
                     <div class="rp-actions">
-                        <button class="btn-action btn-cancel" onclick="cancelOrder('order2')">취소</button>
+                        <button class="btn-action btn-cancel" onclick="event.stopPropagation(); cancelOrder('order2')">취소</button>
                     </div>
                 </div>
 
-                <div class="order-item">
+                <div class="order-item" data-type="krw" onclick="viewOrderDetail('order3')" style="cursor:pointer;">
                     <div class="rp-icon krw">₩</div>
                     <div class="rp-info">
                         <div class="rp-name">퍼스트 발행어음 특판</div>
-                        <!-- <div class="rp-maturity">만기일 2025.06.09 <span class="days">(D-182)</span></div> -->
                         <div class="order-time">14:05:18<span class="gubun-buy">매수</span></div>
                     </div>
                     <div class="rp-value">
                         <div class="rp-amount">2,000,000원</div>
-                        <!-- <div class="rp-profit positive">+0원 (0%)</div> -->
                     </div>
                     <div class="rp-actions">
-                        <button class="btn-action btn-cancel" onclick="cancelOrder('order3')">취소</button>
+                        <button class="btn-action btn-cancel" onclick="event.stopPropagation(); cancelOrder('order3')">취소</button>
                     </div>
                 </div>
             </div>
@@ -1010,14 +1005,11 @@
         <div class="tab-item active" onclick="switchTab('rp-home', this)">
             <span class="tab-label">RP홈</span>
         </div>
-        <div class="tab-item" onclick="switchTab('rp-holdings', this)">
-            <span class="tab-label">RP보유</span>
+        <div class="tab-item" onclick="switchTab('rp-balance', this)">
+            <span class="tab-label">RP보유/거래내역</span>
         </div>
-        <div class="tab-item" onclick="switchTab('rp-products', this)">
-            <span class="tab-label">RP상품</span>
-        </div>
-        <div class="tab-item" onclick="switchTab('rp-orders', this)">
-            <span class="tab-label">주문내역</span>
+        <div class="tab-item" onclick="switchTab('rp-buy', this)">
+            <span class="tab-label">RP매수</span>
         </div>
     </nav>
 
@@ -1119,10 +1111,33 @@
             });
         }
 
+        // Filter orders by currency type
+        function filterOrders(type, element) {
+            const chips = element.parentElement.querySelectorAll('.filter-chip');
+            chips.forEach(chip => chip.classList.remove('active'));
+            element.classList.add('active');
+
+            const items = document.querySelectorAll('#orderList .order-item');
+            items.forEach(item => {
+                if (type === 'all' || item.dataset.type === type) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
         // Navigation functions
         function navigateTo(page) {
-            console.log(`Navigating to: ${page}`);
-            alert(`${page} 페이지로 이동합니다.`);
+            if (page === 'rp-holdings') {
+                window.location.href = 'rp_balance.html';
+            } else if (page === 'rp-products') {
+                window.location.href = 'rp_list.html';
+            } else if (page === 'rp-orders') {
+                window.location.href = 'rp_history.html';
+            } else {
+                console.log(`Navigating to: ${page}`);
+            }
         }
 
         function goBack() {
@@ -1142,10 +1157,23 @@
                 tab.classList.remove('active');
             });
             element.classList.add('active');
-            console.log(`Switching to tab: ${tabName}`);
+
+            if (tabName === 'rp-balance') {
+                window.location.href = 'rp_balance.html';
+            } else if (tabName === 'rp-buy') {
+                window.location.href = 'rp_list.html';
+            }
         }
 
         // RP action functions
+        function viewBalanceDetail(rpId) {
+            window.location.href = 'rp_balance_detail.html?id=' + rpId;
+        }
+
+        function viewOrderDetail(orderId) {
+            window.location.href = 'rp_history_detail.html?id=' + orderId;
+        }
+
         function sellRP(rpId) {
             alert(`${rpId} RP 매도 화면으로 이동합니다.`);
         }
