@@ -577,109 +577,6 @@
             border-bottom: none;
         }
 
-        /* Half Popup (Cancel Confirm) */
-        .popup-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 2000;
-            display: none;
-            justify-content: center;
-            align-items: flex-end;
-        }
-
-        .popup-overlay.show {
-            display: flex;
-        }
-
-        .half-popup {
-            width: 100%;
-            max-width: 480px;
-            background: white;
-            border-radius: 20px 20px 0 0;
-            padding: 24px;
-            transform: translateY(100%);
-            transition: transform 0.3s ease-out;
-        }
-
-        .popup-overlay.show .half-popup {
-            transform: translateY(0);
-        }
-
-        .popup-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .popup-title {
-            font-size: 18px;
-            font-weight: 700;
-        }
-
-        .popup-close {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: var(--text-muted);
-        }
-
-        .popup-content {
-            margin-bottom: 24px;
-        }
-
-        .popup-item-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .popup-item-row:last-child {
-            border-bottom: none;
-        }
-
-        .popup-item-label {
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
-
-        .popup-item-value {
-            font-size: 14px;
-            font-weight: 600;
-        }
-
-        .popup-buttons {
-            display: flex;
-            gap: 12px;
-        }
-
-        .popup-btn {
-            flex: 1;
-            padding: 16px;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            border: none;
-            transition: all 0.2s;
-        }
-
-        .popup-btn.cancel {
-            background: var(--bg-primary);
-            color: var(--text-secondary);
-        }
-
-        .popup-btn.confirm {
-            background: var(--primary);
-            color: white;
-        }
-
         /* Full Popup (Trade Detail) */
         .full-popup {
             position: fixed;
@@ -846,7 +743,7 @@
                         <div class="rp-value">
                             <div class="rp-amount">1,000,000원</div>
                         </div>
-                        <button class="btn-action btn-cancel" onclick="openCancelPopup('order1', '원화RP(31일형)', '매수', '1,000,000원', '09:15:32')">취소</button>
+                        <button class="btn-action btn-cancel" onclick="openCancelPopup('order1', '원화RP(31일형)', '매수', '1,000,000원', '09:15:32', 'krw')">취소</button>
                     </div>
 
                     <div class="order-item" data-type="usd">
@@ -858,7 +755,7 @@
                         <div class="rp-value">
                             <div class="rp-amount">$500.00</div>
                         </div>
-                        <button class="btn-action btn-cancel" onclick="openCancelPopup('order2', '외화RP(USD)(31일형)', '매도', '$500.00', '10:23:45')">취소</button>
+                        <button class="btn-action btn-cancel" onclick="openCancelPopup('order2', '외화RP(USD)(31일형)', '매도', '$500.00', '10:23:45', 'usd')">취소</button>
                     </div>
 
                     <div class="order-item" data-type="krw">
@@ -870,7 +767,7 @@
                         <div class="rp-value">
                             <div class="rp-amount">2,000,000원</div>
                         </div>
-                        <button class="btn-action btn-cancel" onclick="openCancelPopup('order3', '퍼스트 발행어음 특판', '매수', '2,000,000원', '14:05:18')">취소</button>
+                        <button class="btn-action btn-cancel" onclick="openCancelPopup('order3', '퍼스트 발행어음 특판', '매수', '2,000,000원', '14:05:18', 'krw')">취소</button>
                     </div>
 
                     <div class="order-item" data-type="jpy">
@@ -882,7 +779,7 @@
                         <div class="rp-value">
                             <div class="rp-amount">¥100,000</div>
                         </div>
-                        <button class="btn-action btn-cancel" onclick="openCancelPopup('order4', '외화RP(JPY)(수시)', '매수', '¥100,000', '11:30:22')">취소</button>
+                        <button class="btn-action btn-cancel" onclick="openCancelPopup('order4', '외화RP(JPY)(수시)', '매수', '¥100,000', '11:30:22', 'jpy')">취소</button>
                     </div>
                 </div>
             </div>
@@ -1104,38 +1001,6 @@
         </div>
     </nav>
 
-    <!-- Half Popup (Cancel Confirmation) -->
-    <div class="popup-overlay" id="cancelPopup">
-        <div class="half-popup">
-            <div class="popup-header">
-                <span class="popup-title">주문 취소 확인</span>
-                <button class="popup-close" onclick="closeCancelPopup()">×</button>
-            </div>
-            <div class="popup-content">
-                <div class="popup-item-row">
-                    <span class="popup-item-label">종목명</span>
-                    <span class="popup-item-value" id="cancelItemName">-</span>
-                </div>
-                <div class="popup-item-row">
-                    <span class="popup-item-label">주문구분</span>
-                    <span class="popup-item-value" id="cancelOrderType">-</span>
-                </div>
-                <div class="popup-item-row">
-                    <span class="popup-item-label">주문금액</span>
-                    <span class="popup-item-value" id="cancelAmount">-</span>
-                </div>
-                <div class="popup-item-row">
-                    <span class="popup-item-label">주문시간</span>
-                    <span class="popup-item-value" id="cancelTime">-</span>
-                </div>
-            </div>
-            <div class="popup-buttons">
-                <button class="popup-btn cancel" onclick="closeCancelPopup()">취소</button>
-                <button class="popup-btn confirm" onclick="confirmCancel()">확인</button>
-            </div>
-        </div>
-    </div>
-
     <!-- Full Popup (Trade Detail) -->
     <div class="full-popup" id="tradeDetailPopup">
         <div class="full-popup-header">
@@ -1301,28 +1166,17 @@
             alert(`${startDate} ~ ${endDate} 기간의 거래내역을 조회합니다.`);
         }
 
-        // Cancel Popup
-        let currentCancelOrderId = null;
-
-        function openCancelPopup(orderId, itemName, orderType, amount, time) {
-            currentCancelOrderId = orderId;
-            document.getElementById('cancelItemName').textContent = itemName;
-            document.getElementById('cancelOrderType').textContent = orderType;
-            document.getElementById('cancelAmount').textContent = amount;
-            document.getElementById('cancelTime').textContent = time;
-            document.getElementById('cancelPopup').classList.add('show');
-        }
-
-        function closeCancelPopup() {
-            document.getElementById('cancelPopup').classList.remove('show');
-            currentCancelOrderId = null;
-        }
-
-        function confirmCancel() {
-            if (currentCancelOrderId) {
-                alert(`주문번호 ${currentCancelOrderId}가 취소되었습니다.`);
-                closeCancelPopup();
-            }
+        // Cancel Popup - 별도 페이지로 이동
+        function openCancelPopup(orderId, itemName, orderType, amount, time, currency) {
+            const params = new URLSearchParams({
+                orderId: orderId,
+                itemName: itemName,
+                orderType: orderType,
+                amount: amount,
+                time: time,
+                currency: currency || 'krw'
+            });
+            window.location.href = 'rp_cancel.html?' + params.toString();
         }
 
         // Trade Detail Popup
@@ -1384,13 +1238,6 @@
             const passwordInput = document.getElementById('passwordInput');
             accountSelect.disabled = true;
             passwordInput.disabled = true;
-        });
-
-        // Close popup when clicking outside
-        document.getElementById('cancelPopup').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeCancelPopup();
-            }
         });
 
         // Animate elements

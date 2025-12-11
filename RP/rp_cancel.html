@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RP 주문 취소</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1a73e8;
+            --primary-light: #e8f0fe;
+            --accent: #ff6b35;
+            --positive: #e53935;
+            --negative: #1976d2;
+            --menu-red: #d32f2f;
+            --bg-primary: #f5f6f8;
+            --bg-card: #ffffff;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --text-muted: #9ca3af;
+            --border: #e5e7eb;
+            --shadow: 0 2px 8px rgba(0,0,0,0.06);
+            --shadow-lg: 0 4px 16px rgba(0,0,0,0.1);
+            --krw-color: #1a73e8;
+            --usd-color: #10b981;
+            --jpy-color: #f59e0b;
+            --eur-color: #8b5cf6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: rgba(0, 0, 0, 0);
+            color: var(--text-primary);
+            line-height: 1.6;
+            max-width: 480px;
+            margin: 0 auto;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+
+        /* Overlay Background */
+        .overlay-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0);
+            z-index: 1;
+            transition: background 0.4s ease-out;
+        }
+
+        .overlay-bg.show {
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        /* Popup Container */
+        .popup-container {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%) translateY(100%);
+            width: 100%;
+            max-width: 480px;
+            z-index: 2;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .popup-container.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* Half Popup */
+        .half-popup {
+            background: white;
+            border-radius: 20px 20px 0 0;
+            padding: 24px;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .popup-handle {
+            width: 40px;
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            margin: 0 auto 16px;
+        }
+
+        .popup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .popup-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .popup-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-muted);
+            padding: 4px;
+            line-height: 1;
+        }
+
+        /* Order Info Card */
+        .order-info-card {
+            background: var(--bg-primary);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .order-info-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .rp-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 700;
+            margin-right: 14px;
+            flex-shrink: 0;
+        }
+
+        .rp-icon.krw {
+            background: linear-gradient(135deg, #e8f0fe 0%, #c2d9ff 100%);
+            color: var(--krw-color);
+        }
+
+        .rp-icon.usd {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            color: var(--usd-color);
+        }
+
+        .rp-icon.jpy {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            color: var(--jpy-color);
+        }
+
+        .rp-icon.eur {
+            background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
+            color: var(--eur-color);
+        }
+
+        .order-info-title {
+            flex: 1;
+        }
+
+        .order-name {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .order-type-badge {
+            display: inline-block;
+            font-size: 12px;
+            padding: 2px 10px;
+            color: white;
+            border-radius: 10px;
+        }
+
+        .order-type-badge.buy {
+            background: #e53935;
+        }
+
+        .order-type-badge.sell {
+            background: #1976d2;
+        }
+
+        .order-detail-rows {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .order-detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .order-detail-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .order-detail-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .order-detail-value.amount {
+            font-size: 18px;
+            color: var(--primary);
+        }
+
+        /* Warning Message */
+        .warning-message {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            background: #fef3c7;
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 24px;
+        }
+
+        .warning-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .warning-text {
+            font-size: 13px;
+            color: #92400e;
+            line-height: 1.5;
+        }
+
+        /* Buttons */
+        .popup-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .popup-btn {
+            flex: 1;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+
+        .popup-btn.cancel {
+            background: var(--bg-primary);
+            color: var(--text-secondary);
+        }
+
+        .popup-btn.cancel:active {
+            background: #e5e7eb;
+        }
+
+        .popup-btn.confirm {
+            background: var(--menu-red);
+            color: white;
+        }
+
+        .popup-btn.confirm:active {
+            background: #b71c1c;
+        }
+
+        /* Loading State */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.8);
+            z-index: 10;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loading-overlay.show {
+            display: flex;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Success State */
+        .success-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.95);
+            z-index: 10;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .success-overlay.show {
+            display: flex;
+        }
+
+        .success-icon {
+            width: 64px;
+            height: 64px;
+            background: #10b981;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .success-icon svg {
+            width: 32px;
+            height: 32px;
+            stroke: white;
+            stroke-width: 3;
+        }
+
+        .success-message {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+    </style>
+</head>
+<body>
+    <!-- Overlay Background -->
+    <div class="overlay-bg" id="overlayBg" onclick="closePopup()"></div>
+
+    <!-- Popup Container -->
+    <div class="popup-container" id="popupContainer">
+        <div class="half-popup">
+            <div class="popup-handle"></div>
+
+            <div class="popup-header">
+                <span class="popup-title">주문 취소 확인</span>
+                <button class="popup-close" onclick="closePopup()">&times;</button>
+            </div>
+
+            <!-- Order Info Card -->
+            <div class="order-info-card">
+                <div class="order-info-header">
+                    <div class="rp-icon krw" id="orderIcon">₩</div>
+                    <div class="order-info-title">
+                        <div class="order-name" id="orderName">원화RP(31일형)</div>
+                        <span class="order-type-badge buy" id="orderTypeBadge">매수</span>
+                    </div>
+                </div>
+                <div class="order-detail-rows">
+                    <div class="order-detail-row">
+                        <span class="order-detail-label">주문번호</span>
+                        <span class="order-detail-value" id="orderId">-</span>
+                    </div>
+                    <div class="order-detail-row">
+                        <span class="order-detail-label">주문시간</span>
+                        <span class="order-detail-value" id="orderTime">-</span>
+                    </div>
+                    <div class="order-detail-row">
+                        <span class="order-detail-label">주문금액</span>
+                        <span class="order-detail-value amount" id="orderAmount">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Warning Message -->
+            <div class="warning-message">
+                <span class="warning-icon">&#9888;</span>
+                <span class="warning-text">주문 취소 시 해당 주문은 즉시 취소되며, 이 작업은 되돌릴 수 없습니다.</span>
+            </div>
+
+            <!-- Buttons -->
+            <div class="popup-buttons">
+                <button class="popup-btn cancel" onclick="closePopup()">취소</button>
+                <button class="popup-btn confirm" onclick="confirmCancel()">주문 취소</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- Success Overlay -->
+    <div class="success-overlay" id="successOverlay">
+        <div class="success-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M5 13l4 4L19 7"></path>
+            </svg>
+        </div>
+        <span class="success-message">주문이 취소되었습니다</span>
+    </div>
+
+    <script>
+        // URL 파라미터에서 주문 정보 가져오기
+        const urlParams = new URLSearchParams(window.location.search);
+        const orderId = urlParams.get('orderId') || 'ORD20251211001';
+        const itemName = urlParams.get('itemName') || '원화RP(31일형)';
+        const orderType = urlParams.get('orderType') || '매수';
+        const amount = urlParams.get('amount') || '1,000,000원';
+        const time = urlParams.get('time') || '09:15:32';
+        const currency = urlParams.get('currency') || 'krw';
+
+        // 화면 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            // 주문 정보 표시
+            document.getElementById('orderId').textContent = orderId;
+            document.getElementById('orderName').textContent = itemName;
+            document.getElementById('orderTime').textContent = time;
+            document.getElementById('orderAmount').textContent = amount;
+
+            // 주문 구분 뱃지
+            const badge = document.getElementById('orderTypeBadge');
+            badge.textContent = orderType;
+            badge.className = 'order-type-badge ' + (orderType === '매수' ? 'buy' : 'sell');
+
+            // 아이콘 설정
+            const icon = document.getElementById('orderIcon');
+            icon.className = 'rp-icon ' + currency;
+            switch(currency) {
+                case 'krw': icon.textContent = '₩'; break;
+                case 'usd': icon.textContent = '$'; break;
+                case 'jpy': icon.textContent = '¥'; break;
+                case 'eur': icon.textContent = '€'; break;
+                default: icon.textContent = '₩';
+            }
+
+            // 애니메이션 시작
+            setTimeout(() => {
+                document.getElementById('overlayBg').classList.add('show');
+                document.getElementById('popupContainer').classList.add('show');
+            }, 50);
+        });
+
+        // 팝업 닫기
+        function closePopup() {
+            document.getElementById('overlayBg').classList.remove('show');
+            document.getElementById('popupContainer').classList.remove('show');
+
+            setTimeout(() => {
+                // 이전 페이지로 돌아가기
+                if (window.history.length > 1) {
+                    window.history.back();
+                } else {
+                    window.location.href = 'rp_history.html';
+                }
+            }, 400);
+        }
+
+        // 취소 확인
+        function confirmCancel() {
+            // 로딩 표시
+            document.getElementById('loadingOverlay').classList.add('show');
+
+            // 취소 처리 (실제로는 API 호출)
+            setTimeout(() => {
+                document.getElementById('loadingOverlay').classList.remove('show');
+                document.getElementById('successOverlay').classList.add('show');
+
+                // 성공 후 이전 페이지로 이동
+                setTimeout(() => {
+                    window.location.href = 'rp_history.html';
+                }, 1500);
+            }, 1000);
+        }
+
+        // 뒤로가기 처리
+        window.addEventListener('popstate', function(e) {
+            closePopup();
+        });
+    </script>
+</body>
+</html>
