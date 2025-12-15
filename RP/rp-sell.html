@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>RP매도</title>
+    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-brown: #8B7355;
+            --primary-brown-hover: #7A6548;
+            --bg-gray: #F5F5F5;
+            --border-gray: #E5E5E5;
+            --text-primary: #1A1A1A;
+            --text-secondary: #666666;
+            --text-tertiary: #999999;
+            --accent-blue: #3182F6;
+            --accent-red: #F04452;
+            --white: #FFFFFF;
+            --overlay: rgba(0, 0, 0, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-gray);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .phone-frame {
+            width: 375px;
+            max-width: 100%;
+            min-height: 700px;
+            background: var(--white);
+            border-radius: 24px;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-gray);
+            background: var(--white);
+        }
+
+        .header-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .close-btn {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 24px;
+            color: var(--text-secondary);
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+
+        .close-btn:hover {
+            background: var(--bg-gray);
+        }
+
+        /* Screen Container */
+        .screen {
+            display: none;
+            flex-direction: column;
+            height: calc(100% - 65px);
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        .screen-content {
+            flex: 1;
+            padding: 24px 20px;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        /* Account Section */
+        .account-section {
+            margin-bottom: 32px;
+        }
+
+        .account-number {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+
+        .product-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            background: var(--bg-gray);
+            border-radius: 12px;
+        }
+
+        .won-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 16px;
+            color: var(--white);
+            flex-shrink: 0;
+        }
+
+        .product-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* Amount Input Section */
+        .input-section {
+            margin-bottom: 32px;
+        }
+
+        .input-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+
+        .amount-input-wrapper {
+            display: flex;
+            align-items: center;
+            border-bottom: 2px solid var(--text-primary);
+            padding-bottom: 12px;
+            margin-bottom: 12px;
+        }
+
+        .amount-input {
+            flex: 1;
+            min-width: 0;
+            font-size: 24px;
+            font-weight: 600;
+            border: none;
+            outline: none;
+            background: transparent;
+            color: var(--text-primary);
+            text-align: right;
+        }
+
+        .amount-input::placeholder {
+            color: var(--text-tertiary);
+        }
+
+        .currency-label {
+            font-size: 18px;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-left: 8px;
+            flex-shrink: 0;
+        }
+
+        .max-amount {
+            text-align: right;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .max-amount span {
+            color: var(--accent-blue);
+            cursor: pointer;
+        }
+
+        /* Calculation Section */
+        .calc-section {
+            background: var(--bg-gray);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .calc-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+        }
+
+        .calc-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .calc-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .calc-icon.plus {
+            background: #E8F4FD;
+            color: var(--accent-blue);
+        }
+
+        .calc-icon.minus {
+            background: #FEE8EA;
+            color: var(--accent-red);
+        }
+
+        .calc-value {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-primary);
+            flex-shrink: 0;
+        }
+
+        .calc-divider {
+            height: 1px;
+            background: var(--border-gray);
+            margin: 8px 0;
+        }
+
+        .calc-total .calc-label {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .calc-total .calc-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        /* Bottom Button */
+        .bottom-section {
+            padding: 16px 20px 32px;
+            background: var(--white);
+            border-top: 1px solid var(--border-gray);
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 18px;
+            background: var(--primary-brown);
+            color: var(--white);
+            border: none;
+            border-radius: 14px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-brown-hover);
+        }
+
+        .btn-primary:disabled {
+            background: #D1D1D1;
+            cursor: not-allowed;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--overlay);
+            display: none;
+            align-items: flex-end;
+            z-index: 100;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            width: 100%;
+            background: var(--white);
+            border-radius: 24px 24px 0 0;
+            padding: 28px 24px 32px;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .modal-desc {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 28px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-secondary {
+            flex: 1;
+            padding: 16px;
+            background: var(--bg-gray);
+            color: var(--text-primary);
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-secondary:hover {
+            background: #E8E8E8;
+        }
+
+        .btn-confirm {
+            flex: 1;
+            padding: 16px;
+            background: var(--primary-brown);
+            color: var(--white);
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-confirm:hover {
+            background: var(--primary-brown-hover);
+        }
+
+        /* Confirm Popup Modal */
+        .confirm-modal-content {
+            width: 100%;
+            background: var(--white);
+            border-radius: 24px 24px 0 0;
+            animation: slideUp 0.3s ease-out;
+            max-height: 85%;
+            overflow-y: auto;
+        }
+
+        .confirm-header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border-gray);
+        }
+
+        .confirm-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .confirm-body {
+            padding: 24px;
+        }
+
+        .confirm-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 14px 0;
+            border-bottom: 1px solid var(--border-gray);
+        }
+
+        .confirm-row:last-child {
+            border-bottom: none;
+        }
+
+        .confirm-label {
+            font-size: 15px;
+            color: var(--text-secondary);
+        }
+
+        .confirm-value {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .confirm-value.highlight {
+            color: var(--accent-red);
+            font-weight: 600;
+        }
+
+        .confirm-value.accent {
+            color: var(--accent-blue);
+            font-weight: 600;
+        }
+
+        .confirm-buttons {
+            display: flex;
+            gap: 12px;
+            padding: 16px 24px 32px;
+            border-top: 1px solid var(--border-gray);
+        }
+
+        /* Complete Screen */
+        .complete-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 60px 20px 24px;
+        }
+
+        .complete-icon {
+            width: 80px;
+            height: 80px;
+            background: #1A1A4E;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 28px;
+        }
+
+        .complete-icon svg {
+            width: 40px;
+            height: 40px;
+            stroke: var(--white);
+            stroke-width: 3;
+        }
+
+        .complete-message {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 40px;
+        }
+
+        .complete-card {
+            width: 100%;
+            background: var(--bg-gray);
+            border-radius: 16px;
+            padding: 24px;
+        }
+
+        .complete-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+        }
+
+        .complete-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .complete-value {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .complete-value.highlight {
+            color: var(--accent-red);
+            font-weight: 600;
+        }
+
+        .complete-value.accent {
+            color: var(--accent-blue);
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <!-- Screen 1: 매도금액 입력 -->
+        <div class="screen active" id="screen1">
+            <div class="header">
+                <div></div>
+                <div class="header-title">RP매도</div>
+                <button class="close-btn">&times;</button>
+            </div>
+            
+            <div class="screen-content">
+                <div class="account-section">
+                    <div class="account-number">6359-XXXX</div>
+                    <div class="product-badge">
+                        <div class="won-icon">₩</div>
+                        <div class="product-name">원화RP</div>
+                    </div>
+                </div>
+
+                <div class="input-section">
+                    <div class="input-label">매도금액</div>
+                    <div class="amount-input-wrapper">
+                        <input type="text" class="amount-input" id="amountInput" placeholder="0" inputmode="numeric">
+                        <span class="currency-label">원</span>
+                    </div>
+                    <div class="max-amount"><span onclick="setMaxAmount()">전액</span> : 100,000원</div>
+                </div>
+
+                <div class="calc-section">
+                    <div class="calc-row">
+                        <div class="calc-label">
+                            <span class="calc-icon plus">+</span>
+                            예상 이자금액(세전)
+                        </div>
+                        <div class="calc-value" id="interestDisplay">1,000원</div>
+                    </div>
+                    <div class="calc-row">
+                        <div class="calc-label">
+                            <span class="calc-icon minus">−</span>
+                            예상 세금
+                        </div>
+                        <div class="calc-value" id="taxDisplay">2,000원</div>
+                    </div>
+                    <div class="calc-divider"></div>
+                    <div class="calc-row calc-total">
+                        <div class="calc-label">예상 출금금액</div>
+                        <div class="calc-value" id="totalDisplay">99,000원</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bottom-section">
+                <button class="btn-primary" id="sellBtn" onclick="showWarningModal()">매도</button>
+            </div>
+
+            <!-- Warning Modal -->
+            <div class="modal-overlay" id="warningModal">
+                <div class="modal-content">
+                    <div class="modal-title">지금 판매하면 연 5.01%의 수익률을<br>받을 수 없어요</div>
+                    <div class="modal-desc">
+                        약속한 기간 이전에 해지하실 경우 중도상환 수익률 연2.505%만 받을 수 있어요. 
+                        만기일자별 상세 잔고는 구매금액별 상세잔고에서 확인할 수 있어요.
+                    </div>
+                    <div class="modal-buttons">
+                        <button class="btn-secondary" onclick="closeWarningModal()">닫기</button>
+                        <button class="btn-confirm" onclick="showConfirmModal()">판매하기</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Confirm Popup Modal -->
+            <div class="modal-overlay" id="confirmModal">
+                <div class="confirm-modal-content">
+                    <div class="confirm-header-bar">
+                        <div></div>
+                        <div class="confirm-title">RP매도 정보 확인</div>
+                        <button class="close-btn" onclick="closeConfirmModal()">&times;</button>
+                    </div>
+                    <div class="confirm-body">
+                        <div class="confirm-row">
+                            <span class="confirm-label">계좌번호</span>
+                            <span class="confirm-value">6359 - XXXX</span>
+                        </div>
+                        <div class="confirm-row">
+                            <span class="confirm-label">상품명</span>
+                            <span class="confirm-value">원화RP</span>
+                        </div>
+                        <div class="confirm-row">
+                            <span class="confirm-label">약정이율(연)</span>
+                            <span class="confirm-value">2.3%</span>
+                        </div>
+                        <div class="confirm-row">
+                            <span class="confirm-label">중도해지이율(연)</span>
+                            <span class="confirm-value">0.7%</span>
+                        </div>
+                        <div class="confirm-row">
+                            <span class="confirm-label">매도금액</span>
+                            <span class="confirm-value highlight" id="confirmAmount">100,000원</span>
+                        </div>
+                        <div class="confirm-row">
+                            <span class="confirm-label">예상 이자금액(세전)</span>
+                            <span class="confirm-value accent" id="confirmInterest">1,000원</span>
+                        </div>
+                    </div>
+                    <div class="confirm-buttons">
+                        <button class="btn-secondary" onclick="closeConfirmModal()">취소</button>
+                        <button class="btn-secondary" onclick="goToComplete()">확인</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Screen 2: 완료 -->
+        <div class="screen" id="screen2">
+            <div class="header">
+                <div></div>
+                <div class="header-title">RP매도</div>
+                <button class="close-btn" onclick="location.reload()">&times;</button>
+            </div>
+
+            <div class="complete-content">
+                <div class="complete-icon">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <div class="complete-message">RP 매도가 완료되었습니다.</div>
+
+                <div class="complete-card">
+                    <div class="complete-row">
+                        <span class="complete-label">상품명</span>
+                        <span class="complete-value">원화RP</span>
+                    </div>
+                    <div class="complete-row">
+                        <span class="complete-label">약정이율(연)</span>
+                        <span class="complete-value">2.3%</span>
+                    </div>
+                    <div class="complete-row">
+                        <span class="complete-label">중도해지이율(연)</span>
+                        <span class="complete-value">0.7%</span>
+                    </div>
+                    <div class="complete-row">
+                        <span class="complete-label">매도금액</span>
+                        <span class="complete-value highlight" id="completeAmount">100,000원</span>
+                    </div>
+                    <div class="complete-row">
+                        <span class="complete-label">예상 이자금액(세전)</span>
+                        <span class="complete-value accent" id="completeInterest">1,000원</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bottom-section">
+                <button class="btn-primary" onclick="location.reload()">확인</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const amountInput = document.getElementById('amountInput');
+        
+        amountInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/[^0-9]/g, '');
+            if (value) {
+                value = parseInt(value, 10).toLocaleString('ko-KR');
+            }
+            e.target.value = value;
+            updateCalculations();
+        });
+
+        function setMaxAmount() {
+            amountInput.value = '100,000';
+            updateCalculations();
+        }
+
+        function updateCalculations() {
+            const amount = parseInt(amountInput.value.replace(/,/g, '')) || 0;
+            const interest = Math.floor(amount * 0.01);
+            const tax = Math.floor(interest * 0.154);
+            const total = amount + interest - tax;
+
+            document.getElementById('interestDisplay').textContent = interest.toLocaleString('ko-KR') + '원';
+            document.getElementById('taxDisplay').textContent = tax.toLocaleString('ko-KR') + '원';
+            document.getElementById('totalDisplay').textContent = total.toLocaleString('ko-KR') + '원';
+
+            document.getElementById('confirmAmount').textContent = amount.toLocaleString('ko-KR') + '원';
+            document.getElementById('confirmInterest').textContent = interest.toLocaleString('ko-KR') + '원';
+            document.getElementById('completeAmount').textContent = amount.toLocaleString('ko-KR') + '원';
+            document.getElementById('completeInterest').textContent = interest.toLocaleString('ko-KR') + '원';
+        }
+
+        function showWarningModal() {
+            document.getElementById('warningModal').classList.add('active');
+        }
+
+        function closeWarningModal() {
+            document.getElementById('warningModal').classList.remove('active');
+        }
+
+        function showConfirmModal() {
+            closeWarningModal();
+            document.getElementById('confirmModal').classList.add('active');
+        }
+
+        function closeConfirmModal() {
+            document.getElementById('confirmModal').classList.remove('active');
+        }
+
+        function goToComplete() {
+            closeConfirmModal();
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById('screen2').classList.add('active');
+        }
+
+        setMaxAmount();
+    </script>
+</body>
+</html>

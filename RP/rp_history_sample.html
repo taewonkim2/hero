@@ -1,0 +1,1511 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RP 주문/거래내역</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1a73e8;
+            --primary-light: #e8f0fe;
+            --accent: #ff6b35;
+            --positive: #e53935;
+            --negative: #1976d2;
+            --menu-red: #d32f2f;
+            --bg-primary: #f5f6f8;
+            --bg-card: #ffffff;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --text-muted: #9ca3af;
+            --border: #e5e7eb;
+            --shadow: 0 2px 8px rgba(0,0,0,0.06);
+            --shadow-lg: 0 4px 16px rgba(0,0,0,0.1);
+            --krw-color: #1a73e8;
+            --usd-color: #10b981;
+            --jpy-color: #f59e0b;
+            --eur-color: #8b5cf6;
+            --timeline-color: #d1d5db;
+            --circle-size: 8px;
+            --timeline-left: 28px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            max-width: 480px;
+            margin: 0 auto;
+            min-height: 100vh;
+            padding-top: 55px;
+            padding-bottom: 70px;
+        }
+
+        /* Top Navigation Bar */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 480px;
+            background: white;
+            z-index: 1000;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .top-nav-header {
+            height: 56px;
+            display: flex;
+            align-items: center;
+            padding: 0 0px;
+            justify-content: space-between;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            padding: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.7;
+        }
+
+        .sub-nav-item {
+            flex: 1;
+            padding: 14px 0;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .sub-nav-item.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* Bottom Tab Bar */
+        .bottom-tab-bar {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 480px;
+            height: 70px;
+            background: white;
+            display: flex;
+            align-items: stretch;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .tab-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: color 0.2s;
+            padding: 8px 4px;
+        }
+
+        .tab-item.active {
+            color: var(--primary);
+        }
+
+        .tab-label {
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .menu-tab {
+            flex: 0.8;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        .menu-button-box {
+            background: var(--menu-red);
+            border-radius: 10px;
+            padding: 8px 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hamburger-icon {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            margin-bottom: 3px;
+        }
+
+        .hamburger-line {
+            width: 18px;
+            height: 2px;
+            background: white;
+            border-radius: 1px;
+        }
+
+        .menu-label {
+            font-size: 10px;
+            font-weight: 600;
+            color: white;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 16px;
+        }
+
+        /* Account Selector */
+        .account-selector {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow);
+        }
+
+        .account-switch-row {
+            display: flex;
+            align-items: center;
+            gap : 12px;
+        }
+
+        .switch-container {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            padding: 10px 14px;
+            background: var(--bg-primary);
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+
+        .switch-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .switch-dots {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .switch-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #d1d5db;
+            transition: background 0.2s;
+        }
+
+        .switch-dot.active {
+            background: #ef4444;
+        }
+
+        .account-dropdown {
+            flex: 1;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 13px;
+            font-family: inherit;
+            background: white;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+        }
+
+        .account-dropdown:disabled {
+            background-color: #f3f4f6;
+            color: #9ca3af;
+            cursor: not-allowed;
+        }
+
+        .password-input {
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 13px;
+            font-family: inherit;
+            width: 80px;
+        }
+
+        .password-input:disabled {
+            background-color: #f3f4f6;
+            color: #9ca3af;
+            cursor: not-allowed;
+        }
+
+        /* Section Card */
+        .section-card {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 16px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .section-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-toggle {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s;
+        }
+
+        .section-toggle.collapsed {
+            transform: rotate(-90deg);
+        }
+
+        .section-content {
+            max-height: 2000px;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+            opacity: 1;
+        }
+
+        .section-content.collapsed {
+            max-height: 0;
+            opacity: 0;
+        }
+
+        /* Filter Chips */
+        .filter-chips {
+            display: flex;
+            gap: 8px;
+            margin: 16px 0;
+            flex-wrap: wrap;
+        }
+
+        .filter-chip {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: var(--bg-primary);
+            color: var(--text-secondary);
+            border: 1px solid transparent;
+        }
+
+        .filter-chip.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Order Item */
+        .order-item {
+            display: flex;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .order-item:last-child {
+            border-bottom: none;
+        }
+
+        .rp-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 700;
+            margin-right: 14px;
+            flex-shrink: 0;
+        }
+
+        .rp-icon.krw {
+            background: linear-gradient(135deg, #e8f0fe 0%, #c2d9ff 100%);
+            color: var(--krw-color);
+        }
+
+        .rp-icon.usd {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            color: var(--usd-color);
+        }
+
+        .rp-icon.jpy {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            color: var(--jpy-color);
+        }
+
+        .rp-icon.eur {
+            background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
+            color: var(--eur-color);
+        }
+
+        .rp-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .rp-name {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .order-time {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .rp-value {
+            text-align: right;
+            margin-right: 12px;
+        }
+
+        .rp-amount {
+            font-size: 15px;
+            font-weight: 400;
+            margin-bottom: 4px;
+        }
+
+        .gubun-buy {
+            font-size: 12px;
+            margin-left: 8px;
+            padding: 2px 8px;
+            color: white;
+            background: #e53935;
+            border-radius: 10px;
+        }
+
+        .gubun-sell {
+            font-size: 12px;
+            margin-left: 8px;
+            padding: 2px 8px;
+            color: white;
+            background: #1976d2;
+            border-radius: 10px;
+        }
+
+        .btn-action {
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+
+        .btn-cancel {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        /* Date Range */
+        .date-range-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .date-input {
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 13px;
+            font-family: inherit;
+            flex: 1;
+        }
+
+        /* Summary Box */
+        .summary-box {
+            background: linear-gradient(135deg, #1e3a5f 0%, #0d2137 100%);
+            border-radius: 16px;
+            padding: 20px;
+            color: white;
+            margin-bottom: 16px;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .summary-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .summary-label {
+            font-size: 12px;
+            opacity: 0.8;
+            margin-bottom: 4px;
+        }
+
+        .summary-value {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .summary-value.positive {
+            color: #fca5a5;
+        }
+
+        .summary-value.negative {
+            color: #93c5fd;
+        }
+
+        /* Chart Section */
+        .chart-container {
+            height: 120px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            padding: 10px 0;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .chart-bar-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            flex: 1;
+        }
+
+        .chart-bar {
+            width: 100%;
+            max-width: 40px;
+            background: #d1d5db;
+            border-radius: 4px 4px 0 0;
+            transition: height 0.3s ease;
+        }
+
+        .chart-bar.highlight {
+            background: var(--text-primary);
+        }
+
+        .chart-label {
+            font-size: 10px;
+            color: var(--text-muted);
+        }
+
+        /* ========================================
+           Timeline Styles (from history.html)
+           ======================================== */
+
+        /* Timeline Date Group */
+        .timeline-group {
+            position: relative;
+            padding-left: var(--timeline-left);
+        }
+
+        /* Vertical line */
+        .timeline-line {
+            position: absolute;
+            left: calc(var(--circle-size) / 2);
+            width: 1px;
+            background: var(--timeline-color);
+        }
+
+        /* Date header */
+        .timeline-date {
+            position: relative;
+            display: flex;
+            align-items: center;
+            padding-top: 26px;
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .timeline-group:first-child .timeline-date {
+            padding-top: 0;
+        }
+
+        /* Date dot */
+        .timeline-dot {
+            position: absolute;
+            left: calc(-1 * var(--timeline-left));
+            width: var(--circle-size);
+            height: var(--circle-size);
+            border-radius: 50%;
+            background: var(--primary);
+        }
+
+        .timeline-date-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* Items wrapper */
+        .timeline-items {
+            position: relative;
+        }
+
+        /* Individual timeline item */
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 0;
+            cursor: pointer;
+            transition: background 0.2s;
+            position: relative;
+        }
+
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 62px;
+            right: 0;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .timeline-item:last-child::after {
+            display: none;
+        }
+
+        .timeline-item:hover {
+            background: var(--bg-primary);
+            margin: 0 -8px;
+            padding: 12px 8px;
+            border-radius: 8px;
+        }
+
+        /* Timeline rp-icon (smaller than order list) */
+        .timeline-item .rp-icon {
+            width: 40px;
+            height: 40px;
+            font-size: 16px;
+            margin-right: 12px;
+        }
+
+        .timeline-item .rp-name {
+            font-size: 14px;
+        }
+
+        .timeline-item .order-time {
+            font-size: 12px;
+        }
+
+        .timeline-item .rp-amount {
+            font-size: 14px;
+        }
+
+        /* Scroll indicator */
+        .scroll-indicator {
+            text-align: center;
+            padding: 16px;
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        /* Half Popup (Cancel Confirm) */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0);
+            z-index: 2000;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            visibility: hidden;
+            transition: background 0.4s ease-out, visibility 0.4s;
+        }
+
+        .popup-overlay.show {
+            visibility: visible;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .half-popup {
+            width: 100%;
+            max-width: 480px;
+            background: white;
+            border-radius: 20px 20px 0 0;
+            padding: 24px;
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .popup-overlay.show .half-popup {
+            transform: translateY(0);
+        }
+
+        .popup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .popup-title {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .popup-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-muted);
+        }
+
+        .popup-content {
+            margin-bottom: 24px;
+        }
+
+        .popup-item-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .popup-item-row:last-child {
+            border-bottom: none;
+        }
+
+        .popup-item-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .popup-item-value {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .popup-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .popup-btn {
+            flex: 1;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+
+        .popup-btn.cancel {
+            background: var(--bg-primary);
+            color: var(--text-secondary);
+        }
+
+        .popup-btn.confirm {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Full Popup (Trade Detail) */
+        .full-popup {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%) translateY(100%);
+            width: 100%;
+            max-width: 480px;
+            height: 100%;
+            background: var(--bg-primary);
+            z-index: 2000;
+            transition: transform 0.3s ease-out;
+            overflow-y: auto;
+        }
+
+        .full-popup.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .full-popup-header {
+            position: sticky;
+            top: 0;
+            background: white;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            z-index: 10;
+        }
+
+        .full-popup-title {
+            font-size: 17px;
+            font-weight: 600;
+        }
+
+        .full-popup-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-muted);
+        }
+
+        .full-popup-content {
+            padding: 16px;
+        }
+
+        .detail-card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 14px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .detail-value {
+            font-size: 14px;
+            font-weight: 600;
+            text-align: right;
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Top Navigation Bar with Sub Nav -->
+    <nav class="top-nav">
+        <div class="top-nav-header">
+            <button class="back-btn" onclick="goBack()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M15 18l-6-6 6-6"></path>
+                </svg>
+            </button>
+            <div class="sub-nav-item" onclick="switchSubNav('balance', this)">RP보유종목</div>
+            <div class="sub-nav-item active" onclick="switchSubNav('orders', this)">RP주문내역</div>
+            <div class="sub-nav-item" onclick="switchSubNav('history', this)">RP거래내역</div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Account Selector -->
+        <div class="account-selector">
+            <div class="account-switch-row">
+                <div class="switch-container" onclick="toggleAccountMode()">
+                    <span class="switch-text" id="switchText">전체</span>
+                    <div class="switch-dots">
+                        <div class="switch-dot active" id="dotTop"></div>
+                        <div class="switch-dot" id="dotBottom"></div>
+                    </div>
+                </div>
+                <select class="account-dropdown" id="accountSelect" disabled>
+                    <option value="all">전체 계좌</option>
+                    <option value="acc1">123-456-789012 (종합계좌)</option>
+                    <option value="acc2">987-654-321098 (ISA계좌)</option>
+                    <option value="acc3">456-789-123456 (연금저축)</option>
+                </select>
+                <input type="password" class="password-input" id="passwordInput" placeholder="비밀번호" disabled>
+            </div>
+        </div>
+
+        <!-- 당일 주문내역 Section -->
+        <section class="section-card">
+            <div class="section-header" onclick="toggleSection('orderSection')">
+                <span class="section-title">
+                    당일 주문내역
+                    <span style="font-size: 13px; color: var(--text-muted); font-weight: 400;">2025.12.11</span>
+                </span>
+                <div class="section-toggle" id="orderSectionToggle">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 9l6 6 6-6"></path>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="section-content" id="orderSectionContent">
+                <!-- Filter Chips -->
+                <div class="filter-chips">
+                    <div class="filter-chip active" onclick="filterOrders('all', this)">전체</div>
+                    <div class="filter-chip" onclick="filterOrders('krw', this)">원화</div>
+                    <div class="filter-chip" onclick="filterOrders('usd', this)">달러</div>
+                    <div class="filter-chip" onclick="filterOrders('jpy', this)">엔화</div>
+                    <div class="filter-chip" onclick="filterOrders('eur', this)">유로</div>
+                </div>
+
+                <!-- Order List -->
+                <div class="order-list" id="orderList">
+                    <div class="order-item" data-type="krw">
+                        <div class="rp-icon krw">₩</div>
+                        <div class="rp-info">
+                            <div class="rp-name">원화RP(31일형)</div>
+                            <div class="order-time">09:15:32 <span class="gubun-buy">매수</span></div>
+                        </div>
+                        <div class="rp-value">
+                            <div class="rp-amount">1,000,000원</div>
+                        </div>
+                        <button class="btn-action btn-cancel" onclick="openCancelPopup('order1', '원화RP(31일형)', '매수', '1,000,000원', '09:15:32')">취소</button>
+                    </div>
+
+                    <div class="order-item" data-type="usd">
+                        <div class="rp-icon usd">$</div>
+                        <div class="rp-info">
+                            <div class="rp-name">외화RP(USD)(31일형)</div>
+                            <div class="order-time">10:23:45 <span class="gubun-sell">매도</span></div>
+                        </div>
+                        <div class="rp-value">
+                            <div class="rp-amount">$500.00</div>
+                        </div>
+                        <button class="btn-action btn-cancel" onclick="openCancelPopup('order2', '외화RP(USD)(31일형)', '매도', '$500.00', '10:23:45')">취소</button>
+                    </div>
+
+                    <div class="order-item" data-type="krw">
+                        <div class="rp-icon krw">₩</div>
+                        <div class="rp-info">
+                            <div class="rp-name">퍼스트 발행어음 특판</div>
+                            <div class="order-time">14:05:18 <span class="gubun-buy">매수</span></div>
+                        </div>
+                        <div class="rp-value">
+                            <div class="rp-amount">2,000,000원</div>
+                        </div>
+                        <button class="btn-action btn-cancel" onclick="openCancelPopup('order3', '퍼스트 발행어음 특판', '매수', '2,000,000원', '14:05:18')">취소</button>
+                    </div>
+
+                    <div class="order-item" data-type="jpy">
+                        <div class="rp-icon jpy">¥</div>
+                        <div class="rp-info">
+                            <div class="rp-name">외화RP(JPY)(수시)</div>
+                            <div class="order-time">11:30:22 <span class="gubun-buy">매수</span></div>
+                        </div>
+                        <div class="rp-value">
+                            <div class="rp-amount">¥100,000</div>
+                        </div>
+                        <button class="btn-action btn-cancel" onclick="openCancelPopup('order4', '외화RP(JPY)(수시)', '매수', '¥100,000', '11:30:22')">취소</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 기간별 거래내역 Section (Timeline Style) -->
+        <section class="section-card">
+            <div class="section-header" onclick="toggleSection('historySection')">
+                <span class="section-title">기간별 거래내역</span>
+                <div class="section-toggle" id="historySectionToggle">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 9l6 6 6-6"></path>
+                    </svg>
+                </div>
+            </div>
+            <div class="filter-chips" id="historyFilterChips">
+                <div class="filter-chip active" onclick="filterHistory('all', this)">전체</div>
+                <div class="filter-chip" onclick="filterHistory('krw', this)">원화</div>
+                <div class="filter-chip" onclick="filterHistory('usd', this)">달러</div>
+                <div class="filter-chip" onclick="filterHistory('jpy', this)">엔화</div>
+                <div class="filter-chip" onclick="filterHistory('eur', this)">유로</div>
+            </div>
+
+            <div class="section-content" id="historySectionContent">
+                <!-- Date Range -->
+                <div class="date-range-container">
+                    <input type="date" class="date-input" id="startDate" value="2025-09-11">
+                    <span>~</span>
+                    <input type="date" class="date-input" id="endDate" value="2025-12-11">
+                </div>
+
+                <!-- Summary Box -->
+                <div class="summary-box">
+                    <div class="summary-grid">
+                        <div class="summary-item">
+                            <span class="summary-label">매수금액</span>
+                            <span class="summary-value positive">15,200,000원</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">매도금액</span>
+                            <span class="summary-value negative">8,500,000원</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">이자수익</span>
+                            <span class="summary-value positive">+247,320원</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">세금</span>
+                            <span class="summary-value negative">-38,192원</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chart -->
+                <div class="chart-container" id="chartContainer">
+                    <div class="chart-bar-wrapper">
+                        <div class="chart-bar" style="height: 60px;"></div>
+                        <span class="chart-label">09/02</span>
+                    </div>
+                    <div class="chart-bar-wrapper">
+                        <div class="chart-bar" style="height: 85px;"></div>
+                        <span class="chart-label">10/03</span>
+                    </div>
+                    <div class="chart-bar-wrapper">
+                        <div class="chart-bar highlight" style="height: 70px;"></div>
+                        <span class="chart-label">10/25</span>
+                    </div>
+                    <div class="chart-bar-wrapper">
+                        <div class="chart-bar" style="height: 45px;"></div>
+                        <span class="chart-label">11/20</span>
+                    </div>
+                    <div class="chart-bar-wrapper">
+                        <div class="chart-bar" style="height: 55px;"></div>
+                        <span class="chart-label">11/02</span>
+                    </div>
+                    <div class="chart-bar-wrapper">
+                        <div class="chart-bar" style="height: 90px;"></div>
+                        <span class="chart-label">12/02</span>
+                    </div>
+                </div>
+
+                <!-- Timeline History List (Dynamically Rendered) -->
+                <div id="historyList">
+                    <!-- JavaScript로 렌더링 -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Bottom Tab Bar -->
+    <nav class="bottom-tab-bar">
+        <div class="menu-tab" onclick="openSideMenu()">
+            <div class="menu-button-box">
+                <div class="hamburger-icon">
+                    <div class="hamburger-line"></div>
+                    <div class="hamburger-line"></div>
+                    <div class="hamburger-line"></div>
+                </div>
+                <span class="menu-label">메뉴</span>
+            </div>
+        </div>
+        <div class="tab-item" onclick="switchTab('rp-home', this)">
+            <span class="tab-label">RP홈</span>
+        </div>
+        <div class="tab-item active" onclick="switchTab('rp-balance', this)">
+            <span class="tab-label">RP보유/거래내역</span>
+        </div>
+        <div class="tab-item" onclick="switchTab('rp-buy', this)">
+            <span class="tab-label">RP매수</span>
+        </div>
+    </nav>
+
+    <!-- Half Popup (Cancel Confirmation) -->
+    <div class="popup-overlay" id="cancelPopup">
+        <div class="half-popup">
+            <div class="popup-header">
+                <span class="popup-title">주문 취소 확인</span>
+                <button class="popup-close" onclick="closeCancelPopup()">×</button>
+            </div>
+            <div class="popup-content">
+                <div class="popup-item-row">
+                    <span class="popup-item-label">종목명</span>
+                    <span class="popup-item-value" id="cancelItemName">-</span>
+                </div>
+                <div class="popup-item-row">
+                    <span class="popup-item-label">주문구분</span>
+                    <span class="popup-item-value" id="cancelOrderType">-</span>
+                </div>
+                <div class="popup-item-row">
+                    <span class="popup-item-label">주문금액</span>
+                    <span class="popup-item-value" id="cancelAmount">-</span>
+                </div>
+                <div class="popup-item-row">
+                    <span class="popup-item-label">주문시간</span>
+                    <span class="popup-item-value" id="cancelTime">-</span>
+                </div>
+            </div>
+            <div class="popup-buttons">
+                <button class="popup-btn cancel" onclick="closeCancelPopup()">취소</button>
+                <button class="popup-btn confirm" onclick="confirmCancel()">확인</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Full Popup (Trade Detail) -->
+    <div class="full-popup" id="tradeDetailPopup">
+        <div class="full-popup-header">
+            <button class="full-popup-close" onclick="closeTradeDetail()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M15 18l-6-6 6-6"></path>
+                </svg>
+            </button>
+            <span class="full-popup-title">거래 상세</span>
+            <div style="width: 24px;"></div>
+        </div>
+        <div class="full-popup-content">
+            <div class="detail-card">
+                <div class="detail-row">
+                    <span class="detail-label">계좌번호</span>
+                    <span class="detail-value" id="detailAccount">-</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">거래일자</span>
+                    <span class="detail-value" id="detailDate">-</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">거래번호</span>
+                    <span class="detail-value" id="detailTxNo">-</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">거래구분</span>
+                    <span class="detail-value" id="detailType">-</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">거래금액</span>
+                    <span class="detail-value" id="detailAmount">-</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">이자금액</span>
+                    <span class="detail-value" id="detailInterest">-</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">세금</span>
+                    <span class="detail-value" id="detailTax">-</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">매체구분</span>
+                    <span class="detail-value" id="detailChannel">-</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========================================
+        // RP 거래내역 샘플 데이터 (서버에서 받아온다고 가정)
+        // ========================================
+        const mockServerData = [
+            { id: 'T20251210001', date: '2025.12.10', name: '원화RP(31일형)', type: 'buy', currency: 'krw', amount: '3,000,000원', time: '09:30:15', account: '123-456-789012', interest: '0원', tax: '0원', channel: '모바일' },
+            { id: 'T20251210002', date: '2025.12.10', name: '외화RP(USD)(수시)', type: 'sell', currency: 'usd', amount: '$1,500.00', time: '11:20:33', account: '123-456-789012', interest: '$22.50', tax: '$3.47', channel: 'HTS' },
+            { id: 'T20251205001', date: '2025.12.05', name: '퍼스트 발행어음 특판(1년)', type: 'sell', currency: 'krw', amount: '5,000,000원', time: '14:45:20', account: '987-654-321098', interest: '62,500원', tax: '9,625원', channel: '모바일' },
+            { id: 'T20251128001', date: '2025.11.28', name: '외화RP(JPY)(31일형)', type: 'buy', currency: 'jpy', amount: '¥500,000', time: '10:15:45', account: '123-456-789012', interest: '0円', tax: '0円', channel: 'HTS' },
+            { id: 'T20251128002', date: '2025.11.28', name: '외화RP(EUR)(수시)', type: 'buy', currency: 'eur', amount: '€2,000.00', time: '15:30:10', account: '123-456-789012', interest: '0€', tax: '0€', channel: '모바일' },
+            { id: 'T20251115001', date: '2025.11.15', name: '원화RP(수시)', type: 'buy', currency: 'krw', amount: '2,000,000원', time: '09:05:30', account: '456-789-123456', interest: '0원', tax: '0원', channel: '영업점' },
+            { id: 'T20251115002', date: '2025.11.15', name: '외화RP(USD)(31일형)', type: 'sell', currency: 'usd', amount: '$2,000.00', time: '13:40:55', account: '123-456-789012', interest: '$45.00', tax: '$6.93', channel: 'MTS' },
+            { id: 'T20251020001', date: '2025.10.20', name: '원화RP(31일형)', type: 'buy', currency: 'krw', amount: '5,200,000원', time: '10:00:00', account: '123-456-789012', interest: '0원', tax: '0원', channel: '모바일' }
+        ];
+
+        // 현재 필터 상태
+        let currentFilter = 'all';
+
+        // ========================================
+        // 서버 API 호출 (Mock)
+        // ========================================
+        async function fetchHistory(startDate, endDate, filter = 'all') {
+            return mockServerData.filter(item => {
+                const itemDate = item.date.replace(/\./g, '-');
+                const dateMatch = itemDate >= startDate && itemDate <= endDate;
+                const filterMatch = filter === 'all' || item.currency === filter;
+                return dateMatch && filterMatch;
+            });
+        }
+
+        // ========================================
+        // 날짜별 그룹핑
+        // ========================================
+        function groupByDate(items) {
+            const grouped = {};
+            items.forEach(item => {
+                if (!grouped[item.date]) {
+                    grouped[item.date] = [];
+                }
+                grouped[item.date].push(item);
+            });
+
+            return Object.keys(grouped)
+                .sort((a, b) => new Date(b.replace(/\./g, '-')) - new Date(a.replace(/\./g, '-')))
+                .map(date => ({ date, items: grouped[date] }));
+        }
+
+        // ========================================
+        // 통화 아이콘 정보
+        // ========================================
+        function getCurrencyIcon(currency) {
+            const icons = {
+                krw: { symbol: '₩', class: 'krw' },
+                usd: { symbol: '$', class: 'usd' },
+                jpy: { symbol: '¥', class: 'jpy' },
+                eur: { symbol: '€', class: 'eur' }
+            };
+            return icons[currency] || icons.krw;
+        }
+
+        // ========================================
+        // HTML 렌더링
+        // ========================================
+        function renderHistory(groupedData) {
+            const container = document.getElementById('historyList');
+
+            if (groupedData.length === 0) {
+                container.innerHTML = '<div class="scroll-indicator">조회된 거래내역이 없습니다.</div>';
+                return;
+            }
+
+            let html = '';
+
+            groupedData.forEach((group, groupIndex) => {
+                const icon = getCurrencyIcon(group.items[0].currency);
+
+                html += `
+                    <div class="timeline-group" data-group-index="${groupIndex}">
+                        <div class="timeline-line"></div>
+                        <div class="timeline-date">
+                            <div class="timeline-dot"></div>
+                            <span class="timeline-date-text">${group.date}</span>
+                        </div>
+                        <div class="timeline-items">
+                            ${group.items.map((item) => {
+                                const currIcon = getCurrencyIcon(item.currency);
+                                const gubunClass = item.type === 'buy' ? 'gubun-buy' : 'gubun-sell';
+                                const gubunText = item.type === 'buy' ? '매수' : '매도';
+                                return `
+                                    <div class="timeline-item" data-type="${item.currency}" onclick="openTradeDetail('${item.id}', '${item.account}', '${item.date}', '${item.id}', '${gubunText}', '${item.amount}', '${item.interest}', '${item.tax}', '${item.channel}')">
+                                        <div class="rp-icon ${currIcon.class}">${currIcon.symbol}</div>
+                                        <div class="rp-info">
+                                            <div class="rp-name">${item.name}</div>
+                                            <div class="order-time">${item.time} <span class="${gubunClass}">${gubunText}</span></div>
+                                        </div>
+                                        <div class="rp-value">
+                                            <div class="rp-amount">${item.amount}</div>
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += '<div class="scroll-indicator">- 더 이상 거래내역이 없습니다 -</div>';
+            container.innerHTML = html;
+
+            requestAnimationFrame(() => {
+                adjustTimelineLines();
+            });
+        }
+
+        // ========================================
+        // 세로선 위치/높이 동적 계산
+        // ========================================
+        function adjustTimelineLines() {
+            const groups = document.querySelectorAll('.timeline-group');
+            const totalGroups = groups.length;
+            const circleSize = 8;
+            const dotGap = 6;
+
+            groups.forEach((group, index) => {
+                const line = group.querySelector('.timeline-line');
+                const dot = group.querySelector('.timeline-dot');
+                const dateEl = group.querySelector('.timeline-date');
+                const dateText = group.querySelector('.timeline-date-text');
+                const itemsEl = group.querySelector('.timeline-items');
+
+                if (!line || !dot || !dateEl || !dateText) return;
+
+                const textRect = dateText.getBoundingClientRect();
+                const dateRect = dateEl.getBoundingClientRect();
+                const textCenterInDate = (textRect.top - dateRect.top) + (textRect.height / 2);
+                const dotTop = dateEl.offsetTop + textCenterInDate - (circleSize / 2);
+
+                dot.style.top = `${dotTop}px`;
+
+                if (index < totalGroups - 1) {
+                    const nextGroup = groups[index + 1];
+                    const nextDateEl = nextGroup.querySelector('.timeline-date');
+                    const nextDateText = nextGroup.querySelector('.timeline-date-text');
+
+                    if (nextDateEl && nextDateText) {
+                        const nextTextRect = nextDateText.getBoundingClientRect();
+                        const nextDateRect = nextDateEl.getBoundingClientRect();
+                        const nextTextCenterInDate = (nextTextRect.top - nextDateRect.top) + (nextTextRect.height / 2);
+                        const nextDotTop = nextGroup.offsetTop - group.offsetTop + nextDateEl.offsetTop + nextTextCenterInDate - (circleSize / 2);
+
+                        const lineTop = dotTop + circleSize + dotGap;
+                        const lineHeight = nextDotTop - dotTop - circleSize - (dotGap * 2);
+
+                        line.style.top = `${lineTop}px`;
+                        line.style.height = `${lineHeight}px`;
+                        line.style.display = 'block';
+                    }
+                } else {
+                    if (itemsEl) {
+                        const lineTop = dotTop + circleSize + dotGap;
+                        const itemsBottom = itemsEl.offsetTop + itemsEl.offsetHeight;
+                        const lineHeight = itemsBottom - lineTop;
+
+                        line.style.top = `${lineTop}px`;
+                        line.style.height = `${lineHeight}px`;
+                        line.style.display = 'block';
+                    } else {
+                        line.style.display = 'none';
+                    }
+                }
+            });
+        }
+
+        // ========================================
+        // 거래내역 로드
+        // ========================================
+        async function loadHistory() {
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+
+            const items = await fetchHistory(startDate, endDate, currentFilter);
+            const grouped = groupByDate(items);
+            renderHistory(grouped);
+        }
+
+        // ========================================
+        // Account mode toggle
+        // ========================================
+        let isAccountMode = false;
+
+        function toggleAccountMode() {
+            const switchText = document.getElementById('switchText');
+            const dotTop = document.getElementById('dotTop');
+            const dotBottom = document.getElementById('dotBottom');
+            const accountSelect = document.getElementById('accountSelect');
+            const passwordInput = document.getElementById('passwordInput');
+
+            isAccountMode = !isAccountMode;
+
+            if (isAccountMode) {
+                switchText.textContent = '계좌';
+                dotTop.classList.remove('active');
+                dotBottom.classList.add('active');
+                accountSelect.disabled = false;
+                passwordInput.disabled = false;
+                accountSelect.selectedIndex = 1;
+            } else {
+                switchText.textContent = '전체';
+                dotTop.classList.add('active');
+                dotBottom.classList.remove('active');
+                accountSelect.disabled = true;
+                passwordInput.disabled = true;
+                accountSelect.selectedIndex = 0;
+            }
+        }
+
+        // ========================================
+        // Section Toggle
+        // ========================================
+        function toggleSection(sectionId) {
+            const content = document.getElementById(sectionId + 'Content');
+            const toggle = document.getElementById(sectionId + 'Toggle');
+
+            content.classList.toggle('collapsed');
+            toggle.classList.toggle('collapsed');
+        }
+
+        // ========================================
+        // Filter orders
+        // ========================================
+        function filterOrders(type, element) {
+            const chips = element.parentElement.querySelectorAll('.filter-chip');
+            chips.forEach(chip => chip.classList.remove('active'));
+            element.classList.add('active');
+
+            const items = document.querySelectorAll('#orderList .order-item');
+            items.forEach(item => {
+                if (type === 'all' || item.dataset.type === type) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        // ========================================
+        // Filter history (Timeline)
+        // ========================================
+        function filterHistory(type, element) {
+            const chips = document.querySelectorAll('#historyFilterChips .filter-chip');
+            chips.forEach(chip => chip.classList.remove('active'));
+            element.classList.add('active');
+
+            currentFilter = type;
+            loadHistory();
+        }
+
+        // ========================================
+        // Cancel Popup
+        // ========================================
+        let currentCancelOrderId = null;
+
+        function openCancelPopup(orderId, itemName, orderType, amount, time) {
+            currentCancelOrderId = orderId;
+            document.getElementById('cancelItemName').textContent = itemName;
+            document.getElementById('cancelOrderType').textContent = orderType;
+            document.getElementById('cancelAmount').textContent = amount;
+            document.getElementById('cancelTime').textContent = time;
+            document.getElementById('cancelPopup').classList.add('show');
+        }
+
+        function closeCancelPopup() {
+            document.getElementById('cancelPopup').classList.remove('show');
+            currentCancelOrderId = null;
+        }
+
+        function confirmCancel() {
+            if (currentCancelOrderId) {
+                alert(`주문번호 ${currentCancelOrderId}가 취소되었습니다.`);
+                closeCancelPopup();
+            }
+        }
+
+        // ========================================
+        // Trade Detail Popup
+        // ========================================
+        function openTradeDetail(txId, account, date, txNo, type, amount, interest, tax, channel) {
+            document.getElementById('detailAccount').textContent = account;
+            document.getElementById('detailDate').textContent = date;
+            document.getElementById('detailTxNo').textContent = txNo;
+            document.getElementById('detailType').textContent = type;
+            document.getElementById('detailAmount').textContent = amount;
+            document.getElementById('detailInterest').textContent = interest;
+            document.getElementById('detailTax').textContent = tax;
+            document.getElementById('detailChannel').textContent = channel;
+            document.getElementById('tradeDetailPopup').classList.add('show');
+        }
+
+        function closeTradeDetail() {
+            document.getElementById('tradeDetailPopup').classList.remove('show');
+        }
+
+        // ========================================
+        // Navigation
+        // ========================================
+        function switchSubNav(page, element) {
+            document.querySelectorAll('.sub-nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            element.classList.add('active');
+
+            if (page === 'balance') {
+                window.location.href = 'rp_balance.html';
+            }
+        }
+
+        function goBack() {
+            window.location.href = 'rp_home.html';
+        }
+
+        function openSideMenu() {
+            alert('메뉴가 열립니다.');
+        }
+
+        function switchTab(tabName, element) {
+            document.querySelectorAll('.tab-item').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            element.classList.add('active');
+
+            if (tabName === 'rp-home') {
+                window.location.href = 'rp_home.html';
+            } else if (tabName === 'rp-buy') {
+                window.location.href = 'rp_list.html';
+            }
+        }
+
+        // ========================================
+        // Initialize
+        // ========================================
+        document.addEventListener('DOMContentLoaded', function() {
+            const accountSelect = document.getElementById('accountSelect');
+            const passwordInput = document.getElementById('passwordInput');
+            accountSelect.disabled = true;
+            passwordInput.disabled = true;
+
+            // 날짜 변경시 재조회
+            document.getElementById('startDate').addEventListener('change', loadHistory);
+            document.getElementById('endDate').addEventListener('change', loadHistory);
+
+            // 초기 로드
+            loadHistory();
+        });
+
+        // Close popup when clicking outside
+        document.getElementById('cancelPopup').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeCancelPopup();
+            }
+        });
+
+        // 윈도우 리사이즈시 세로선 재계산
+        window.addEventListener('resize', adjustTimelineLines);
+    </script>
+</body>
+</html>

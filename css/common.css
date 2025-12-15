@@ -1,0 +1,266 @@
+/* ========================================
+   Common Styles - Hero App
+   ======================================== */
+
+/* Font Face */
+@font-face {
+    font-family: 'DAKI';
+    src: url('../font/DAKIL.TTF') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'DAKI';
+    src: url('../font/DAKIM.TTF') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+}
+
+/* ========================================
+   CSS Variables
+   ======================================== */
+:root {
+    /* Background Colors */
+    --bg-primary: #FFFFFF;
+    --bg-secondary: #F8F9FA;
+    --bg-card: #FFFFFF;
+    --bg-card-hover: #F3F4F6;
+
+    /* Text Colors */
+    --text-primary: #111827;
+    --text-secondary: #6B7280;
+    --text-tertiary: #9CA3AF;
+
+    /* Border */
+    --border-color: #E5E7EB;
+
+    /* Accent Colors */
+    --accent-red: #DC2626;
+    --accent-red-bg: rgba(220, 38, 38, 0.08);
+    --accent-blue: #2563EB;
+    --accent-blue-bg: rgba(37, 99, 235, 0.08);
+    --accent-green: #059669;
+    --accent-purple: #7C3AED;
+    --accent-orange: #D97706;
+
+    /* Kiwoom Brand Colors */
+    --kiwoom-red: #E31837;
+    --kiwoom-dark: #1a1a1a;
+
+    /* Gray Scale */
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-400: #9ca3af;
+    --gray-500: #6b7280;
+    --gray-600: #4b5563;
+    --gray-700: #374151;
+    --gray-800: #1f2937;
+
+    /* Shadows */
+    /* --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -1px rgba(0, 0, 0, 0.04); */
+    --shadow : 0 2px 8px rgba(0,0,0,0.06);
+
+    /* Border Radius */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 20px;
+}
+
+/* ========================================
+   Reset & Base Styles
+   ======================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'DAKI', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* ========================================
+   Common Header
+   ======================================== */
+.header {
+    padding: 16px 20px 12px;
+    position: sticky;
+    top: 0;
+    background: var(--bg-primary);
+    z-index: 100;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.header-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+/* ========================================
+   Common Buttons
+   ======================================== */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 20px;
+    border-radius: var(--radius-md);
+    font-size: 15px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-primary {
+    background: var(--text-primary);
+    color: var(--bg-primary);
+}
+
+.btn-primary:hover {
+    background: #374151;
+}
+
+.btn-secondary {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+    background: var(--bg-card-hover);
+}
+
+/* ========================================
+   Common Card Styles
+   ======================================== */
+.card {
+    background: var(--bg-card);
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+}
+
+/* ========================================
+   Common Section Styles
+   ======================================== */
+.section {
+    background: white;
+    margin: 12px 16px;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.section-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--gray-800);
+}
+
+.section-arrow {
+    color: var(--gray-400);
+    font-size: 18px;
+}
+
+/* ========================================
+   Common Badge Styles
+   ======================================== */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 10px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.badge-positive {
+    background: var(--accent-red-bg);
+    color: var(--accent-red);
+}
+
+.badge-negative {
+    background: var(--accent-blue-bg);
+    color: var(--accent-blue);
+}
+
+/* ========================================
+   Common Icon Styles
+   ======================================== */
+.icon-circle {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ========================================
+   Institution Logo Colors
+   ======================================== */
+.logo-kiwoom { background: #FF6B00; color: white; }
+.logo-kis { background: #003366; color: white; }
+.logo-mirae { background: #0066B3; color: white; }
+.logo-kb { background: #FFB81C; color: #333; }
+.logo-shinhan { background: #0046FF; color: white; }
+.logo-kakao { background: #FEE500; color: #333; }
+.logo-toss { background: #0064FF; color: white; }
+
+/* ========================================
+   Common Animation
+   ======================================== */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ========================================
+   Utility Classes
+   ======================================== */
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.flex { display: flex; }
+.flex-1 { flex: 1; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.gap-4 { gap: 4px; }
+.gap-8 { gap: 8px; }
+.gap-12 { gap: 12px; }
+
+/* ========================================
+   Responsive
+   ======================================== */
+@media (max-width: 380px) {
+    .header-title {
+        font-size: 18px;
+    }
+
+    .btn {
+        padding: 12px 16px;
+        font-size: 14px;
+    }
+}

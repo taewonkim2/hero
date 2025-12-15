@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>내 자산</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0D0D0F;
+            --bg-secondary: #18181B;
+            --bg-card: #1F1F23;
+            --bg-card-hover: #27272A;
+            --text-primary: #FAFAFA;
+            --text-secondary: #A1A1AA;
+            --text-tertiary: #71717A;
+            --border-color: #27272A;
+            --accent-red: #EF4444;
+            --accent-red-bg: rgba(239, 68, 68, 0.12);
+            --accent-blue: #3B82F6;
+            --accent-blue-bg: rgba(59, 130, 246, 0.12);
+            --accent-green: #10B981;
+            --accent-purple: #8B5CF6;
+            --accent-orange: #F59E0B;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding-bottom: 100px;
+        }
+
+        /* Header */
+        .header {
+            padding: 16px 20px 12px;
+            position: sticky;
+            top: 0;
+            background: var(--bg-primary);
+            z-index: 100;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .header-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* Total Asset Section */
+        .total-asset-section {
+            padding: 24px 20px 28px;
+            background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+        }
+
+        .total-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .total-label svg {
+            width: 16px;
+            height: 16px;
+            opacity: 0.7;
+        }
+
+        .total-amount {
+            font-size: 36px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: baseline;
+            gap: 4px;
+        }
+
+        .total-amount .currency {
+            font-size: 24px;
+            font-weight: 500;
+        }
+
+        .change-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+
+        .change-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 6px 10px;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .change-badge.positive {
+            background: var(--accent-red-bg);
+            color: var(--accent-red);
+        }
+
+        .change-badge.negative {
+            background: var(--accent-blue-bg);
+            color: var(--accent-blue);
+        }
+
+        .change-badge svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .change-detail {
+            font-size: 13px;
+            color: var(--text-tertiary);
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .action-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px 20px;
+            border-radius: var(--radius-md);
+            font-size: 15px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .action-btn.deposit {
+            background: var(--text-primary);
+            /* color: var(--bg-primary); */
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .action-btn.deposit:hover {
+            background: #E4E4E7;
+        }
+
+        .action-btn.withdraw {
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .action-btn.withdraw:hover {
+            background: var(--bg-card-hover);
+        }
+
+        .action-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Asset Categories */
+        .asset-categories {
+            padding: 16px 20px;
+        }
+
+        .category-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            margin-bottom: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 20px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .category-header:hover {
+            background: var(--bg-card-hover);
+        }
+
+        .category-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .category-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .category-icon.invest {
+            background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+        }
+
+        .category-icon.bank {
+            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+        }
+
+        .category-icon.pension {
+            background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+        }
+
+        .category-icon svg {
+            width: 22px;
+            height: 22px;
+            color: white;
+        }
+
+        .category-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .category-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .category-count {
+            font-size: 13px;
+            color: var(--text-tertiary);
+        }
+
+        .category-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .category-amount {
+            text-align: right;
+        }
+
+        .category-amount .amount {
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .category-amount .change {
+            font-size: 12px;
+            margin-top: 2px;
+        }
+
+        .category-amount .change.positive {
+            color: var(--accent-red);
+        }
+
+        .category-amount .change.negative {
+            color: var(--accent-blue);
+        }
+
+        .expand-icon {
+            width: 24px;
+            height: 24px;
+            color: var(--text-tertiary);
+            transition: transform 0.3s ease;
+        }
+
+        .category-card.expanded .expand-icon {
+            transform: rotate(180deg);
+        }
+
+        /* Institution List */
+        .institution-list {
+            display: none;
+            padding: 0 20px 8px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .category-card.expanded .institution-list {
+            display: block;
+        }
+
+        .institution-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .institution-item:last-of-type {
+            border-bottom: none;
+        }
+
+        .institution-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .institution-logo {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--bg-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .institution-logo.kiwoom { background: #FF6B00; color: white; }
+        .institution-logo.kis { background: #003366; color: white; }
+        .institution-logo.mirae { background: #0066B3; color: white; }
+        .institution-logo.kb { background: #FFB81C; color: #333; }
+        .institution-logo.shinhan { background: #0046FF; color: white; }
+        .institution-logo.kakao { background: #FEE500; color: #333; }
+        .institution-logo.toss { background: #0064FF; color: white; }
+
+        .institution-name {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .institution-detail {
+            font-size: 13px;
+            color: var(--text-tertiary);
+            margin-top: 2px;
+        }
+
+        .institution-amount {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* Pension Sub-items */
+        .pension-group {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .pension-group:last-of-type {
+            border-bottom: none;
+        }
+
+        .pension-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 0;
+            cursor: pointer;
+        }
+
+        .pension-header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .pension-type-badge {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .pension-type-badge.saving {
+            background: rgba(245, 158, 11, 0.15);
+            color: #F59E0B;
+        }
+
+        .pension-type-badge.irp {
+            background: rgba(139, 92, 246, 0.15);
+            color: #8B5CF6;
+        }
+
+        .pension-sub-list {
+            display: none;
+            padding-left: 16px;
+            margin-top: 8px;
+        }
+
+        .pension-group.expanded .pension-sub-list {
+            display: block;
+        }
+
+        .pension-sub-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(39, 39, 42, 0.5);
+        }
+
+        .pension-sub-item:last-child {
+            border-bottom: none;
+        }
+
+        .pension-expand-icon {
+            width: 18px;
+            height: 18px;
+            color: var(--text-tertiary);
+            transition: transform 0.3s ease;
+        }
+
+        .pension-group.expanded .pension-expand-icon {
+            transform: rotate(180deg);
+        }
+
+        /* Add Account Button */
+        .add-account-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 14px;
+            margin-top: 8px;
+            background: transparent;
+            border: 1px dashed var(--border-color);
+            border-radius: var(--radius-md);
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .add-account-btn:hover {
+            background: var(--bg-secondary);
+            border-color: var(--text-tertiary);
+            color: var(--text-primary);
+        }
+
+        .add-account-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .category-card.expanded .institution-list {
+            animation: fadeIn 0.3s ease;
+        }
+
+        /* Responsive */
+        @media (max-width: 380px) {
+            .total-amount {
+                font-size: 30px;
+            }
+            .action-btn {
+                padding: 12px 16px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <h1 class="header-title">내 자산</h1>
+    </header>
+
+    <!-- Total Asset Section -->
+    <section class="total-asset-section">
+        <div class="total-label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+            </svg>
+            전체 자산
+        </div>
+        <div class="total-amount">
+            <span>1,847,523,840</span>
+            <span class="currency">원</span>
+        </div>
+        <div class="change-info">
+            <span class="change-badge positive">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M18 15l-6-6-6 6"/>
+                </svg>
+                +12,458,200원
+            </span>
+            <span class="change-detail">전일 대비 +0.68%</span>
+        </div>
+        <div class="action-buttons">
+            <button class="action-btn deposit">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 5v14M5 12l7-7 7 7"/>
+                </svg>
+                입금
+            </button>
+            <button class="action-btn withdraw">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 19V5M5 12l7 7 7-7"/>
+                </svg>
+                출금
+            </button>
+        </div>
+    </section>
+
+    <!-- Asset Categories -->
+    <section class="asset-categories">
+        <!-- 투자 (증권) -->
+        <div class="category-card" id="invest-card">
+            <div class="category-header" onclick="toggleCategory('invest-card')">
+                <div class="category-left">
+                    <div class="category-icon invest">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 3v18h18"/>
+                            <path d="M18 9l-5 5-4-4-3 3"/>
+                        </svg>
+                    </div>
+                    <div class="category-info">
+                        <span class="category-name">투자</span>
+                        <span class="category-count">3개 계좌</span>
+                    </div>
+                </div>
+                <div class="category-right">
+                    <div class="category-amount">
+                        <div class="amount">1,245,830,500원</div>
+                        <div class="change positive">+8,234,100원</div>
+                    </div>
+                    <svg class="expand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 9l6 6 6-6"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="institution-list">
+                <div class="institution-item">
+                    <div class="institution-left">
+                        <div class="institution-logo kiwoom">키움</div>
+                        <div>
+                            <div class="institution-name">키움증권</div>
+                            <div class="institution-detail">위탁계좌 •••4582</div>
+                        </div>
+                    </div>
+                    <div class="institution-amount">523,450,200원</div>
+                </div>
+                <div class="institution-item">
+                    <div class="institution-left">
+                        <div class="institution-logo kis">한투</div>
+                        <div>
+                            <div class="institution-name">한국투자증권</div>
+                            <div class="institution-detail">위탁계좌 •••7891</div>
+                        </div>
+                    </div>
+                    <div class="institution-amount">412,380,300원</div>
+                </div>
+                <div class="institution-item">
+                    <div class="institution-left">
+                        <div class="institution-logo mirae">미래</div>
+                        <div>
+                            <div class="institution-name">미래에셋증권</div>
+                            <div class="institution-detail">위탁계좌 •••2156</div>
+                        </div>
+                    </div>
+                    <div class="institution-amount">310,000,000원</div>
+                </div>
+                <button class="add-account-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 5v14M5 12h14"/>
+                    </svg>
+                    증권 계좌 추가하기
+                </button>
+            </div>
+        </div>
+
+        <!-- 은행 -->
+        <div class="category-card" id="bank-card">
+            <div class="category-header" onclick="toggleCategory('bank-card')">
+                <div class="category-left">
+                    <div class="category-icon bank">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 21h18M3 10h18M5 6l7-3 7 3M4 10v11M20 10v11M8 14v3M12 14v3M16 14v3"/>
+                        </svg>
+                    </div>
+                    <div class="category-info">
+                        <span class="category-name">은행</span>
+                        <span class="category-count">4개 계좌</span>
+                    </div>
+                </div>
+                <div class="category-right">
+                    <div class="category-amount">
+                        <div class="amount">285,693,340원</div>
+                        <div class="change negative">-1,500,000원</div>
+                    </div>
+                    <svg class="expand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 9l6 6 6-6"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="institution-list">
+                <div class="institution-item">
+                    <div class="institution-left">
+                        <div class="institution-logo kb">KB</div>
+                        <div>
+                            <div class="institution-name">KB국민은행</div>
+                            <div class="institution-detail">입출금통장 •••3456</div>
+                        </div>
+                    </div>
+                    <div class="institution-amount">125,450,000원</div>
+                </div>
+                <div class="institution-item">
+                    <div class="institution-left">
+                        <div class="institution-logo shinhan">신한</div>
+                        <div>
+                            <div class="institution-name">신한은행</div>
+                            <div class="institution-detail">급여통장 •••8912</div>
+                        </div>
+                    </div>
+                    <div class="institution-amount">85,243,340원</div>
+                </div>
+                <div class="institution-item">
+                    <div class="institution-left">
+                        <div class="institution-logo kakao">카카오</div>
+                        <div>
+                            <div class="institution-name">카카오뱅크</div>
+                            <div class="institution-detail">입출금통장 •••5678</div>
+                        </div>
+                    </div>
+                    <div class="institution-amount">52,000,000원</div>
+                </div>
+                <div class="institution-item">
+                    <div class="institution-left">
+                        <div class="institution-logo toss">토스</div>
+                        <div>
+                            <div class="institution-name">토스뱅크</div>
+                            <div class="institution-detail">입출금통장 •••9012</div>
+                        </div>
+                    </div>
+                    <div class="institution-amount">23,000,000원</div>
+                </div>
+                <button class="add-account-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 5v14M5 12h14"/>
+                    </svg>
+                    은행 계좌 추가하기
+                </button>
+            </div>
+        </div>
+
+        <!-- 연금 -->
+        <div class="category-card" id="pension-card">
+            <div class="category-header" onclick="toggleCategory('pension-card')">
+                <div class="category-left">
+                    <div class="category-icon pension">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 6v6l4 2"/>
+                        </svg>
+                    </div>
+                    <div class="category-info">
+                        <span class="category-name">연금</span>
+                        <span class="category-count">4개 계좌</span>
+                    </div>
+                </div>
+                <div class="category-right">
+                    <div class="category-amount">
+                        <div class="amount">316,000,000원</div>
+                        <div class="change positive">+5,724,100원</div>
+                    </div>
+                    <svg class="expand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 9l6 6 6-6"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="institution-list">
+                <!-- 연금저축 그룹 -->
+                <div class="pension-group" id="pension-saving">
+                    <div class="pension-header" onclick="togglePensionGroup(event, 'pension-saving')">
+                        <div class="pension-header-left">
+                            <span class="pension-type-badge saving">연금저축</span>
+                            <span class="institution-amount">186,000,000원</span>
+                        </div>
+                        <svg class="pension-expand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M6 9l6 6 6-6"/>
+                        </svg>
+                    </div>
+                    <div class="pension-sub-list">
+                        <div class="pension-sub-item">
+                            <div class="institution-left">
+                                <div class="institution-logo kiwoom">키움</div>
+                                <div>
+                                    <div class="institution-name">키움증권</div>
+                                    <div class="institution-detail">연금저축 •••1234</div>
+                                </div>
+                            </div>
+                            <div class="institution-amount">98,000,000원</div>
+                        </div>
+                        <div class="pension-sub-item">
+                            <div class="institution-left">
+                                <div class="institution-logo mirae">미래</div>
+                                <div>
+                                    <div class="institution-name">미래에셋증권</div>
+                                    <div class="institution-detail">연금저축 •••5678</div>
+                                </div>
+                            </div>
+                            <div class="institution-amount">88,000,000원</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- IRP 그룹 -->
+                <div class="pension-group" id="pension-irp">
+                    <div class="pension-header" onclick="togglePensionGroup(event, 'pension-irp')">
+                        <div class="pension-header-left">
+                            <span class="pension-type-badge irp">IRP</span>
+                            <span class="institution-amount">130,000,000원</span>
+                        </div>
+                        <svg class="pension-expand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M6 9l6 6 6-6"/>
+                        </svg>
+                    </div>
+                    <div class="pension-sub-list">
+                        <div class="pension-sub-item">
+                            <div class="institution-left">
+                                <div class="institution-logo kis">한투</div>
+                                <div>
+                                    <div class="institution-name">한국투자증권</div>
+                                    <div class="institution-detail">IRP •••9012</div>
+                                </div>
+                            </div>
+                            <div class="institution-amount">75,000,000원</div>
+                        </div>
+                        <div class="pension-sub-item">
+                            <div class="institution-left">
+                                <div class="institution-logo mirae">미래</div>
+                                <div>
+                                    <div class="institution-name">미래에셋증권</div>
+                                    <div class="institution-detail">IRP •••3456</div>
+                                </div>
+                            </div>
+                            <div class="institution-amount">55,000,000원</div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="add-account-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 5v14M5 12h14"/>
+                    </svg>
+                    연금 계좌 추가하기
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        function toggleCategory(cardId) {
+            const card = document.getElementById(cardId);
+            card.classList.toggle('expanded');
+        }
+
+        function togglePensionGroup(event, groupId) {
+            event.stopPropagation();
+            const group = document.getElementById(groupId);
+            group.classList.toggle('expanded');
+        }
+
+        // 숫자 포맷팅 함수 (필요시 사용)
+        function formatNumber(num) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+    </script>
+</body>
+</html>

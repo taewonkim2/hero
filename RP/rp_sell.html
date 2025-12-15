@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RP매도</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1a73e8;
+            --primary-light: #e8f0fe;
+            --positive: #e53935;
+            --negative: #1976d2;
+            --bg-primary: #f5f6f8;
+            --bg-card: #ffffff;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --text-muted: #9ca3af;
+            --border: #e5e7eb;
+            --shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            max-width: 480px;
+            margin: 0 auto;
+            min-height: 100vh;
+        }
+
+        /* Step Container */
+        .step-container {
+            display: none;
+            min-height: 100vh;
+            background: white;
+            flex-direction: column;
+        }
+
+        .step-container.active {
+            display: flex;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 100;
+        }
+
+        .header-title {
+            font-size: 17px;
+            font-weight: 600;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .header-left {
+            width: 24px;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            padding: 4px;
+        }
+
+        /* Content Area */
+        .content {
+            flex: 1;
+            padding: 20px 16px;
+            overflow-y: auto;
+        }
+
+        /* Account Info */
+        .account-info {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+
+        /* Product Card */
+        .product-card {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            background: var(--bg-primary);
+            border-radius: 12px;
+            margin-bottom: 24px;
+        }
+
+        .product-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 700;
+            margin-right: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .product-name {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        /* Form Section */
+        .form-section {
+            margin-bottom: 24px;
+        }
+
+        .form-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .form-input-wrapper {
+            position: relative;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 16px;
+            padding-right: 40px;
+            border: none;
+            border-bottom: 1px solid var(--border);
+            font-size: 18px;
+            font-family: inherit;
+            text-align: right;
+            background: transparent;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-bottom-color: var(--primary);
+        }
+
+        .form-suffix {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 18px;
+            color: var(--text-primary);
+        }
+
+        .form-helper {
+            text-align: right;
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-top: 8px;
+        }
+
+        /* Divider */
+        .divider {
+            height: 1px;
+            background: var(--border);
+            margin: 24px 0;
+        }
+
+        /* Info Row */
+        .info-row {
+            display: flex;
+            align-items: center;
+            padding: 12px 0;
+        }
+
+        .info-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--primary-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            color: var(--primary);
+            font-size: 14px;
+        }
+
+        .info-text {
+            font-size: 14px;
+            color: var(--text-primary);
+        }
+
+        .info-value {
+            font-weight: 600;
+        }
+
+        /* Expected Amount */
+        .expected-section {
+            background: var(--bg-primary);
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 24px;
+        }
+
+        .expected-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .expected-value {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        /* Bottom Button */
+        .bottom-section {
+            padding: 16px;
+            border-top: 1px solid var(--border);
+            background: white;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 16px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .btn-primary.active {
+            background: var(--text-primary);
+            color: white;
+        }
+
+        .btn-primary:disabled {
+            background: var(--bg-primary);
+            color: var(--text-muted);
+            cursor: not-allowed;
+        }
+
+        /* Step 2 - Warning Popup Style */
+        .warning-box {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            margin: 20px 0;
+        }
+
+        .warning-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        .warning-text {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .warning-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-secondary {
+            flex: 1;
+            padding: 14px;
+            background: white;
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .btn-warning {
+            flex: 1;
+            padding: 14px;
+            background: #d4a574;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        /* Step 3 - Confirmation */
+        .confirm-header {
+            text-align: center;
+            padding: 20px 0 30px;
+        }
+
+        .confirm-title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .confirm-product {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: var(--bg-primary);
+            border-radius: 12px;
+            margin-bottom: 24px;
+        }
+
+        .confirm-product .product-icon {
+            margin-right: 12px;
+        }
+
+        .confirm-product .product-name {
+            font-size: 18px;
+        }
+
+        .confirm-info {
+            background: white;
+        }
+
+        .confirm-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .confirm-row:last-child {
+            border-bottom: none;
+        }
+
+        .confirm-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .confirm-value {
+            font-size: 14px;
+            font-weight: 600;
+            text-align: right;
+        }
+
+        .confirm-value.highlight {
+            color: var(--positive);
+        }
+
+        .confirm-buttons {
+            display: flex;
+            gap: 12px;
+            padding: 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        .btn-cancel {
+            flex: 1;
+            padding: 16px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .btn-confirm {
+            flex: 1;
+            padding: 16px;
+            background: var(--text-primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        /* Step 4 - Complete */
+        .complete-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+        }
+
+        .complete-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+        }
+
+        .complete-icon svg {
+            width: 40px;
+            height: 40px;
+            color: white;
+        }
+
+        .complete-message {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 40px;
+        }
+
+        .complete-info {
+            width: 100%;
+            background: var(--bg-primary);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .complete-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+        }
+
+        .complete-row:not(:last-child) {
+            border-bottom: 1px solid var(--border);
+        }
+
+        .complete-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .complete-value {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .complete-value.highlight {
+            color: var(--positive);
+        }
+
+        /* Dark overlay for step 2 */
+        .step2-bg {
+            background: #1a1a2e;
+            padding-top: 60px;
+        }
+
+        .step2-product-info {
+            color: white;
+            padding: 20px;
+        }
+
+        .step2-product-name {
+            font-size: 12px;
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 8px;
+        }
+
+        .step2-amount {
+            font-size: 28px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 4px;
+        }
+
+        .step2-change {
+            font-size: 14px;
+            color: var(--positive);
+        }
+    </style>
+</head>
+<body>
+    <!-- Step 1: 매도금액 입력 -->
+    <div class="step-container active" id="step1">
+        <div class="header">
+            <div class="header-left"></div>
+            <span class="header-title">RP매도</span>
+            <button class="close-btn" onclick="closePage()">&times;</button>
+        </div>
+        <div class="content">
+            <div class="account-info">6359-XXXX</div>
+
+            <div class="product-card">
+                <div class="product-icon">₩</div>
+                <span class="product-name">원화RP</span>
+            </div>
+
+            <div class="form-section">
+                <div class="form-label">매도금액</div>
+                <div class="form-input-wrapper">
+                    <input type="text" class="form-input" id="sellAmount" placeholder="0" oninput="updateAmount()">
+                    <span class="form-suffix">원</span>
+                </div>
+                <div class="form-helper">전액 : 100,000원</div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="info-row">
+                <div class="info-icon">$</div>
+                <div class="info-text">
+                    <span>(+) 예상 이자금액(세전) : </span>
+                    <span class="info-value">1,000원</span>
+                </div>
+            </div>
+
+            <div class="info-row">
+                <div class="info-icon" style="background: #fef3c7; color: #d97706;">-</div>
+                <div class="info-text">
+                    <span>(-) 예상 세금 : </span>
+                    <span class="info-value">2,000원</span>
+                </div>
+            </div>
+
+            <div class="expected-section">
+                <div class="expected-label">예상 출금금액</div>
+                <div class="expected-value" id="expectedAmount">99,000원</div>
+            </div>
+        </div>
+        <div class="bottom-section">
+            <button class="btn-primary active" onclick="goToStep(2)">매도</button>
+        </div>
+    </div>
+
+    <!-- Step 2: 수익률 경고 팝업 -->
+    <div class="step-container" id="step2">
+        <div class="header" style="background: #1a1a2e; border-bottom: none;">
+            <button class="close-btn" style="color: white;" onclick="goToStep(1)">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M15 18l-6-6 6-6"></path>
+                </svg>
+            </button>
+            <span class="header-title" style="color: white;">한국투자증권</span>
+            <button class="close-btn" style="color: white;" onclick="closePage()">&times;</button>
+        </div>
+        <div class="step2-bg" style="flex: 1;">
+            <div class="step2-product-info">
+                <div class="step2-product-name">외화RP(USD)이토스뱅크 제휴 특판 기간형)</div>
+                <div class="step2-amount">147,098원</div>
+                <div class="step2-change">-112원 (-0.07%)</div>
+            </div>
+
+            <div class="warning-box">
+                <div class="warning-title">지금 판매하면 연 5.01%의 수익률을 받을 수 없어요</div>
+                <div class="warning-text">
+                    약속한 기간 이전에 해지하실 경우 중도상환 수익률 연2.505%만 받을 수 있어요. 만기일자별 상세 잔고는 구매금액별 상세잔고에서 확인할 수 있어요.
+                </div>
+                <div class="warning-buttons">
+                    <button class="btn-secondary" onclick="goToStep(1)">닫기</button>
+                    <button class="btn-warning" onclick="goToStep(3)">판매하기</button>
+                </div>
+            </div>
+
+            <div style="padding: 20px; color: white;">
+                <div style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                    <span style="color: rgba(255,255,255,0.6); font-size: 14px;">구매일</span>
+                    <span style="font-size: 14px;">원</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                    <span style="color: rgba(255,255,255,0.6); font-size: 14px;">기간</span>
+                    <span style="font-size: 14px;">일</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                    <span style="color: rgba(255,255,255,0.6); font-size: 14px;">상품기간</span>
+                    <span style="font-size: 14px;">일</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                    <span style="color: rgba(255,255,255,0.6); font-size: 14px;">약정 수익률 (세전) ⓘ</span>
+                    <span style="font-size: 14px;">연 5.01%</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding: 12px 0;">
+                    <span style="color: rgba(255,255,255,0.6); font-size: 14px;">중도해지수익률 ⓘ</span>
+                    <span style="font-size: 14px;">연 2.505%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 3: 매도 정보 확인 -->
+    <div class="step-container" id="step3">
+        <div class="header" style="background: var(--bg-primary);">
+            <div class="header-left"></div>
+            <span class="header-title">RP매도</span>
+            <button class="close-btn" onclick="closePage()">&times;</button>
+        </div>
+        <div class="content" style="background: var(--bg-primary);">
+            <div class="account-info">6359-XXXX</div>
+
+            <div class="confirm-product">
+                <div class="product-icon">₩</div>
+                <span class="product-name">원화RP</span>
+            </div>
+
+            <div class="confirm-header">
+                <h2 class="confirm-title">RP매도 정보 확인</h2>
+            </div>
+
+            <div class="confirm-info" style="background: white; border-radius: 12px; padding: 0 16px;">
+                <div class="confirm-row">
+                    <span class="confirm-label">계좌번호</span>
+                    <span class="confirm-value">6359 - XXXX</span>
+                </div>
+                <div class="confirm-row">
+                    <span class="confirm-label">상품명</span>
+                    <span class="confirm-value">원화RP</span>
+                </div>
+                <div class="confirm-row">
+                    <span class="confirm-label">약정이율(연)</span>
+                    <span class="confirm-value">2.3%</span>
+                </div>
+                <div class="confirm-row">
+                    <span class="confirm-label">중도해지이율(연)</span>
+                    <span class="confirm-value">0.7%</span>
+                </div>
+                <div class="confirm-row">
+                    <span class="confirm-label">매도금액</span>
+                    <span class="confirm-value highlight">100,000원</span>
+                </div>
+                <div class="confirm-row">
+                    <span class="confirm-label">예상 이자금액(세전)</span>
+                    <span class="confirm-value highlight">1,000원</span>
+                </div>
+            </div>
+        </div>
+        <div class="confirm-buttons">
+            <button class="btn-cancel" onclick="goToStep(1)">취소</button>
+            <button class="btn-confirm" onclick="goToStep(4)">확인</button>
+        </div>
+    </div>
+
+    <!-- Step 4: 매도 완료 -->
+    <div class="step-container" id="step4">
+        <div class="header">
+            <div class="header-left"></div>
+            <span class="header-title">RP매도</span>
+            <button class="close-btn" onclick="closePage()">&times;</button>
+        </div>
+        <div class="content">
+            <div class="complete-content">
+                <div class="complete-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                        <path d="M5 13l4 4L19 7"></path>
+                    </svg>
+                </div>
+                <div class="complete-message">RP 매도가 완료되었습니다.</div>
+
+                <div class="complete-info">
+                    <div class="complete-row">
+                        <span class="complete-label">상품명</span>
+                        <span class="complete-value">원화RP</span>
+                    </div>
+                    <div class="complete-row">
+                        <span class="complete-label">약정이율(연)</span>
+                        <span class="complete-value">2.3%</span>
+                    </div>
+                    <div class="complete-row">
+                        <span class="complete-label">중도해지이율(연)</span>
+                        <span class="complete-value">0.7%</span>
+                    </div>
+                    <div class="complete-row">
+                        <span class="complete-label">매도금액</span>
+                        <span class="complete-value highlight">100,000원</span>
+                    </div>
+                    <div class="complete-row">
+                        <span class="complete-label">예상 이자금액(세전)</span>
+                        <span class="complete-value highlight">1,000원</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="bottom-section">
+            <button class="btn-primary active" onclick="closePage()">확인</button>
+        </div>
+    </div>
+
+    <script>
+        function goToStep(step) {
+            document.querySelectorAll('.step-container').forEach(container => {
+                container.classList.remove('active');
+            });
+            document.getElementById('step' + step).classList.add('active');
+        }
+
+        function closePage() {
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                window.location.href = 'rp_balance.html';
+            }
+        }
+
+        function updateAmount() {
+            const input = document.getElementById('sellAmount');
+            let value = input.value.replace(/[^0-9]/g, '');
+            if (value) {
+                value = parseInt(value).toLocaleString();
+            }
+            input.value = value;
+
+            // Update expected amount
+            const numValue = parseInt(input.value.replace(/,/g, '')) || 0;
+            const interest = 1000;
+            const tax = 2000;
+            const expected = numValue + interest - tax;
+            document.getElementById('expectedAmount').textContent = expected.toLocaleString() + '원';
+        }
+
+        // URL 파라미터로 상품 정보 받기
+        function initPage() {
+            const params = new URLSearchParams(window.location.search);
+            const productName = params.get('product') || '원화RP';
+            // 필요시 상품 정보로 화면 업데이트
+        }
+
+        document.addEventListener('DOMContentLoaded', initPage);
+    </script>
+</body>
+</html>

@@ -186,7 +186,7 @@
         }
 
         .account-switch-row {
-            display: flex;
+            display: space-between;
             align-items: center;
             gap: 12px;
             margin-bottom: 12px;
@@ -310,7 +310,8 @@
         }
 
         .account-dropdown {
-            width: 50%;
+            width: 75%;
+            /* margin-bottom: 10px; */
             padding: 12px 16px;
             border: 1px solid var(--border);
             border-radius: 10px;
@@ -747,15 +748,15 @@
                 <span class="section-title">RP보유종목</span>
                 <span class="section-more" onclick="navigateTo('rp-holdings')">전체보기 ›</span>
             </div>
-        <section class="account-selector animate-in">
+        <!-- <section class="account-selector animate-in"> -->
             <div class="account-switch-row">
-                <div class="switch-container" onclick="toggleAccountMode()">
+                <!-- <div class="switch-container" onclick="toggleAccountMode()">
                     <span class="switch-text" id="switchText">전체</span>
                     <div class="switch-dots">
                         <div class="switch-dot active" id="dotTop"></div>
                         <div class="switch-dot" id="dotBottom"></div>
                     </div>
-                </div>
+                </div> -->
                 <select class="account-dropdown" id="accountSelect" disabled>
                     <option value="all">전체 계좌</option>
                     <option value="acc1">123-456-789012 (종합계좌)</option>
@@ -764,7 +765,7 @@
                 </select>
                 <input type="password" class="password-input" id="passwordInput" placeholder="비밀번호" disabled>
             </div>
-        </section>
+        <!-- </section> -->
             <!-- Total Summary -->
             <div class="total-summary">
                 <div class="total-label">전체 보유금액</div>

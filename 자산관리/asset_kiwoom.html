@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>자산키움</title>
+    <link rel="stylesheet" href="../css/common.css">
+    <link rel="stylesheet" href="asset-kiwoom.css">
+</head>
+<body>
+    <!-- Header Area (통합) -->
+    <div class="header-area">
+        <!-- Top Row -->
+        <div class="header-top">
+            <!-- <a href="#" class="back-btn">‹</a> -->
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M15 18l-6-6 6-6"></path>
+                </svg>
+            <div class="header-tabs">
+                <div class="header-tab active">일반</div>
+                <div class="header-tab">간편</div>
+            </div>
+            <!-- 뭐사지 배너 (나중에 img로 교체) -->
+            <div class="banner-image">
+                <div class="banner-placeholder">
+                    <span class="banner-placeholder-text">뭐 사지?</span>
+                    <span class="banner-placeholder-sub">고민 끝! 내버리기 ›</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Tabs -->
+        <div class="main-tabs">
+            <div class="main-tab">주식</div>
+            <div class="main-tab">혜택</div>
+            <div class="main-tab active">자산키움</div>
+        </div>
+    </div>
+
+    <div class="content">
+        <!-- Notification Banner -->
+        <div class="notification-banner">
+            <div class="notification-icon">$</div>
+            <span class="notification-text">새로운 포트폴리오 전략이 나왔어요</span>
+        </div>
+
+        <!-- Asset Card -->
+        <div class="asset-card">
+            <div class="asset-header">
+                <div class="asset-header-left">
+                    <span class="asset-label">내 통합자산</span>
+                    <div class="asset-info-icon">!</div>
+                </div>
+                <button class="asset-deposit-btn">입금</button>
+            </div>
+            <div class="asset-amount">1,589,450,759 원</div>
+            <div class="asset-change">
+                2025년 11월 12일 보다 <span>+89,389,982(111,56%) </span>늘었어요
+            </div>
+        </div>
+
+        <!-- 오늘의 인기 세트 메뉴 (명품관 스타일) -->
+        <div class="section" id="section-popular">
+            <div class="section-header" onclick="toggleSection('popular')">
+                <span class="section-title">📈 오늘의 인기 세트 메뉴</span>
+                <span class="section-toggle" id="toggle-popular">▼</span>
+            </div>
+
+            <div class="section-content" id="content-popular">
+                <!-- Fidelity 스타일 -->
+                <div class="premium-item">
+                    <div class="premium-logo-placeholder fidelity">Fidelity</div>
+                    <div class="premium-content">
+                        <div class="premium-item-title">피델리티 자산배분</div>
+                        <div class="premium-item-desc">미국 대형 기술주 중심 투자</div>
+                        <div class="premium-stocks">
+                            <div class="stock-icon nvidia">NV</div>
+                            <div class="stock-icon google">G</div>
+                            <div class="stock-icon apple">A</div>
+                        </div>
+                    </div>
+                    <div class="premium-right">
+                        <div class="premium-return-label">1개월</div>
+                        <div class="premium-return-value">+31%</div>
+                    </div>
+                </div>
+
+                <!-- Schwab 스타일 -->
+                <div class="premium-item">
+                    <div class="premium-logo-placeholder schwab">charles<br>SCHWAB</div>
+                    <div class="premium-content">
+                        <div class="premium-item-title">찰스슈왑 자산배분</div>
+                        <div class="premium-item-desc">전세계 지수 분산 투자</div>
+                        <div class="premium-stocks">
+                            <div class="stock-icon spdr">SP</div>
+                            <div class="stock-icon spdr">DX</div>
+                        </div>
+                    </div>
+                    <div class="premium-right">
+                        <div class="premium-return-label">1개월</div>
+                        <div class="premium-return-value">+26%</div>
+                    </div>
+                </div>
+
+                <!-- Vanguard 스타일 -->
+                <div class="premium-item">
+                    <div class="premium-logo-placeholder vanguard">Vanguard</div>
+                    <div class="premium-content">
+                        <div class="premium-item-title">뱅가드 자산배분</div>
+                        <div class="premium-item-desc">저비용 인덱스 장기 투자</div>
+                        <div class="premium-stocks">
+                            <div class="stock-icon vti">VTI</div>
+                            <div class="stock-icon bnd">BND</div>
+                        </div>
+                    </div>
+                    <div class="premium-right">
+                        <div class="premium-return-label">1개월</div>
+                        <div class="premium-return-value">+18%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 단품 메뉴 -->
+        <div class="section" id="section-single">
+            <div class="section-header" onclick="toggleSection('single')">
+                <span class="section-title">🎯 단품 메뉴</span>
+                <span class="section-toggle" id="toggle-single">▼</span>
+            </div>
+
+            <div class="section-content" id="content-single">
+                <div class="menu-item">
+                    <div class="menu-icon hyundai">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="#002c5f">
+                            <ellipse cx="12" cy="12" rx="10" ry="6"/>
+                        </svg>
+                    </div>
+                    <div class="menu-content">
+                        <div class="menu-title">미국 3년 국채<span class="rating-badge">AA++</span></div>
+                        <div class="menu-subtitle">1년 수익률 00.0%</div>
+                    </div>
+                </div>
+
+                <div class="menu-item">
+                    <div class="menu-icon rp">K</div>
+                    <div class="menu-content">
+                        <div class="menu-title">단기원화 RP</div>
+                        <div class="menu-subtitle">1년 수익률 00.0%</div>
+                    </div>
+                </div>
+
+                <div class="menu-item">
+                    <div class="menu-icon global">K</div>
+                    <div class="menu-content">
+                        <div class="menu-title">키움 글로벌 펀드</div>
+                        <div class="menu-subtitle">1년 수익률 00.0%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 금주 Hot한 전략 -->
+        <div class="section" id="section-hot">
+            <div class="section-header" onclick="toggleSection('hot')">
+                <span class="section-title">⚡금주 Hot한 전략</span>
+                <span class="section-toggle" id="toggle-hot">▼</span>
+            </div>
+
+            <div class="section-content" id="content-hot">
+                <div class="menu-item">
+                    <div class="menu-icon china">
+                        <span class="flag-icon">🇨🇳</span>
+                    </div>
+                    <div class="menu-content">
+                        <div class="menu-title"> 차이나 전략</div>
+                        <div class="menu-subtitle">1년 수익률 00.0%</div>
+                    </div>
+                </div>
+
+                <div class="menu-item">
+                    <div class="menu-icon usa">
+                        <span style="font-size: 12px; font-weight: 700; color: #2563eb;">ETF</span>
+                    </div>
+                    <div class="menu-content">
+                        <div class="menu-title">Easy ETF 전략</div>
+                        <div class="menu-subtitle">1년 수익률 00.0%</div>
+                    </div>
+                </div>
+
+                <div class="menu-item">
+                    <div class="menu-icon usa">
+                        <span class="flag-icon">🇺🇸</span>
+                    </div>
+                    <div class="menu-content">
+                        <div class="menu-title">글로벌 해외전략</div>
+                        <div class="menu-subtitle">1년 수익률 00.0%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 지금 조회수 많은 상품 -->
+        <div class="section" id="section-trending">
+            <div class="section-header" onclick="toggleSection('trending')">
+                <span class="section-title">💰 지금 조회수 많은 상품</span>
+                <span class="section-toggle" id="toggle-trending">▼</span>
+            </div>
+
+            <div class="section-content" id="content-trending">
+                <div class="menu-item">
+                    <div class="menu-icon global">K</div>
+                    <div class="menu-content">
+                        <div class="menu-title">키움 글로벌 펀드</div>
+                        <div class="menu-subtitle">1년 수익률 00.0%</div>
+                    </div>
+                </div>
+
+                <div class="menu-item">
+                    <div class="menu-icon els">K</div>
+                    <div class="menu-content">
+                        <div class="menu-title">키움 ELS</div>
+                        <div class="menu-subtitle">1년 수익률 00.0%</div>
+                    </div>
+                </div>
+
+                <div class="menu-item">
+                    <div class="menu-icon bond"></div>
+                    <div class="menu-content">
+                        <div class="menu-title">채권</div>
+                        <div class="menu-subtitle">1년 수익률 00.0%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 자산키움 서비스 (Swipeable) -->
+        <div class="service-section">
+            <div class="service-title">📊 자산키움 서비스</div>
+            <div class="service-scroll-container">
+                <div class="service-buttons">
+                    <div class="service-btn">
+                        <div class="service-btn-icon search">🔍</div>
+                        <div class="service-btn-label">자산조회</div>
+                    </div>
+                    <div class="service-btn">
+                        <div class="service-btn-icon save">💰</div>
+                        <div class="service-btn-label">적립</div>
+                    </div>
+                    <div class="service-btn">
+                        <div class="service-btn-icon pension">🏆</div>
+                        <div class="service-btn-label">연금</div>
+                    </div>
+                    <div class="service-btn">
+                        <div class="service-btn-icon product">📦</div>
+                        <div class="service-btn-label">금융상품</div>
+                    </div>
+                    <div class="service-btn">
+                        <div class="service-btn-icon tax">💎</div>
+                        <div class="service-btn-label">절세</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Connect Button -->
+        <div class="connect-btn">
+            <span>+</span>
+            <span>다른 금융사 연결하기</span>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <div class="nav-menu-btn">
+            <div class="hamburger">
+                <div class="hamburger-line"></div>
+                <div class="hamburger-line"></div>
+                <div class="hamburger-line"></div>
+            </div>
+            <span>메뉴</span>
+        </div>
+        <div class="nav-text-item active">자산키움</div>
+    </div>
+
+    <script src="../js/common.js"></script>
+    <script src="asset-kiwoom.js"></script>
+</body>
+</html>

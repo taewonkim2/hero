@@ -1,0 +1,448 @@
+/* ========================================
+   Asset Overview Styles (자산관리 전용)
+   ======================================== */
+
+/* Page specific body padding */
+body {
+    padding-bottom: 100px;
+}
+
+/* ========================================
+   Total Asset Section
+   ======================================== */
+.total-asset-section {
+    padding: 24px 20px 28px;
+    background: var(--bg-primary);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.total-label {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.total-label svg {
+    width: 16px;
+    height: 16px;
+    opacity: 0.7;
+}
+
+.total-amount {
+    font-size: 36px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    color: var(--text-primary);
+}
+
+.total-amount .currency {
+    font-size: 24px;
+    font-weight: 500;
+}
+
+.change-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 24px;
+}
+
+.change-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 10px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.change-badge.positive {
+    background: var(--accent-red-bg);
+    color: var(--accent-red);
+}
+
+.change-badge.negative {
+    background: var(--accent-blue-bg);
+    color: var(--accent-blue);
+}
+
+.change-badge svg {
+    width: 14px;
+    height: 14px;
+}
+
+.change-detail {
+    font-size: 13px;
+    color: var(--text-tertiary);
+}
+
+/* ========================================
+   Action Buttons
+   ======================================== */
+.action-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.action-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 20px;
+    border-radius: var(--radius-md);
+    font-size: 15px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.action-btn.deposit {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.action-btn.deposit:hover {
+    background: var(--bg-card-hover);
+}
+
+.action-btn.withdraw {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.action-btn.withdraw:hover {
+    background: var(--bg-card-hover);
+}
+
+.action-btn svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* ========================================
+   Asset Categories
+   ======================================== */
+.asset-categories {
+    padding: 16px 20px;
+}
+
+.category-card {
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    margin-bottom: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+}
+
+.category-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 20px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.category-header:hover {
+    background: var(--bg-card-hover);
+}
+
+.category-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.category-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.category-icon.invest {
+    background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+}
+
+.category-icon.bank {
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+}
+
+.category-icon.pension {
+    background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+}
+
+.category-icon svg {
+    width: 22px;
+    height: 22px;
+    color: white;
+}
+
+.category-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.category-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.category-count {
+    font-size: 13px;
+    color: var(--text-tertiary);
+}
+
+.category-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.category-amount {
+    text-align: right;
+}
+
+.category-amount .amount {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.category-amount .change {
+    font-size: 12px;
+    margin-top: 2px;
+    font-weight: 500;
+}
+
+.category-amount .change.positive {
+    color: var(--accent-red);
+}
+
+.category-amount .change.negative {
+    color: var(--accent-blue);
+}
+
+.expand-icon {
+    width: 24px;
+    height: 24px;
+    color: var(--text-tertiary);
+    transition: transform 0.3s ease;
+}
+
+.category-card.expanded .expand-icon {
+    transform: rotate(180deg);
+}
+
+/* ========================================
+   Institution List
+   ======================================== */
+.institution-list {
+    display: none;
+    padding: 0 20px 8px;
+    border-top: 1px solid var(--border-color);
+    background: var(--bg-secondary);
+}
+
+.category-card.expanded .institution-list {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+
+.institution-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.institution-item:last-of-type {
+    border-bottom: none;
+}
+
+.institution-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.institution-logo {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--bg-card);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+}
+
+.institution-logo.kiwoom { background: #FF6B00; color: white; border: none; }
+.institution-logo.kis { background: #003366; color: white; border: none; }
+.institution-logo.mirae { background: #0066B3; color: white; border: none; }
+.institution-logo.kb { background: #FFB81C; color: #333; border: none; }
+.institution-logo.shinhan { background: #0046FF; color: white; border: none; }
+.institution-logo.kakao { background: #FEE500; color: #333; border: none; }
+.institution-logo.toss { background: #0064FF; color: white; border: none; }
+
+.institution-name {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.institution-detail {
+    font-size: 13px;
+    color: var(--text-tertiary);
+    margin-top: 2px;
+}
+
+.institution-amount {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+/* ========================================
+   Pension Sub-items
+   ======================================== */
+.pension-group {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.pension-group:last-of-type {
+    border-bottom: none;
+}
+
+.pension-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 0;
+    cursor: pointer;
+}
+
+.pension-header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.pension-type-badge {
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.pension-type-badge.saving {
+    background: rgba(245, 158, 11, 0.12);
+    color: #B45309;
+}
+
+.pension-type-badge.irp {
+    background: rgba(139, 92, 246, 0.12);
+    color: #6D28D9;
+}
+
+.pension-sub-list {
+    display: none;
+    padding-left: 16px;
+    margin-top: 8px;
+}
+
+.pension-group.expanded .pension-sub-list {
+    display: block;
+}
+
+.pension-sub-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(229, 231, 235, 0.7);
+}
+
+.pension-sub-item:last-child {
+    border-bottom: none;
+}
+
+.pension-expand-icon {
+    width: 18px;
+    height: 18px;
+    color: var(--text-tertiary);
+    transition: transform 0.3s ease;
+}
+
+.pension-group.expanded .pension-expand-icon {
+    transform: rotate(180deg);
+}
+
+/* ========================================
+   Add Account Button
+   ======================================== */
+.add-account-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 14px;
+    margin-top: 8px;
+    background: var(--bg-card);
+    border: 1px dashed var(--border-color);
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.add-account-btn:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--text-tertiary);
+    color: var(--text-primary);
+}
+
+.add-account-btn svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* ========================================
+   Responsive
+   ======================================== */
+@media (max-width: 380px) {
+    .total-amount {
+        font-size: 30px;
+    }
+
+    .action-btn {
+        padding: 12px 16px;
+        font-size: 14px;
+    }
+}

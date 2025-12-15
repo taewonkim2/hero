@@ -440,20 +440,9 @@
             padding-top: 0;
         }
 
-        /* Timeline Line */
+        /* History Items */
         .history-items-wrapper {
             position: relative;
-            padding-left: 20px;
-        }
-
-        .history-items-wrapper::before {
-            content: '';
-            position: absolute;
-            left: 7px;
-            top: 20px;
-            bottom: 20px;
-            width: 2px;
-            background: var(--border);
         }
 
         .history-item {
@@ -461,7 +450,6 @@
             align-items: flex-start;
             padding: 14px 0;
             border-bottom: 1px solid var(--border);
-            position: relative;
             cursor: pointer;
             transition: background 0.2s;
         }
@@ -470,19 +458,6 @@
             background: var(--bg-primary);
             margin: 0 -16px;
             padding: 14px 16px;
-        }
-
-        .history-item::before {
-            content: '';
-            position: absolute;
-            left: -20px;
-            top: 26px;
-            width: 10px;
-            height: 10px;
-            background: white;
-            border: 2px solid var(--primary);
-            border-radius: 50%;
-            z-index: 1;
         }
 
         .history-item:last-child {
