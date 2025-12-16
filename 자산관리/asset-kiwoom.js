@@ -32,3 +32,28 @@ function toggleSection(sectionId) {
         toggle.classList.toggle('collapsed');
     }
 }
+
+/* ========================================
+   Popular View Toggle (리스트/캐러셀 뷰 전환)
+   ======================================== */
+let isCarouselView = false;
+
+function togglePopularView(event) {
+    // 이벤트 버블링 방지 (섹션 접기/펼치기 방지)
+    event.stopPropagation();
+
+    const listView = document.getElementById('popular-list-view');
+    const carouselView = document.getElementById('popular-carousel-view');
+
+    if (listView && carouselView) {
+        isCarouselView = !isCarouselView;
+
+        if (isCarouselView) {
+            listView.classList.add('hidden');
+            carouselView.classList.remove('hidden');
+        } else {
+            listView.classList.remove('hidden');
+            carouselView.classList.add('hidden');
+        }
+    }
+}

@@ -196,7 +196,8 @@
     <div class="main-container">
         <!-- 왼쪽 메뉴 -->
         <nav class="left-menu">
-            <div class="menu-item active" data-target="today">홈/div>
+            <div class="menu-item active" data-target="asset">자산관리</div>
+            <div class="menu-item" data-target="today">오늘의 <br> 금융상품</div>
             <div class="menu-item" data-target="fund">펀드</div>
             <div class="menu-item" data-target="pension">연금</div>
             <div class="menu-item" data-target="els">ELS/ELB</div>
@@ -213,12 +214,19 @@
 
         <!-- 오른쪽 컨텐츠 -->
         <div class="right-content" id="rightContent">
-            <!-- 오늘의 금융상품 -->
-            <div class="section" id="today">
-                <div class="section-header">오늘의금융상품</div>
+            <!-- 자산관리 -->
+            <div class="section" id="asset">
+                <div class="section-header">자산관리</div>
                 <div class="section-content">
-                    <div class="sub-item" onclick="location.href='/자산관리/asset_kiwoom.html'">자산관리 홈</div>
-                    <div class="sub-item">오늘의 금융상품</div>
+                    <div class="sub-item" onclick="location.href='/자산관리/asset_kiwoom.html'">자산키움</div>
+                    <div class="sub-item" onclick="location.href='/자산관리/asset_inquiry.html'">자산조회</div>
+                </div>
+            </div>
+            <div class="section" id="today">
+                <div class="section-header">오늘의 금융상품</div>
+                <div class="section-content">
+                    <div class="sub-item" onclick="location.href='/자산관리/asset_kiwoom.html'">오늘의 금융상품</div>
+                    <!-- <div class="sub-item">오늘의 금융상품</div> -->
                 </div>
             </div>
 
