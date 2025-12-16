@@ -757,6 +757,131 @@
         .content {
             padding-bottom: 70px;
         }
+
+        /* ========================================
+           Bottom Slide Popup
+           ======================================== */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 200;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+
+        .popup-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .popup-container {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%) translateY(100%);
+            width: 100%;
+            max-width: 480px;
+            background: white;
+            border-radius: 20px 20px 0 0;
+            z-index: 201;
+            transition: transform 0.3s ease-out;
+        }
+
+        .popup-overlay.active + .popup-container,
+        .popup-container.active {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .popup-header {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid var(--gray-200);
+            position: relative;
+        }
+
+        .popup-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--gray-800);
+        }
+
+        .popup-close {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--gray-500);
+            font-size: 20px;
+        }
+
+        .popup-content {
+            padding: 24px 20px;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        .popup-subtitle {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--kiwoom-purple);
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .popup-text {
+            font-size: 14px;
+            color: var(--gray-600);
+            line-height: 1.8;
+            margin-bottom: 16px;
+        }
+
+        .popup-text-highlight {
+            color: var(--kiwoom-purple);
+            font-weight: 500;
+        }
+
+        .popup-list {
+            margin-bottom: 16px;
+        }
+
+        .popup-list-item {
+            font-size: 13px;
+            color: var(--gray-600);
+            line-height: 1.8;
+            padding-left: 12px;
+            position: relative;
+        }
+
+        .popup-list-item::before {
+            content: '·';
+            position: absolute;
+            left: 0;
+            color: var(--gray-400);
+        }
+
+        .popup-button {
+            width: 100%;
+            padding: 16px;
+            background: var(--kiwoom-purple);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 16px;
+        }
     </style>
 </head>
 <body>
@@ -853,7 +978,7 @@
             <div class="section-header">
                 <div class="section-title-row">
                     <span class="section-title">해외주식 양도소득</span>
-                    <div class="section-info-icon">?</div>
+                    <div class="section-info-icon" onclick="openPopup('taxInfoPopup')">?</div>
                 </div>
                 <span class="section-badge purple">양도세 미발생</span>
             </div>
@@ -938,12 +1063,13 @@
             </div>
             <!-- Bar Chart -->
             <div class="chart-section">
-                <div class="chart-message">
-                    <!-- 당사+타사 = 90%, box 170px, 화살표가 90% 지점 가리킴 -->
-                    <div class="chart-message-box warning" style="margin-left: calc(90% - 85px);">
+                <div class="chart-message" style="position: relative;">
+                    <!-- box는 가운데 배치 -->
+                    <div class="chart-message-box warning" style="margin-left: calc(50% - 85px);">
                         금융소득 2,000만원 초과시<br>종합과세 대상이에요
-                        <div class="chart-message-arrow" style="left: 50%;"></div>
                     </div>
+                    <!-- 화살표는 90% 지점(bar 끝)을 가리킴 -->
+                    <div style="position: absolute; bottom: -6px; left: 90%; transform: translateX(-50%); width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 6px solid #d97706;"></div>
                 </div>
                 <div class="bar-chart-container">
                     <div class="bar-chart">
@@ -1063,6 +1189,34 @@
         </div>
     </div>
 
+    <!-- Tax Info Popup -->
+    <div class="popup-overlay" id="taxInfoPopupOverlay" onclick="closePopup('taxInfoPopup')"></div>
+    <div class="popup-container" id="taxInfoPopup">
+        <div class="popup-header">
+            <span class="popup-title">기본공제 안내</span>
+            <div class="popup-close" onclick="closePopup('taxInfoPopup')">×</div>
+        </div>
+        <div class="popup-content">
+            <div class="popup-subtitle">해외주식 양도소득세는<br>250만원 기본공제가 적용됩니다</div>
+            <div class="popup-text">
+                해외주식 양도소득이 250만원을 초과하면,<br>
+                전체 소득금액이 아니라 <span class="popup-text-highlight">250만원을 초과한 금액에만 세율이 적용돼요!</span>
+            </div>
+            <div class="popup-list">
+                <div class="popup-list-item">기본공제: 해외주식 양도소득에서 세금이 면제되는 제도(250 만원)</div>
+                <div class="popup-list-item">과세표준: 세금을 계산할 때 기준이 되는 금액</div>
+                <div class="popup-list-item">세율: 총 22% - 소득세 20% + 주민세 2%</div>
+            </div>
+            <div class="popup-text" style="background: var(--gray-50); padding: 16px; border-radius: 12px; margin-bottom: 0;">
+                예) 해외주식 양도소득: 300 만원<br>
+                기본공제: 250 만원<br>
+                과세표준: 300 만원 - 250 만원 = 50만원<br>
+                해외주식 양도소득세: 50 만원 × 22% = 11 만원
+            </div>
+            <button class="popup-button" onclick="closePopup('taxInfoPopup')">확인</button>
+        </div>
+    </div>
+
     <!-- Bottom Navigation -->
     <nav class="bottom-nav">
         <div class="nav-menu-btn">
@@ -1134,6 +1288,24 @@
                 this.classList.add('active');
             });
         });
+
+        // Popup 열기
+        function openPopup(popupId) {
+            const overlay = document.getElementById(popupId + 'Overlay');
+            const popup = document.getElementById(popupId);
+            overlay.classList.add('active');
+            popup.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Popup 닫기
+        function closePopup(popupId) {
+            const overlay = document.getElementById(popupId + 'Overlay');
+            const popup = document.getElementById(popupId);
+            overlay.classList.remove('active');
+            popup.classList.remove('active');
+            document.body.style.overflow = '';
+        }
     </script>
 </body>
 </html>
