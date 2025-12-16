@@ -466,45 +466,119 @@
         */
 
         /* ========================================
-           Institution List (기관별 목록)
+           Category Card (투자/은행/보험 분류)
            ======================================== */
-        .institution-list {
+        .category-list {
             padding: 12px 16px;
         }
 
-        .institution-card {
-            background: var(--gray-50);
+        .category-card {
+            background: white;
             border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 12px;
+            margin-bottom: 16px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            overflow: hidden;
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px;
+            cursor: pointer;
+        }
+
+        .category-header-left {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .category-title-row {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+        }
+
+        .category-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--gray-800);
+        }
+
+        .category-amount {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--gray-800);
+        }
+
+        .category-change {
+            font-size: 13px;
+            color: var(--kiwoom-red);
+            text-align:right;
+        }
+
+        .category-change.negative {
+            color: var(--kiwoom-blue);
+        }
+
+        .category-expand-icon {
+            font-size: 14px;
+            color: var(--gray-400);
+            transition: transform 0.3s;
+        }
+
+        .category-expand-icon.expanded {
+            transform: rotate(180deg);
+        }
+
+        .category-content {
+            padding: 0;
+        }
+
+        .category-content.hidden {
+            display: none;
+        }
+
+        /* ========================================
+           Institution List (기관별 목록)
+           ======================================== */
+        .institution-list {
+            padding: 0;
+        }
+
+        .institution-card {
+            background: white;
+            padding: 16px 20px;
+            border-top: 1px solid var(--gray-100);
+            /* margin-left: 36px; */
         }
 
         .institution-card:last-child {
-            margin-bottom: 0;
+            border-bottom: none;
         }
 
         .institution-header {
             display: flex;
             align-items: flex-start;
             justify-content: space-between;
-            margin-bottom: 12px;
+            margin-bottom: 0;
         }
 
         .institution-header-left {
             display: flex;
             align-items: flex-start;
-            gap: 10px;
+            gap: 8px;
         }
 
         .institution-logo {
-            width: 40px;
-            height: 40px;
-            border-radius: 8px;
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 12px;
+            font-size: 9px;
             font-weight: 700;
             color: white;
             flex-shrink: 0;
@@ -589,8 +663,8 @@
         }
 
         .chart-icon-small {
-            width: 80px;
-            height: 50px;
+            width: 56px;
+            height: 35px;
             flex-shrink: 0;
         }
 
@@ -610,9 +684,9 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-top: 16px;
-            padding-top: 16px;
-            border-top: 1px solid var(--gray-200);
+            margin-top: 12px;
+            padding-top: 12px;
+            /* border-top: 1px solid var(--gray-100); */
             cursor: pointer;
         }
 
@@ -623,8 +697,9 @@
         }
 
         .institution-total-label {
-            font-size: 14px;
+            font-size: 13px;
             color: var(--gray-600);
+            margin-left: 36px;
         }
 
         .institution-total-right {
@@ -634,13 +709,13 @@
         }
 
         .institution-total-amount {
-            font-size: 17px;
+            font-size: 15px;
             font-weight: 600;
             color: var(--gray-800);
         }
 
         .expand-icon {
-            font-size: 12px;
+            font-size: 10px;
             color: var(--gray-400);
             transition: transform 0.3s;
         }
@@ -656,7 +731,7 @@
             margin-top: 12px;
             padding-top: 12px;
             /* border-top: 1px solid var(--gray-200); */
-            padding-left: 8px;
+            padding-left: 36px;
         }
 
         .institution-details.hidden {
@@ -880,497 +955,630 @@
         </div>
         -->
 
-        <!-- Institution List -->
-        <div class="institution-list">
-            <!-- 키움증권 -->
-            <div class="institution-card">
-                <div class="institution-header">
-                    <div class="institution-header-left">
-                        <div class="institution-logo kiwoom">K</div>
-                        <div class="institution-info">
-                            <div class="institution-name-row">
-                                <span class="institution-name">키움증권</span>
-                                <span class="institution-count">(3개)</span>
-                            </div>
-                            <div class="institution-change positive">
-                                159,569,478원 올랐어요
-                            </div>
+        <!-- Category List (투자/은행/보험) -->
+        <div class="category-list">
+            <!-- ========== 투자 카테고리 ========== -->
+            <div class="category-card">
+                <div class="category-header" onclick="toggleCategory(this)">
+                    <div class="category-header-left">
+                        <div class="category-title-row">
+                            <span class="category-title">투자</span>
+                            <span class="category-amount">156,893,903원</span>
                         </div>
+                        <span class="category-change">+23,589,932원(+12.45%)</span>
                     </div>
-                    <svg class="chart-icon-small up" viewBox="0 0 28 16" fill="none">
-                        <path d="M2 12 L8 6 L14 9 L22 3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M18 2 L22 3 L21 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-                    </svg>
+                    <span class="category-expand-icon">&gt;</span>
                 </div>
-                <div class="institution-total" onclick="toggleInstitution(this)">
-                    <span class="institution-total-label">총자산</span>
-                    <div class="institution-total-right">
-                        <span class="institution-total-amount">159,569,478원</span>
-                        <span class="expand-icon">▼</span>
-                    </div>
-                </div>
-                <div class="institution-details hidden">
-                    <div class="detail-item">
-                        <div class="detail-item-left">
-                            <span class="detail-account-name">키움증권 종합매매</span>
-                            <span class="detail-account-number">6593-XXXX</span>
+                <div class="category-content">
+                    <div class="institution-list">
+                        <!-- 키움증권 -->
+                        <div class="institution-card">
+                            <div class="institution-header">
+                                <div class="institution-header-left">
+                                    <div class="institution-logo kiwoom">K</div>
+                                    <div class="institution-info">
+                                        <div class="institution-name-row">
+                                            <span class="institution-name">키움증권</span>
+                                            <span class="institution-count">(3개)</span>
+                                        </div>
+                                        <div class="institution-change positive">
+                                            000,000,000원 올랐어요
+                                        </div>
+                                    </div>
+                                </div>
+                                <svg class="chart-icon-small up" viewBox="0 0 28 16" fill="none">
+                                    <path d="M2 12 L8 6 L14 9 L22 3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M18 2 L22 3 L21 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                                </svg>
+                            </div>
+                            <div class="institution-total" onclick="toggleInstitution(event, this)">
+                                <span class="institution-total-label">총자산</span>
+                                <div class="institution-total-right">
+                                    <span class="institution-total-amount">000,000,000원</span>
+                                    <span class="expand-icon">▼</span>
+                                </div>
+                            </div>
+                            <div class="institution-details hidden">
+                                <div class="detail-item">
+                                    <div class="detail-item-left">
+                                        <span class="detail-account-name">키움증권 종합매매</span>
+                                        <span class="detail-account-number">6593-XXXX</span>
+                                    </div>
+                                    <div class="detail-item-right">
+                                        <span class="detail-amount">7,458,892원</span>
+                                        <span class="detail-profit">+159,589원(10.45%)</span>
+                                    </div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-item-left">
+                                        <span class="detail-account-name">키움증권 IRP</span>
+                                        <span class="detail-account-number">6593-XXXX</span>
+                                    </div>
+                                    <div class="detail-item-right">
+                                        <span class="detail-amount">7,458,892원</span>
+                                        <span class="detail-profit">+159,589원(10.45%)</span>
+                                    </div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-item-left">
+                                        <span class="detail-account-name">키움증권 CMA</span>
+                                        <span class="detail-account-number">6593-XXXX</span>
+                                    </div>
+                                    <div class="detail-item-right">
+                                        <span class="detail-amount">7,458,892원</span>
+                                        <span class="detail-profit">+159,589원(10.45%)</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="detail-item-right">
-                            <span class="detail-amount">7,458,892원</span>
-                            <span class="detail-profit">+159,589원(10.45%)</span>
+
+                        <!-- 현대차증권 -->
+                        <div class="institution-card">
+                            <div class="institution-header">
+                                <div class="institution-header-left">
+                                    <div class="institution-logo hyundai">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="white">
+                                            <ellipse cx="12" cy="12" rx="10" ry="5"/>
+                                        </svg>
+                                    </div>
+                                    <div class="institution-info">
+                                        <div class="institution-name-row">
+                                            <span class="institution-name">현대차증권</span>
+                                            <span class="institution-count">(2개)</span>
+                                        </div>
+                                        <div class="institution-change">
+                                            지난번과 동일해요
+                                        </div>
+                                    </div>
+                                </div>
+                                <svg class="chart-icon-small flat" viewBox="0 0 28 16" fill="none">
+                                    <path d="M2 8 L7 6 L12 9 L17 7 L22 8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M19 5 L22 8 L19 11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                                </svg>
+                            </div>
+                            <div class="institution-total" onclick="toggleInstitution(event, this)">
+                                <span class="institution-total-label">총자산</span>
+                                <div class="institution-total-right">
+                                    <span class="institution-total-amount">000,000,000원</span>
+                                    <span class="expand-icon">▼</span>
+                                </div>
+                            </div>
+                            <div class="institution-details hidden">
+                                <div class="detail-item">
+                                    <div class="detail-item-left">
+                                        <span class="detail-account-name">현대차 ISA계좌</span>
+                                        <span class="detail-account-number">8521-XXXX</span>
+                                    </div>
+                                    <div class="detail-item-right">
+                                        <span class="detail-amount">3,200,000원</span>
+                                        <span class="detail-profit">+0원(0.00%)</span>
+                                    </div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-item-left">
+                                        <span class="detail-account-name">현대차 위탁계좌</span>
+                                        <span class="detail-account-number">8521-XXXX</span>
+                                    </div>
+                                    <div class="detail-item-right">
+                                        <span class="detail-amount">2,150,000원</span>
+                                        <span class="detail-profit">+0원(0.00%)</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="detail-item-left">
-                            <span class="detail-account-name">키움증권 IRP</span>
-                            <span class="detail-account-number">6593-XXXX</span>
+
+                        <!-- 삼성증권 -->
+                        <div class="institution-card">
+                            <div class="institution-header">
+                                <div class="institution-header-left">
+                                    <div class="institution-logo samsung">SS</div>
+                                    <div class="institution-info">
+                                        <div class="institution-name-row">
+                                            <span class="institution-name">삼성증권</span>
+                                            <span class="institution-count">(2개)</span>
+                                        </div>
+                                        <div class="institution-change positive">
+                                            420,000원 올랐어요
+                                        </div>
+                                    </div>
+                                </div>
+                                <svg class="chart-icon-small up" viewBox="0 0 28 16" fill="none">
+                                    <path d="M2 12 L8 6 L14 9 L22 3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M18 2 L22 3 L21 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                                </svg>
+                            </div>
+                            <div class="institution-total" onclick="toggleInstitution(event, this)">
+                                <span class="institution-total-label">총자산</span>
+                                <div class="institution-total-right">
+                                    <span class="institution-total-amount">12,700,000원</span>
+                                    <span class="expand-icon">▼</span>
+                                </div>
+                            </div>
+                            <div class="institution-details hidden">
+                                <div class="detail-item">
+                                    <div class="detail-item-left">
+                                        <span class="detail-account-name">삼성 ISA계좌</span>
+                                        <span class="detail-account-number">5012-XXXX</span>
+                                    </div>
+                                    <div class="detail-item-right">
+                                        <span class="detail-amount">8,500,000원</span>
+                                        <span class="detail-profit">+420,000원(5.19%)</span>
+                                    </div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-item-left">
+                                        <span class="detail-account-name">삼성 위탁계좌</span>
+                                        <span class="detail-account-number">5012-XXXX</span>
+                                    </div>
+                                    <div class="detail-item-right">
+                                        <span class="detail-amount">4,200,000원</span>
+                                        <span class="detail-profit">+85,000원(2.06%)</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="detail-item-right">
-                            <span class="detail-amount">7,458,892원</span>
-                            <span class="detail-profit">+159,589원(10.45%)</span>
+
+                        <!-- 미래에셋증권 -->
+                        <div class="institution-card">
+                            <div class="institution-header">
+                                <div class="institution-header-left">
+                                    <div class="institution-logo mirae">M</div>
+                                    <div class="institution-info">
+                                        <div class="institution-name-row">
+                                            <span class="institution-name">미래에셋증권</span>
+                                            <span class="institution-count">(3개)</span>
+                                        </div>
+                                        <div class="institution-change negative">
+                                            465,000원 줄었어요
+                                        </div>
+                                    </div>
+                                </div>
+                                <svg class="chart-icon-small down" viewBox="0 0 28 16" fill="none">
+                                    <path d="M2 3 L8 9 L14 6 L22 12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M18 13 L22 12 L21 8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                                </svg>
+                            </div>
+                            <div class="institution-total" onclick="toggleInstitution(event, this)">
+                                <span class="institution-total-label">총자산</span>
+                                <div class="institution-total-right">
+                                    <span class="institution-total-amount">21,900,000원</span>
+                                    <span class="expand-icon">▼</span>
+                                </div>
+                            </div>
+                            <div class="institution-details hidden">
+                                <div class="detail-item">
+                                    <div class="detail-item-left">
+                                        <span class="detail-account-name">미래에셋 ISA계좌</span>
+                                        <span class="detail-account-number">7300-XXXX</span>
+                                    </div>
+                                    <div class="detail-item-right">
+                                        <span class="detail-amount">5,600,000원</span>
+                                        <span class="detail-profit negative">-120,000원(2.10%)</span>
+                                    </div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-item-left">
+                                        <span class="detail-account-name">미래에셋 위탁계좌</span>
+                                        <span class="detail-account-number">7300-XXXX</span>
+                                    </div>
+                                    <div class="detail-item-right">
+                                        <span class="detail-amount">3,800,000원</span>
+                                        <span class="detail-profit negative">-65,000원(1.68%)</span>
+                                    </div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-item-left">
+                                        <span class="detail-account-name">미래에셋 연금계좌</span>
+                                        <span class="detail-account-number">7300-XXXX</span>
+                                    </div>
+                                    <div class="detail-item-right">
+                                        <span class="detail-amount">12,500,000원</span>
+                                        <span class="detail-profit negative">-280,000원(2.19%)</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="detail-item-left">
-                            <span class="detail-account-name">키움증권 CMA</span>
-                            <span class="detail-account-number">6593-XXXX</span>
-                        </div>
-                        <div class="detail-item-right">
-                            <span class="detail-amount">7,458,892원</span>
-                            <span class="detail-profit">+159,589원(10.45%)</span>
+
+                        <!-- 토스증권 -->
+                        <div class="institution-card">
+                            <div class="institution-header">
+                                <div class="institution-header-left">
+                                    <div class="institution-logo toss">T</div>
+                                    <div class="institution-info">
+                                        <div class="institution-name-row">
+                                            <span class="institution-name">토스증권</span>
+                                            <span class="institution-count">(1개)</span>
+                                        </div>
+                                        <div class="institution-change positive">
+                                            95,000원 올랐어요
+                                        </div>
+                                    </div>
+                                </div>
+                                <svg class="chart-icon-small up" viewBox="0 0 28 16" fill="none">
+                                    <path d="M2 12 L8 6 L14 9 L22 3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M18 2 L22 3 L21 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                                </svg>
+                            </div>
+                            <div class="institution-total" onclick="toggleInstitution(event, this)">
+                                <span class="institution-total-label">총자산</span>
+                                <div class="institution-total-right">
+                                    <span class="institution-total-amount">1,850,000원</span>
+                                    <span class="expand-icon">▼</span>
+                                </div>
+                            </div>
+                            <div class="institution-details hidden">
+                                <div class="detail-item">
+                                    <div class="detail-item-left">
+                                        <span class="detail-account-name">토스 위탁계좌</span>
+                                        <span class="detail-account-number">9100-XXXX</span>
+                                    </div>
+                                    <div class="detail-item-right">
+                                        <span class="detail-amount">1,850,000원</span>
+                                        <span class="detail-profit">+95,000원(5.42%)</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- KB국민은행 -->
-            <div class="institution-card">
-                <div class="institution-header">
-                    <div class="institution-header-left">
-                        <div class="institution-logo kb">KB</div>
-                        <div class="institution-info">
-                            <div class="institution-name-row">
-                                <span class="institution-name">KB국민은행</span>
-                                <span class="institution-count">(1개)</span>
+            <!-- ========== 은행 카테고리 ========== -->
+            <div class="category-card">
+                <div class="category-header" onclick="toggleCategory(this)">
+                    <div class="category-header-left">
+                        <div class="category-title-row">
+                            <span class="category-title">은행</span>
+                            <span class="category-amount">156,893,903원</span>
+                        </div>
+                        <span class="category-change">+23,589,932원(+12.45%)</span>
+                    </div>
+                    <span class="category-expand-icon">&gt;</span>
+                </div>
+                <div class="category-content">
+                    <div class="institution-list">
+                        <!-- KB국민은행 -->
+                        <div class="institution-card">
+                            <div class="institution-header">
+                                <div class="institution-header-left">
+                                    <div class="institution-logo kb">KB</div>
+                                    <div class="institution-info">
+                                        <div class="institution-name-row">
+                                            <span class="institution-name">KB국민은행</span>
+                                            <span class="institution-count">(1개)</span>
+                                        </div>
+                                        <div class="institution-change negative">
+                                            89,000원 줄었어요
+                                        </div>
+                                    </div>
+                                </div>
+                                <svg class="chart-icon-small down" viewBox="0 0 28 16" fill="none">
+                                    <path d="M2 3 L8 9 L14 6 L22 12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M18 13 L22 12 L21 8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                                </svg>
                             </div>
-                            <div class="institution-change negative">
-                                159,569,478원 줄었어요
+                            <div class="institution-total" onclick="toggleInstitution(event, this)">
+                                <span class="institution-total-label">총자산</span>
+                                <div class="institution-total-right">
+                                    <span class="institution-total-amount">5,230,000원</span>
+                                    <span class="expand-icon">▼</span>
+                                </div>
+                            </div>
+                            <div class="institution-details hidden">
+                                <div class="detail-item">
+                                    <div class="detail-item-left">
+                                        <span class="detail-account-name">KB 입출금통장</span>
+                                        <span class="detail-account-number">1234-XXXX</span>
+                                    </div>
+                                    <div class="detail-item-right">
+                                        <span class="detail-amount">5,230,000원</span>
+                                        <span class="detail-profit negative">-89,000원(1.67%)</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <svg class="chart-icon-small down" viewBox="0 0 28 16" fill="none">
-                        <path d="M2 3 L8 9 L14 6 L22 12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M18 13 L22 12 L21 8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-                    </svg>
-                </div>
-                <div class="institution-total" onclick="toggleInstitution(this)">
-                    <span class="institution-total-label">총자산</span>
-                    <div class="institution-total-right">
-                        <span class="institution-total-amount">159,569,478원</span>
-                        <span class="expand-icon">▼</span>
-                    </div>
-                </div>
-                <div class="institution-details hidden">
-                    <div class="detail-item">
-                        <div class="detail-item-left">
-                            <span class="detail-account-name">KB 입출금통장</span>
-                            <span class="detail-account-number">1234-XXXX</span>
+
+                        <!-- 신한은행 -->
+                        <div class="institution-card">
+                            <div class="institution-header">
+                                <div class="institution-header-left">
+                                    <div class="institution-logo shinhan">S</div>
+                                    <div class="institution-info">
+                                        <div class="institution-name-row">
+                                            <span class="institution-name">신한은행</span>
+                                            <span class="institution-count">(2개)</span>
+                                        </div>
+                                        <div class="institution-change positive">
+                                            175,000원 올랐어요
+                                        </div>
+                                    </div>
+                                </div>
+                                <svg class="chart-icon-small up" viewBox="0 0 28 16" fill="none">
+                                    <path d="M2 12 L8 6 L14 9 L22 3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M18 2 L22 3 L21 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                                </svg>
+                            </div>
+                            <div class="institution-total" onclick="toggleInstitution(event, this)">
+                                <span class="institution-total-label">총자산</span>
+                                <div class="institution-total-right">
+                                    <span class="institution-total-amount">6,520,000원</span>
+                                    <span class="expand-icon">▼</span>
+                                </div>
+                            </div>
+                            <div class="institution-details hidden">
+                                <div class="detail-item">
+                                    <div class="detail-item-left">
+                                        <span class="detail-account-name">신한 입출금통장</span>
+                                        <span class="detail-account-number">110-XXXX</span>
+                                    </div>
+                                    <div class="detail-item-right">
+                                        <span class="detail-amount">4,520,000원</span>
+                                        <span class="detail-profit">+125,000원(2.85%)</span>
+                                    </div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-item-left">
+                                        <span class="detail-account-name">신한 적금계좌</span>
+                                        <span class="detail-account-number">110-XXXX</span>
+                                    </div>
+                                    <div class="detail-item-right">
+                                        <span class="detail-amount">2,000,000원</span>
+                                        <span class="detail-profit">+50,000원(2.56%)</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="detail-item-right">
-                            <span class="detail-amount">5,230,000원</span>
-                            <span class="detail-profit negative">-89,000원(1.67%)</span>
+
+                        <!-- 하나은행 -->
+                        <div class="institution-card">
+                            <div class="institution-header">
+                                <div class="institution-header-left">
+                                    <div class="institution-logo hana">H</div>
+                                    <div class="institution-info">
+                                        <div class="institution-name-row">
+                                            <span class="institution-name">하나은행</span>
+                                            <span class="institution-count">(1개)</span>
+                                        </div>
+                                        <div class="institution-change negative">
+                                            45,000원 줄었어요
+                                        </div>
+                                    </div>
+                                </div>
+                                <svg class="chart-icon-small down" viewBox="0 0 28 16" fill="none">
+                                    <path d="M2 3 L8 9 L14 6 L22 12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M18 13 L22 12 L21 8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                                </svg>
+                            </div>
+                            <div class="institution-total" onclick="toggleInstitution(event, this)">
+                                <span class="institution-total-label">총자산</span>
+                                <div class="institution-total-right">
+                                    <span class="institution-total-amount">3,150,000원</span>
+                                    <span class="expand-icon">▼</span>
+                                </div>
+                            </div>
+                            <div class="institution-details hidden">
+                                <div class="detail-item">
+                                    <div class="detail-item-left">
+                                        <span class="detail-account-name">하나 입출금통장</span>
+                                        <span class="detail-account-number">100-XXXX</span>
+                                    </div>
+                                    <div class="detail-item-right">
+                                        <span class="detail-amount">3,150,000원</span>
+                                        <span class="detail-profit negative">-45,000원(1.41%)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 우리은행 -->
+                        <div class="institution-card">
+                            <div class="institution-header">
+                                <div class="institution-header-left">
+                                    <div class="institution-logo woori">W</div>
+                                    <div class="institution-info">
+                                        <div class="institution-name-row">
+                                            <span class="institution-name">우리은행</span>
+                                            <span class="institution-count">(2개)</span>
+                                        </div>
+                                        <div class="institution-change positive">
+                                            285,000원 올랐어요
+                                        </div>
+                                    </div>
+                                </div>
+                                <svg class="chart-icon-small up" viewBox="0 0 28 16" fill="none">
+                                    <path d="M2 12 L8 6 L14 9 L22 3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M18 2 L22 3 L21 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                                </svg>
+                            </div>
+                            <div class="institution-total" onclick="toggleInstitution(event, this)">
+                                <span class="institution-total-label">총자산</span>
+                                <div class="institution-total-right">
+                                    <span class="institution-total-amount">9,800,000원</span>
+                                    <span class="expand-icon">▼</span>
+                                </div>
+                            </div>
+                            <div class="institution-details hidden">
+                                <div class="detail-item">
+                                    <div class="detail-item-left">
+                                        <span class="detail-account-name">우리 입출금통장</span>
+                                        <span class="detail-account-number">1002-XXXX</span>
+                                    </div>
+                                    <div class="detail-item-right">
+                                        <span class="detail-amount">6,800,000원</span>
+                                        <span class="detail-profit">+210,000원(3.19%)</span>
+                                    </div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-item-left">
+                                        <span class="detail-account-name">우리 적금계좌</span>
+                                        <span class="detail-account-number">1002-XXXX</span>
+                                    </div>
+                                    <div class="detail-item-right">
+                                        <span class="detail-amount">3,000,000원</span>
+                                        <span class="detail-profit">+75,000원(2.56%)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- NH농협 -->
+                        <div class="institution-card">
+                            <div class="institution-header">
+                                <div class="institution-header-left">
+                                    <div class="institution-logo nh">NH</div>
+                                    <div class="institution-info">
+                                        <div class="institution-name-row">
+                                            <span class="institution-name">NH농협</span>
+                                            <span class="institution-count">(1개)</span>
+                                        </div>
+                                        <div class="institution-change">
+                                            지난번과 동일해요
+                                        </div>
+                                    </div>
+                                </div>
+                                <svg class="chart-icon-small flat" viewBox="0 0 28 16" fill="none">
+                                    <path d="M2 8 L7 6 L12 9 L17 7 L22 8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M19 5 L22 8 L19 11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                                </svg>
+                            </div>
+                            <div class="institution-total" onclick="toggleInstitution(event, this)">
+                                <span class="institution-total-label">총자산</span>
+                                <div class="institution-total-right">
+                                    <span class="institution-total-amount">2,450,000원</span>
+                                    <span class="expand-icon">▼</span>
+                                </div>
+                            </div>
+                            <div class="institution-details hidden">
+                                <div class="detail-item">
+                                    <div class="detail-item-left">
+                                        <span class="detail-account-name">농협 입출금통장</span>
+                                        <span class="detail-account-number">351-XXXX</span>
+                                    </div>
+                                    <div class="detail-item-right">
+                                        <span class="detail-amount">2,450,000원</span>
+                                        <span class="detail-profit">+0원(0.00%)</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- 현대차증권 -->
-            <div class="institution-card">
-                <div class="institution-header">
-                    <div class="institution-header-left">
-                        <div class="institution-logo hyundai">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
-                                <ellipse cx="12" cy="12" rx="10" ry="5"/>
-                            </svg>
+            <!-- ========== 보험 카테고리 ========== -->
+            <div class="category-card">
+                <div class="category-header" onclick="toggleCategory(this)">
+                    <div class="category-header-left">
+                        <div class="category-title-row">
+                            <span class="category-title">보험</span>
+                            <span class="category-amount">15,230,000원</span>
                         </div>
-                        <div class="institution-info">
-                            <div class="institution-name-row">
-                                <span class="institution-name">현대차증권</span>
-                                <span class="institution-count">(2개)</span>
+                        <span class="category-change">+1,230,000원(+8.78%)</span>
+                    </div>
+                    <span class="category-expand-icon">&gt;</span>
+                </div>
+                <div class="category-content">
+                    <div class="institution-list">
+                        <!-- 삼성생명 -->
+                        <div class="institution-card">
+                            <div class="institution-header">
+                                <div class="institution-header-left">
+                                    <div class="institution-logo samsung">SS</div>
+                                    <div class="institution-info">
+                                        <div class="institution-name-row">
+                                            <span class="institution-name">삼성생명</span>
+                                            <span class="institution-count">(1개)</span>
+                                        </div>
+                                        <div class="institution-change positive">
+                                            730,000원 올랐어요
+                                        </div>
+                                    </div>
+                                </div>
+                                <svg class="chart-icon-small up" viewBox="0 0 28 16" fill="none">
+                                    <path d="M2 12 L8 6 L14 9 L22 3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M18 2 L22 3 L21 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                                </svg>
                             </div>
-                            <div class="institution-change">
-                                지난번과 동일해요
+                            <div class="institution-total" onclick="toggleInstitution(event, this)">
+                                <span class="institution-total-label">총자산</span>
+                                <div class="institution-total-right">
+                                    <span class="institution-total-amount">8,500,000원</span>
+                                    <span class="expand-icon">▼</span>
+                                </div>
+                            </div>
+                            <div class="institution-details hidden">
+                                <div class="detail-item">
+                                    <div class="detail-item-left">
+                                        <span class="detail-account-name">삼성생명 연금보험</span>
+                                        <span class="detail-account-number">1234-XXXX</span>
+                                    </div>
+                                    <div class="detail-item-right">
+                                        <span class="detail-amount">8,500,000원</span>
+                                        <span class="detail-profit">+730,000원(9.40%)</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <svg class="chart-icon-small flat" viewBox="0 0 28 16" fill="none">
-                        <path d="M2 8 L7 6 L12 9 L17 7 L22 8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M19 5 L22 8 L19 11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-                    </svg>
-                </div>
-                <div class="institution-total" onclick="toggleInstitution(this)">
-                    <span class="institution-total-label">총자산</span>
-                    <div class="institution-total-right">
-                        <span class="institution-total-amount">159,569,478원</span>
-                        <span class="expand-icon">▼</span>
-                    </div>
-                </div>
-                <div class="institution-details hidden">
-                    <div class="detail-item">
-                        <div class="detail-item-left">
-                            <span class="detail-account-name">현대차 ISA계좌</span>
-                            <span class="detail-account-number">8521-XXXX</span>
-                        </div>
-                        <div class="detail-item-right">
-                            <span class="detail-amount">3,200,000원</span>
-                            <span class="detail-profit">+0원(0.00%)</span>
-                        </div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="detail-item-left">
-                            <span class="detail-account-name">현대차 위탁계좌</span>
-                            <span class="detail-account-number">8521-XXXX</span>
-                        </div>
-                        <div class="detail-item-right">
-                            <span class="detail-amount">2,150,000원</span>
-                            <span class="detail-profit">+0원(0.00%)</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            <!-- 신한은행 -->
-            <div class="institution-card">
-                <div class="institution-header">
-                    <div class="institution-header-left">
-                        <div class="institution-logo shinhan">S</div>
-                        <div class="institution-info">
-                            <div class="institution-name-row">
-                                <span class="institution-name">신한은행</span>
-                                <span class="institution-count">(2개)</span>
+                        <!-- 한화생명 -->
+                        <div class="institution-card">
+                            <div class="institution-header">
+                                <div class="institution-header-left">
+                                    <div class="institution-logo mirae">H</div>
+                                    <div class="institution-info">
+                                        <div class="institution-name-row">
+                                            <span class="institution-name">한화생명</span>
+                                            <span class="institution-count">(1개)</span>
+                                        </div>
+                                        <div class="institution-change positive">
+                                            500,000원 올랐어요
+                                        </div>
+                                    </div>
+                                </div>
+                                <svg class="chart-icon-small up" viewBox="0 0 28 16" fill="none">
+                                    <path d="M2 12 L8 6 L14 9 L22 3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M18 2 L22 3 L21 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                                </svg>
                             </div>
-                            <div class="institution-change positive">
-                                159,569,478원 올랐어요
+                            <div class="institution-total" onclick="toggleInstitution(event, this)">
+                                <span class="institution-total-label">총자산</span>
+                                <div class="institution-total-right">
+                                    <span class="institution-total-amount">6,730,000원</span>
+                                    <span class="expand-icon">▼</span>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                    <svg class="chart-icon-small up" viewBox="0 0 28 16" fill="none">
-                        <path d="M2 12 L8 6 L14 9 L22 3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M18 2 L22 3 L21 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-                    </svg>
-                </div>
-                <div class="institution-total" onclick="toggleInstitution(this)">
-                    <span class="institution-total-label">총자산</span>
-                    <div class="institution-total-right">
-                        <span class="institution-total-amount">159,569,478원</span>
-                        <span class="expand-icon">▼</span>
-                    </div>
-                </div>
-                <div class="institution-details hidden">
-                    <div class="detail-item">
-                        <div class="detail-item-left">
-                            <span class="detail-account-name">신한 입출금통장</span>
-                            <span class="detail-account-number">110-XXXX</span>
-                        </div>
-                        <div class="detail-item-right">
-                            <span class="detail-amount">4,520,000원</span>
-                            <span class="detail-profit">+125,000원(2.85%)</span>
-                        </div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="detail-item-left">
-                            <span class="detail-account-name">신한 적금계좌</span>
-                            <span class="detail-account-number">110-XXXX</span>
-                        </div>
-                        <div class="detail-item-right">
-                            <span class="detail-amount">2,000,000원</span>
-                            <span class="detail-profit">+50,000원(2.56%)</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 하나은행 -->
-            <div class="institution-card">
-                <div class="institution-header">
-                    <div class="institution-header-left">
-                        <div class="institution-logo hana">H</div>
-                        <div class="institution-info">
-                            <div class="institution-name-row">
-                                <span class="institution-name">하나은행</span>
-                                <span class="institution-count">(1개)</span>
+                            <div class="institution-details hidden">
+                                <div class="detail-item">
+                                    <div class="detail-item-left">
+                                        <span class="detail-account-name">한화생명 종신보험</span>
+                                        <span class="detail-account-number">5678-XXXX</span>
+                                    </div>
+                                    <div class="detail-item-right">
+                                        <span class="detail-amount">6,730,000원</span>
+                                        <span class="detail-profit">+500,000원(8.03%)</span>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="institution-change negative">
-                                159,569,478원 줄었어요
-                            </div>
-                        </div>
-                    </div>
-                    <svg class="chart-icon-small down" viewBox="0 0 28 16" fill="none">
-                        <path d="M2 3 L8 9 L14 6 L22 12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M18 13 L22 12 L21 8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-                    </svg>
-                </div>
-                <div class="institution-total" onclick="toggleInstitution(this)">
-                    <span class="institution-total-label">총자산</span>
-                    <div class="institution-total-right">
-                        <span class="institution-total-amount">159,569,478원</span>
-                        <span class="expand-icon">▼</span>
-                    </div>
-                </div>
-                <div class="institution-details hidden">
-                    <div class="detail-item">
-                        <div class="detail-item-left">
-                            <span class="detail-account-name">하나 입출금통장</span>
-                            <span class="detail-account-number">100-XXXX</span>
-                        </div>
-                        <div class="detail-item-right">
-                            <span class="detail-amount">3,150,000원</span>
-                            <span class="detail-profit negative">-45,000원(1.41%)</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 우리은행 -->
-            <div class="institution-card">
-                <div class="institution-header">
-                    <div class="institution-header-left">
-                        <div class="institution-logo woori">W</div>
-                        <div class="institution-info">
-                            <div class="institution-name-row">
-                                <span class="institution-name">우리은행</span>
-                                <span class="institution-count">(2개)</span>
-                            </div>
-                            <div class="institution-change positive">
-                                159,569,478원 올랐어요
-                            </div>
-                        </div>
-                    </div>
-                    <svg class="chart-icon-small up" viewBox="0 0 28 16" fill="none">
-                        <path d="M2 12 L8 6 L14 9 L22 3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M18 2 L22 3 L21 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-                    </svg>
-                </div>
-                <div class="institution-total" onclick="toggleInstitution(this)">
-                    <span class="institution-total-label">총자산</span>
-                    <div class="institution-total-right">
-                        <span class="institution-total-amount">159,569,478원</span>
-                        <span class="expand-icon">▼</span>
-                    </div>
-                </div>
-                <div class="institution-details hidden">
-                    <div class="detail-item">
-                        <div class="detail-item-left">
-                            <span class="detail-account-name">우리 입출금통장</span>
-                            <span class="detail-account-number">1002-XXXX</span>
-                        </div>
-                        <div class="detail-item-right">
-                            <span class="detail-amount">6,800,000원</span>
-                            <span class="detail-profit">+210,000원(3.19%)</span>
-                        </div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="detail-item-left">
-                            <span class="detail-account-name">우리 적금계좌</span>
-                            <span class="detail-account-number">1002-XXXX</span>
-                        </div>
-                        <div class="detail-item-right">
-                            <span class="detail-amount">3,000,000원</span>
-                            <span class="detail-profit">+75,000원(2.56%)</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- NH농협 -->
-            <div class="institution-card">
-                <div class="institution-header">
-                    <div class="institution-header-left">
-                        <div class="institution-logo nh">NH</div>
-                        <div class="institution-info">
-                            <div class="institution-name-row">
-                                <span class="institution-name">NH농협</span>
-                                <span class="institution-count">(1개)</span>
-                            </div>
-                            <div class="institution-change">
-                                지난번과 동일해요
-                            </div>
-                        </div>
-                    </div>
-                    <svg class="chart-icon-small flat" viewBox="0 0 28 16" fill="none">
-                        <path d="M2 8 L7 6 L12 9 L17 7 L22 8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M19 5 L22 8 L19 11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-                    </svg>
-                </div>
-                <div class="institution-total" onclick="toggleInstitution(this)">
-                    <span class="institution-total-label">총자산</span>
-                    <div class="institution-total-right">
-                        <span class="institution-total-amount">159,569,478원</span>
-                        <span class="expand-icon">▼</span>
-                    </div>
-                </div>
-                <div class="institution-details hidden">
-                    <div class="detail-item">
-                        <div class="detail-item-left">
-                            <span class="detail-account-name">농협 입출금통장</span>
-                            <span class="detail-account-number">351-XXXX</span>
-                        </div>
-                        <div class="detail-item-right">
-                            <span class="detail-amount">2,450,000원</span>
-                            <span class="detail-profit">+0원(0.00%)</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 삼성증권 -->
-            <div class="institution-card">
-                <div class="institution-header">
-                    <div class="institution-header-left">
-                        <div class="institution-logo samsung">SS</div>
-                        <div class="institution-info">
-                            <div class="institution-name-row">
-                                <span class="institution-name">삼성증권</span>
-                                <span class="institution-count">(2개)</span>
-                            </div>
-                            <div class="institution-change positive">
-                                159,569,478원 올랐어요
-                            </div>
-                        </div>
-                    </div>
-                    <svg class="chart-icon-small up" viewBox="0 0 28 16" fill="none">
-                        <path d="M2 12 L8 6 L14 9 L22 3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M18 2 L22 3 L21 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-                    </svg>
-                </div>
-                <div class="institution-total" onclick="toggleInstitution(this)">
-                    <span class="institution-total-label">총자산</span>
-                    <div class="institution-total-right">
-                        <span class="institution-total-amount">159,569,478원</span>
-                        <span class="expand-icon">▼</span>
-                    </div>
-                </div>
-                <div class="institution-details hidden">
-                    <div class="detail-item">
-                        <div class="detail-item-left">
-                            <span class="detail-account-name">삼성 ISA계좌</span>
-                            <span class="detail-account-number">5012-XXXX</span>
-                        </div>
-                        <div class="detail-item-right">
-                            <span class="detail-amount">8,500,000원</span>
-                            <span class="detail-profit">+420,000원(5.19%)</span>
-                        </div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="detail-item-left">
-                            <span class="detail-account-name">삼성 위탁계좌</span>
-                            <span class="detail-account-number">5012-XXXX</span>
-                        </div>
-                        <div class="detail-item-right">
-                            <span class="detail-amount">4,200,000원</span>
-                            <span class="detail-profit">+85,000원(2.06%)</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 미래에셋증권 -->
-            <div class="institution-card">
-                <div class="institution-header">
-                    <div class="institution-header-left">
-                        <div class="institution-logo mirae">M</div>
-                        <div class="institution-info">
-                            <div class="institution-name-row">
-                                <span class="institution-name">미래에셋증권</span>
-                                <span class="institution-count">(3개)</span>
-                            </div>
-                            <div class="institution-change negative">
-                                159,569,478원 줄었어요
-                            </div>
-                        </div>
-                    </div>
-                    <svg class="chart-icon-small down" viewBox="0 0 28 16" fill="none">
-                        <path d="M2 3 L8 9 L14 6 L22 12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M18 13 L22 12 L21 8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-                    </svg>
-                </div>
-                <div class="institution-total" onclick="toggleInstitution(this)">
-                    <span class="institution-total-label">총자산</span>
-                    <div class="institution-total-right">
-                        <span class="institution-total-amount">159,569,478원</span>
-                        <span class="expand-icon">▼</span>
-                    </div>
-                </div>
-                <div class="institution-details hidden">
-                    <div class="detail-item">
-                        <div class="detail-item-left">
-                            <span class="detail-account-name">미래에셋 ISA계좌</span>
-                            <span class="detail-account-number">7300-XXXX</span>
-                        </div>
-                        <div class="detail-item-right">
-                            <span class="detail-amount">5,600,000원</span>
-                            <span class="detail-profit negative">-120,000원(2.10%)</span>
-                        </div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="detail-item-left">
-                            <span class="detail-account-name">미래에셋 위탁계좌</span>
-                            <span class="detail-account-number">7300-XXXX</span>
-                        </div>
-                        <div class="detail-item-right">
-                            <span class="detail-amount">3,800,000원</span>
-                            <span class="detail-profit negative">-65,000원(1.68%)</span>
-                        </div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="detail-item-left">
-                            <span class="detail-account-name">미래에셋 연금계좌</span>
-                            <span class="detail-account-number">7300-XXXX</span>
-                        </div>
-                        <div class="detail-item-right">
-                            <span class="detail-amount">12,500,000원</span>
-                            <span class="detail-profit negative">-280,000원(2.19%)</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 토스증권 -->
-            <div class="institution-card">
-                <div class="institution-header">
-                    <div class="institution-header-left">
-                        <div class="institution-logo toss">T</div>
-                        <div class="institution-info">
-                            <div class="institution-name-row">
-                                <span class="institution-name">토스증권</span>
-                                <span class="institution-count">(1개)</span>
-                            </div>
-                            <div class="institution-change positive">
-                                159,569,478원 올랐어요
-                            </div>
-                        </div>
-                    </div>
-                    <svg class="chart-icon-small up" viewBox="0 0 28 16" fill="none">
-                        <path d="M2 12 L8 6 L14 9 L22 3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M18 2 L22 3 L21 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-                    </svg>
-                </div>
-                <div class="institution-total" onclick="toggleInstitution(this)">
-                    <span class="institution-total-label">총자산</span>
-                    <div class="institution-total-right">
-                        <span class="institution-total-amount">159,569,478원</span>
-                        <span class="expand-icon">▼</span>
-                    </div>
-                </div>
-                <div class="institution-details hidden">
-                    <div class="detail-item">
-                        <div class="detail-item-left">
-                            <span class="detail-account-name">토스 위탁계좌</span>
-                            <span class="detail-account-number">9100-XXXX</span>
-                        </div>
-                        <div class="detail-item-right">
-                            <span class="detail-amount">1,850,000원</span>
-                            <span class="detail-profit">+95,000원(5.42%)</span>
                         </div>
                     </div>
                 </div>
@@ -1453,8 +1661,24 @@
             });
         });
 
+        // 카테고리(투자/은행/보험) 펼치기/접기 기능
+        function toggleCategory(element) {
+            const expandIcon = element.querySelector('.category-expand-icon');
+            const card = element.closest('.category-card');
+            const contentSection = card.querySelector('.category-content');
+
+            if (expandIcon) {
+                expandIcon.classList.toggle('expanded');
+            }
+
+            if (contentSection) {
+                contentSection.classList.toggle('hidden');
+            }
+        }
+
         // 기관별 총자산 펼치기/접기 기능
-        function toggleInstitution(element) {
+        function toggleInstitution(event, element) {
+            event.stopPropagation();
             const expandIcon = element.querySelector('.expand-icon');
             const card = element.closest('.institution-card');
             const detailsSection = card.querySelector('.institution-details');
