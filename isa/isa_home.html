@@ -669,10 +669,10 @@
             transition: all 0.2s;
         }
 
-        .deposit-btn:hover {
+        /* .deposit-btn:hover {
             background: #1557b0;
             transform: scale(1.05);
-        }
+        } */
 
         .category-section {
             border-bottom: 1px solid var(--border);
@@ -1164,7 +1164,17 @@
         </div>
         <div class="top-nav-submenu" id="navSubmenu">
             <!-- 서브메뉴 항목들이 여기에 동적으로 표시됨 -->
+             <span class="top-nav-submenu-item active" onclick="navigateTo('isa-balance')">ISA 홈</span>
         </div>
+        <!-- <div class="top-nav-submenu">
+            <span class="top-nav-submenu-item active" onclick="navigateTo('isa-balance')">ISA잔고</span>
+            <span class="top-nav-submenu-item" onclick="location.href='isa-history.html'">거래내역</span>
+            <span class="top-nav-submenu-item" onclick="location.href='isa-tax-saving.html'">절세현황/한도</span>
+            <span class="top-nav-submenu-item" onclick="location.href='isa-account-info.html'">계좌정보</span>
+        </div> -->
+
+
+
     </nav>
 
     <!-- Overlay for closing dropdown -->
@@ -1272,7 +1282,7 @@
                     <div class="category-header" onclick="toggleCategory('stock')">
                         <span class="category-name">주식</span>
                         <div class="category-right">
-                            <span class="category-amount">31,440,000원</span>
+                            <span class="category-amount">31,440,000원</span><br/>
                             <span class="category-profit positive">(+2,024,200원)</span>
                             <span class="category-toggle" id="toggle-stock">▼</span>
                         </div>
@@ -1439,11 +1449,11 @@
                 <div class="chip" onclick="location.href='isa-history.html'">
                     <span class="chip-icon">📋</span>주문내역
                 </div>
-                <div class="chip" onclick="navigateTo('profit')">
+                <!-- <div class="chip" onclick="navigateTo('profit')">
                     <span class="chip-icon">📊</span>손익현황
-                </div>
+                </div> -->
                 <div class="chip" onclick="navigateTo('savings')">
-                    <span class="chip-icon">🔄</span>적립식
+                    <span class="chip-icon">🔄</span>적립식서비스 등록
                 </div>
             </div>
         </section>
@@ -1588,7 +1598,7 @@
 
     <!-- Bottom Tab Bar -->
     <nav class="bottom-tab-bar">
-        <div class="menu-tab" onclick="openSideMenu()">
+        <div class="menu-tab" onclick="location.href='../index.html'">
             <div class="menu-button-box">
                 <div class="hamburger-icon">
                     <div class="hamburger-line"></div>
@@ -1646,10 +1656,10 @@
             alert('영상을 재생합니다.');
         }
 
-        function openSideMenu() {
-            console.log('Opening side menu');
-            alert('메뉴가 열립니다.');
-        }
+        // function openSideMenu() {
+        //     console.log('Opening side menu');
+        //     alert('메뉴가 열립니다.');
+        // }
 
         function goBack() {
             console.log('Going back');
