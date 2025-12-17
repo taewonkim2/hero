@@ -450,22 +450,6 @@
         }
 
         /* ========================================
-           Description Banner (주석처리)
-           ========================================
-        .description-banner {
-            background: var(--gray-50);
-            padding: 14px 20px;
-            border-bottom: 1px solid var(--gray-200);
-        }
-
-        .description-text {
-            font-size: 13px;
-            color: var(--gray-600);
-            line-height: 1.5;
-        }
-        */
-
-        /* ========================================
            Category Card (투자/은행/보험 분류)
            ======================================== */
         .category-list {
@@ -523,22 +507,55 @@
         }
 
         .category-expand-icon {
-            font-size: 14px;
-            color: var(--gray-400);
-            transition: transform 0.3s;
+            /* 1. 모양 만들기 (텍스트 ▲ 대신 선으로 그림) */
+            display: block;
+            width: 8px;
+            height: 8px;
+            flex-shrink: 0;
+            
+            /* 색상은 회색(gray-400) 정도로 설정 */
+            border-bottom: 2px solid var(--gray-400); 
+            border-right: 2px solid var(--gray-400);
+            border-top: none;
+            border-left: none;
+            
+            /* 2. 회전 준비 */
+            transform: rotate(45deg); /* 기본 v 모양 */
+            transform-origin: center center;
+            transition: transform 0.3s ease;
+            
+            /* 3. 위치 보정 */
+            margin-right: 4px; /* 필요시 여백 조정 */
+            margin-bottom: 4px;
         }
 
-        .category-expand-icon.expanded {
-            transform: rotate(180deg);
+        .category-content,
+        .institution-details {
+            max-height: 0;                /* 높이를 0으로 해서 숨김 */
+            overflow: hidden;             /* 내용이 넘치면 안 보이게 */
+            opacity: 0;                   /* 투명하게 (페이드 효과용) */
+            transition: max-height 0.3s ease-out, opacity 0.3s ease-out; /* 0.3초 동안 스르륵 */
+            padding: 0;                   /* 닫혔을 때 패딩도 없어야 깔끔함 */
         }
 
-        .category-content {
-            padding: 0;
-        }
-
-        .category-content.hidden {
+        /* .category-content.hidden {
             display: none;
-        }
+        } */
+
+        .category-content.active,
+            .institution-details.active {
+                opacity: 1;                   /* 불투명하게 등장 */
+                /* max-height는 자바스크립트가 내용물 길이에 맞춰서 직접 넣어줍니다 */
+            }
+
+            /* (중요) 기존에 있던 .hidden { display: none } 코드는 애니메이션을 방해하므로 지우거나 아래처럼 무력화하세요 */
+            .hidden {
+                display: block !important; /* 이제 display:none은 쓰지 않습니다 */
+            }
+        .category-content.hidden,
+            .institution-details.hidden {
+                display: block !important;
+            }
 
         /* ========================================
            Institution List (기관별 목록)
@@ -714,14 +731,36 @@
             color: var(--gray-800);
         }
 
+
+
         .expand-icon {
-            font-size: 10px;
-            color: var(--gray-400);
-            transition: transform 0.3s;
+            display: block;
+            width: 8px;
+            height: 8px;
+            flex-shrink: 0;
+            
+            /* 아래, 오른쪽 테두리를 45도 돌리면 'v'가 됩니다. 계산하기 가장 좋습니다. */
+            border-bottom: 1px solid var(--gray-600);
+            border-right: 1px solid var(--gray-600);
+            border-top: none;
+            border-left: none;
+            
+            /* 시작 각도: 45도 */
+            transform: rotate(45deg); 
+            
+            /* 중심축 고정 (제자리 회전) */
+            transform-origin: center center;
+            
+            /* 펼쳐질 때와 접힐 때 모두 부드럽게 (여기 설정해야 양방향 다 먹습니다) */
+            transition: transform 0.3s ease; 
+            
+            margin-bottom: 4px;
         }
 
+/* 2. 펼쳐진 상태 (^ 모양) */
         .expand-icon.expanded {
-            transform: rotate(180deg);
+
+            margin-bottom: 0px; /* 뒤집혔을 때 위치 미세 보정 */
         }
 
         /* ========================================
@@ -967,7 +1006,7 @@
                         </div>
                         <span class="category-change">+23,589,932원(+12.45%)</span>
                     </div>
-                    <span class="category-expand-icon">&gt;</span>
+                    <span class="category-expand-icon"></span>
                 </div>
                 <div class="category-content">
                     <div class="institution-list">
@@ -995,7 +1034,7 @@
                                 <span class="institution-total-label">총자산</span>
                                 <div class="institution-total-right">
                                     <span class="institution-total-amount">000,000,000원</span>
-                                    <span class="expand-icon">▼</span>
+                                    <span class="expand-icon"></span>
                                 </div>
                             </div>
                             <div class="institution-details hidden">
@@ -1060,7 +1099,7 @@
                                 <span class="institution-total-label">총자산</span>
                                 <div class="institution-total-right">
                                     <span class="institution-total-amount">000,000,000원</span>
-                                    <span class="expand-icon">▼</span>
+                                    <span class="expand-icon"></span>
                                 </div>
                             </div>
                             <div class="institution-details hidden">
@@ -1111,7 +1150,7 @@
                                 <span class="institution-total-label">총자산</span>
                                 <div class="institution-total-right">
                                     <span class="institution-total-amount">12,700,000원</span>
-                                    <span class="expand-icon">▼</span>
+                                    <span class="expand-icon"></span>
                                 </div>
                             </div>
                             <div class="institution-details hidden">
@@ -1162,7 +1201,7 @@
                                 <span class="institution-total-label">총자산</span>
                                 <div class="institution-total-right">
                                     <span class="institution-total-amount">21,900,000원</span>
-                                    <span class="expand-icon">▼</span>
+                                    <span class="expand-icon"></span>
                                 </div>
                             </div>
                             <div class="institution-details hidden">
@@ -1223,7 +1262,7 @@
                                 <span class="institution-total-label">총자산</span>
                                 <div class="institution-total-right">
                                     <span class="institution-total-amount">1,850,000원</span>
-                                    <span class="expand-icon">▼</span>
+                                    <span class="expand-icon"></span>
                                 </div>
                             </div>
                             <div class="institution-details hidden">
@@ -1253,7 +1292,7 @@
                         </div>
                         <span class="category-change">+23,589,932원(+12.45%)</span>
                     </div>
-                    <span class="category-expand-icon">&gt;</span>
+                    <span class="category-expand-icon"></span>
                 </div>
                 <div class="category-content">
                     <div class="institution-list">
@@ -1281,7 +1320,7 @@
                                 <span class="institution-total-label">총자산</span>
                                 <div class="institution-total-right">
                                     <span class="institution-total-amount">5,230,000원</span>
-                                    <span class="expand-icon">▼</span>
+                                    <span class="expand-icon"></span>
                                 </div>
                             </div>
                             <div class="institution-details hidden">
@@ -1322,7 +1361,7 @@
                                 <span class="institution-total-label">총자산</span>
                                 <div class="institution-total-right">
                                     <span class="institution-total-amount">6,520,000원</span>
-                                    <span class="expand-icon">▼</span>
+                                    <span class="expand-icon"></span>
                                 </div>
                             </div>
                             <div class="institution-details hidden">
@@ -1373,7 +1412,7 @@
                                 <span class="institution-total-label">총자산</span>
                                 <div class="institution-total-right">
                                     <span class="institution-total-amount">3,150,000원</span>
-                                    <span class="expand-icon">▼</span>
+                                    <span class="expand-icon"></span>
                                 </div>
                             </div>
                             <div class="institution-details hidden">
@@ -1414,7 +1453,7 @@
                                 <span class="institution-total-label">총자산</span>
                                 <div class="institution-total-right">
                                     <span class="institution-total-amount">9,800,000원</span>
-                                    <span class="expand-icon">▼</span>
+                                    <span class="expand-icon"></span>
                                 </div>
                             </div>
                             <div class="institution-details hidden">
@@ -1465,7 +1504,7 @@
                                 <span class="institution-total-label">총자산</span>
                                 <div class="institution-total-right">
                                     <span class="institution-total-amount">2,450,000원</span>
-                                    <span class="expand-icon">▼</span>
+                                    <span class="expand-icon"></span>
                                 </div>
                             </div>
                             <div class="institution-details hidden">
@@ -1523,7 +1562,7 @@
                                 <span class="institution-total-label">총자산</span>
                                 <div class="institution-total-right">
                                     <span class="institution-total-amount">8,500,000원</span>
-                                    <span class="expand-icon">▼</span>
+                                    <span class="expand-icon"></span>
                                 </div>
                             </div>
                             <div class="institution-details hidden">
@@ -1564,7 +1603,7 @@
                                 <span class="institution-total-label">총자산</span>
                                 <div class="institution-total-right">
                                     <span class="institution-total-amount">6,730,000원</span>
-                                    <span class="expand-icon">▼</span>
+                                    <span class="expand-icon"></span>
                                 </div>
                             </div>
                             <div class="institution-details hidden">
@@ -1645,6 +1684,39 @@
     </nav>
 
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // ★ 핵심: 안쪽(institution-details)은 건드리지 않습니다. 
+            // CSS(max-height: 0)에 의해 기본적으로 닫혀 있게 됩니다.
+
+            // 1. [바깥쪽] 카테고리(category-content)만 찾아서 엽니다.
+            const allCategories = document.querySelectorAll('.category-content');
+            
+            allCategories.forEach(category => {
+                // 1-1. 내용 펼치기
+                category.classList.add('active');
+                
+                // 이때 scrollHeight는 안쪽 내용이 닫혀있으므로 '기관 목록'만큼의 높이만 잡힙니다. (딱 원하시는 대로)
+                category.style.maxHeight = category.scrollHeight + "px";
+
+                // 1-2. 카테고리 화살표 회전시키기 (v -> ^)
+                const card = category.closest('.category-card');
+                const icon = card.querySelector('.category-expand-icon');
+                
+                if (icon) {
+                    icon.classList.add('expanded');
+                    icon.style.transform = 'rotate(225deg)'; // 열린 상태 각도
+                    icon.dataset.deg = "225"; 
+                }
+            });
+        });
+
+
+
+
+
+
+
         // Tab 전환 기능
         document.querySelectorAll('.tab-item').forEach(tab => {
             tab.addEventListener('click', function() {
@@ -1661,34 +1733,131 @@
             });
         });
 
-        // 카테고리(투자/은행/보험) 펼치기/접기 기능
+        // function toggleCategory(element) {
+        //     // 1. 필요한 요소 찾기
+        //     const expandIcon = element.querySelector('.category-expand-icon');
+        //     const card = element.closest('.category-card');
+        //     const contentSection = card.querySelector('.category-content');
+
+        //     // 2. 아이콘 회전 로직 (시계방향 무한 회전)
+        //     if (expandIcon) {
+        //         // 현재 각도 가져오기 (없으면 45도)
+        //         let currentDeg = expandIcon.dataset.deg ? parseInt(expandIcon.dataset.deg) : 45;
+                
+        //         // 180도 더하기 (계속 증가 -> 시계방향)
+        //         currentDeg += 180;
+
+        //         // 스타일 적용
+        //         expandIcon.style.transform = `rotate(${currentDeg}deg)`;
+                
+        //         // 다음을 위해 저장
+        //         expandIcon.dataset.deg = currentDeg;
+                
+        //         // (참고) expanded 클래스는 CSS 애니메이션용이 아니라 상태 표시용으로 남겨둠
+        //         expandIcon.classList.toggle('expanded');
+        //     }
+
+        //     // 3. 내용 펼치기/접기
+        //     if (contentSection) {
+        //         contentSection.classList.toggle('hidden');
+        //     }
+        // }
+
         function toggleCategory(element) {
             const expandIcon = element.querySelector('.category-expand-icon');
             const card = element.closest('.category-card');
             const contentSection = card.querySelector('.category-content');
 
+            // 아이콘 회전 로직 (기존 유지)
             if (expandIcon) {
+                let currentDeg = expandIcon.dataset.deg ? parseInt(expandIcon.dataset.deg) : 45;
+                currentDeg += 180;
+                expandIcon.style.transform = `rotate(${currentDeg}deg)`;
+                expandIcon.dataset.deg = currentDeg;
                 expandIcon.classList.toggle('expanded');
             }
 
+            // [핵심] 스르륵 펼치기/접기 로직
             if (contentSection) {
-                contentSection.classList.toggle('hidden');
+                // 이미 열려있다면 (maxHeight가 설정되어 있다면) -> 닫기
+                if (contentSection.style.maxHeight) {
+                    contentSection.style.maxHeight = null; // 높이 제거 (0으로 돌아감)
+                    contentSection.classList.remove('active');
+                } 
+                // 닫혀있다면 -> 열기
+                else {
+                    contentSection.classList.add('active');
+                    // scrollHeight는 숨겨진 내용의 전체 높이입니다
+                    contentSection.style.maxHeight = contentSection.scrollHeight + "px"; 
+                }
             }
         }
 
-        // 기관별 총자산 펼치기/접기 기능
+
+        // function toggleInstitution(event, element) {
+        //     event.stopPropagation();
+        //     const expandIcon = element.querySelector('.expand-icon');
+        //     const card = element.closest('.institution-card');
+        //     const detailsSection = card.querySelector('.institution-details');
+
+        //     if (expandIcon) {
+        //         // 1. 클래스 토글 (위치 보정용 CSS 스타일 적용을 위해 유지)
+        //         expandIcon.classList.toggle('expanded');
+
+        //         // 2. [핵심] 현재 각도를 가져와서 180도를 더해줌 (무조건 시계방향 전진)
+        //         // 데이터 속성(data-deg)에 현재 각도를 저장해둡니다. 없으면 초기값 45도.
+        //         let currentDeg = expandIcon.dataset.deg ? parseInt(expandIcon.dataset.deg) : 45;
+                
+        //         currentDeg += 180; // 계속 180도씩 더함 (45 -> 225 -> 405 -> 585 ...)
+
+        //         // 스타일 직접 적용
+        //         expandIcon.style.transform = `rotate(${currentDeg}deg)`;
+                
+        //         // 다음번을 위해 저장
+        //         expandIcon.dataset.deg = currentDeg;
+        //     }
+
+        //     if (detailsSection) {
+        //         detailsSection.classList.toggle('hidden');
+        //     }
+        // }
+
+        /* 2. 기관별 (키움/삼성 등) 상세 토글 함수 */
         function toggleInstitution(event, element) {
             event.stopPropagation();
             const expandIcon = element.querySelector('.expand-icon');
             const card = element.closest('.institution-card');
             const detailsSection = card.querySelector('.institution-details');
 
+            // 아이콘 회전 로직 (기존 유지)
             if (expandIcon) {
                 expandIcon.classList.toggle('expanded');
+                let currentDeg = expandIcon.dataset.deg ? parseInt(expandIcon.dataset.deg) : 45;
+                currentDeg += 180; 
+                expandIcon.style.transform = `rotate(${currentDeg}deg)`;
+                expandIcon.dataset.deg = currentDeg;
             }
 
+            // [핵심] 스르륵 펼치기/접기 로직
             if (detailsSection) {
-                detailsSection.classList.toggle('hidden');
+                // 상위 카테고리 높이 재조정 (중첩된 아코디언 문제 해결)
+                // 안쪽을 펼치면 바깥쪽(카테고리) 높이도 같이 늘어나야 짤리지 않습니다.
+                const parentContent = card.closest('.category-content');
+
+                if (detailsSection.style.maxHeight) {
+                    // 닫을 때
+                    detailsSection.style.maxHeight = null;
+                    detailsSection.classList.remove('active');
+                } else {
+                    // 열 때
+                    detailsSection.classList.add('active');
+                    detailsSection.style.maxHeight = detailsSection.scrollHeight + "px";
+                    
+                    // ★ 중요: 안쪽이 열리면서 높이가 커졌으니, 감싸고 있는 부모의 높이도 늘려줍니다.
+                    if (parentContent && parentContent.style.maxHeight) {
+                        parentContent.style.maxHeight = (parentContent.scrollHeight + detailsSection.scrollHeight) + "px";
+                    }
+                }
             }
         }
 
