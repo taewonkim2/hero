@@ -312,7 +312,7 @@
             font-weight: 500;
             cursor: pointer;
             padding: 8px 12px;
-            border: 1px solid var(--border);
+            /* border: 1px solid var(--border); */
             border-radius: 8px;
             background: white;
             transition: all 0.2s;
@@ -323,7 +323,7 @@
         }
 
         .chart-toggle-btn.active {
-            background: var(--primary-light);
+            /* background: var(--primary-light); */
             border-color: var(--primary);
             color: var(--primary);
         }
@@ -570,10 +570,10 @@
             </button>
         </div>
         <div class="top-nav-submenu">
-            <span class="top-nav-submenu-item" onclick="location.href='isa-balance.html'">ISA잔고</span>
+            <span class="top-nav-submenu-item" onclick="location.href='isa_balance.html'">ISA잔고</span>
             <span class="top-nav-submenu-item active">거래내역</span>
-            <span class="top-nav-submenu-item" onclick="location.href='isa-tax-saving.html'">절세현황</span>
-            <span class="top-nav-submenu-item" onclick="location.href='isa-account-info.html'">계좌정보</span>
+            <span class="top-nav-submenu-item" onclick="location.href='isa_tax_saving.html'">절세현황</span>
+            <span class="top-nav-submenu-item" onclick="location.href='isa_account_info.html'">계좌정보</span>
         </div>
     </nav>
 
@@ -609,7 +609,7 @@
                     <input type="date" class="date-input" id="endDate" value="2025-12-12">
                 </div>
                 <div class="chart-toggle-btn active" onclick="toggleChart()">
-                    <span>거래추이</span>
+                    <!-- <span>거래추이</span> -->
                     <span class="filter-arrow" id="chartArrow">▼</span>
                 </div>
             </div>
@@ -661,16 +661,16 @@
                 <span class="menu-label">메뉴</span>
             </div>
         </div>
-        <div class="tab-item" onclick="location.href='isa-home.html'">
+        <div class="tab-item" onclick="location.href='isa_home.html'">
             <span class="tab-label">ISA홈</span>
         </div>
         <div class="tab-item active">
             <span class="tab-label">ISA계좌</span>
         </div>
-        <div class="tab-item" onclick="switchTab('isa-join')">
+        <div class="tab-item" onclick="switchTab('isa_join')">
             <span class="tab-label">ISA가입/이전</span>
         </div>
-        <div class="tab-item" onclick="switchTab('isa-task')">
+        <div class="tab-item" onclick="switchTab('isa_task')">
             <span class="tab-label">ISA업무</span>
         </div>
     </nav>
@@ -906,7 +906,7 @@
             if (window.history.length > 1) {
                 window.history.back();
             } else {
-                location.href = 'isa-home.html';
+                location.href = 'isa_home.html';
             }
         }
 
@@ -920,7 +920,7 @@
 
         function openTradeDetail(id, type, date) {
             const params = new URLSearchParams({ id, type, date });
-            location.href = `isa-trade-detail.html?${params.toString()}`;
+            location.href = `isa_trade-detail.html?${params.toString()}`;
         }
 
         // ========================================

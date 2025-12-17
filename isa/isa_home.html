@@ -791,7 +791,7 @@
         }
 
         /* Tax Savings Card */
-        .tax-card {
+        .tax_card {
             background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
             border-radius: 20px;
             padding: 20px;
@@ -800,7 +800,7 @@
             overflow: hidden;
         }
 
-        .tax-card::before {
+        .tax_card::before {
             content: '💰';
             position: absolute;
             right: 20px;
@@ -810,20 +810,20 @@
             opacity: 0.3;
         }
 
-        .tax-header {
+        .tax_header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 8px;
         }
 
-        .tax-label {
+        .tax_label {
             font-size: 14px;
             color: #92400e;
             font-weight: 500;
         }
 
-        .tax-detail-btn {
+        .tax_detail-btn {
             background: rgba(255,255,255,0.6);
             border: none;
             padding: 6px 12px;
@@ -834,7 +834,7 @@
             font-weight: 500;
         }
 
-        .tax-value {
+        .tax_value {
             font-size: 26px;
             font-weight: 700;
             color: #92400e;
@@ -1164,13 +1164,13 @@
         </div>
         <div class="top-nav-submenu" id="navSubmenu">
             <!-- 서브메뉴 항목들이 여기에 동적으로 표시됨 -->
-             <span class="top-nav-submenu-item active" onclick="navigateTo('isa-balance')">ISA 홈</span>
+             <span class="top-nav-submenu-item active" onclick="navigateTo('isa_balance')">ISA 홈</span>
         </div>
         <!-- <div class="top-nav-submenu">
-            <span class="top-nav-submenu-item active" onclick="navigateTo('isa-balance')">ISA잔고</span>
-            <span class="top-nav-submenu-item" onclick="location.href='isa-history.html'">거래내역</span>
-            <span class="top-nav-submenu-item" onclick="location.href='isa-tax-saving.html'">절세현황/한도</span>
-            <span class="top-nav-submenu-item" onclick="location.href='isa-account-info.html'">계좌정보</span>
+            <span class="top-nav-submenu-item active" onclick="navigateTo('isa_balance')">ISA잔고</span>
+            <span class="top-nav-submenu-item" onclick="location.href='isa_history.html'">거래내역</span>
+            <span class="top-nav-submenu-item" onclick="location.href='isa_tax_saving.html'">절세현황/한도</span>
+            <span class="top-nav-submenu-item" onclick="location.href='isa_account-info.html'">계좌정보</span>
         </div> -->
 
 
@@ -1198,7 +1198,7 @@
                     </div>
                 </button>
                 <div class="more-dropdown" id="moreDropdown">
-                    <div class="more-dropdown-item" onclick="location.href='isa-account-info.html'">계좌정보</div>
+                    <div class="more-dropdown-item" onclick="location.href='isa_account_info.html'">계좌정보</div>
                     <div class="more-dropdown-item" onclick="navigateTo('close-account')">해지신청</div>
                     <div class="more-dropdown-item" onclick="navigateTo('pension-convert')">연금전환</div>
                     <div class="more-dropdown-item" onclick="navigateTo('reregister')">발급번호 재등록</div>
@@ -1260,7 +1260,7 @@
             <!-- ISA잔고 섹션 -->
             <div class="balance-section-header">
                 <span class="balance-title">ISA잔고</span>
-                <span class="balance-more" onclick="location.href='isa-balance.html'">전체보기</span>
+                <span class="balance-more" onclick="location.href='isa_balance.html'">전체보기</span>
             </div>
 
             <!-- Holdings Categories -->
@@ -1446,7 +1446,7 @@
 
             <!-- Menu Chips -->
             <div class="menu-chips">
-                <div class="chip" onclick="location.href='isa-history.html'">
+                <div class="chip" onclick="location.href='isa_history.html'">
                     <span class="chip-icon">📋</span>주문내역
                 </div>
                 <!-- <div class="chip" onclick="navigateTo('profit')">
@@ -1459,16 +1459,16 @@
         </section>
 
         <!-- Tax Savings Card -->
-        <section class="tax-card animate-in delay-1" onclick="location.href='isa-tax-saving.html'" style="cursor: pointer;">
-            <div class="tax-header">
-                <span class="tax-label">올해 절세금액</span>
-                <span class="tax-detail-btn">상세보기 →</span>
+        <section class="tax_card animate-in delay-1" onclick="location.href='isa_tax_saving.html'" style="cursor: pointer;">
+            <div class="tax_header">
+                <span class="tax_label">올해 절세금액</span>
+                <span class="tax_detail-btn">상세보기 →</span>
             </div>
-            <div class="tax-value">287,450원</div>
+            <div class="tax_value">287,450원</div>
         </section>
 
         <!-- Benefit Progress Card -->
-        <section class="benefit-card animate-in delay-2" onclick="location.href='isa-tax-saving.html'" style="cursor: pointer;">
+        <section class="benefit-card animate-in delay-2" onclick="location.href='isa_tax_saving.html'" style="cursor: pointer;">
             <div class="benefit-header">
                 <span class="benefit-title">비과세 혜택현황</span>
                 <span class="benefit-amount">1,850,000원 / 3,000,000원</span>
@@ -1552,7 +1552,7 @@
                 <span class="section-title">📚 ISA 알아보기</span>
             </div>
             <div class="carousel-container">
-                <div class="info-card" onclick="navigateTo('isa-guide')">
+                <div class="info-card" onclick="navigateTo('isa_guide')">
                     <div class="info-thumbnail">
                         <span class="info-thumbnail-text">ISA</span>
                     </div>
@@ -1569,7 +1569,7 @@
                         <div class="info-title">3분만에 이해하는 ISA 계좌 활용법</div>
                     </div>
                 </div>
-                <div class="info-card" onclick="navigateTo('tax-guide')">
+                <div class="info-card" onclick="navigateTo('tax_guide')">
                     <div class="info-thumbnail" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
                         <span class="info-thumbnail-text">💰</span>
                     </div>
@@ -1608,16 +1608,16 @@
                 <span class="menu-label">메뉴</span>
             </div>
         </div>
-        <div class="tab-item active" onclick="switchTab('isa-home', this)">
+        <div class="tab-item active" onclick="switchTab('isa_home', this)">
             <span class="tab-label">ISA홈</span>
         </div>
-        <div class="tab-item" onclick="switchTab('isa-account', this)">
+        <div class="tab-item" onclick="switchTab('isa_account', this)">
             <span class="tab-label">ISA계좌</span>
         </div>
-        <div class="tab-item" onclick="switchTab('isa-join', this)">
+        <div class="tab-item" onclick="switchTab('isa_join', this)">
             <span class="tab-label">ISA가입/이전</span>
         </div>
-        <div class="tab-item" onclick="switchTab('isa-task', this)">
+        <div class="tab-item" onclick="switchTab('isa_task', this)">
             <span class="tab-label">ISA업무</span>
         </div>
     </nav>
@@ -1682,38 +1682,38 @@
             
             // 서브메뉴 데이터
             const submenus = {
-                'isa-home': [],
-                'isa-account': [
-                    { label: 'ISA잔고', page: 'isa-balance' },
-                    { label: '거래내역', page: 'isa-history' },
-                    { label: '절세현황/한도', page: 'isa-tax' },
-                    { label: '계좌정보', page: 'isa-info' }
+                'isa_home': [],
+                'isa_account': [
+                    { label: 'ISA잔고', page: 'isa_balance' },
+                    { label: '거래내역', page: 'isa_history' },
+                    { label: '절세현황/한도', page: 'isa_tax' },
+                    { label: '계좌정보', page: 'isa_info' }
                 ],
-                'isa-join': [
-                    { label: 'ISA소개', page: 'isa-intro' },
-                    { label: 'ISA가입', page: 'isa-signup' },
-                    { label: 'ISA이전', page: 'isa-transfer' }
+                'isa_join': [
+                    { label: 'ISA소개', page: 'isa_intro' },
+                    { label: 'ISA가입', page: 'isa_signup' },
+                    { label: 'ISA이전', page: 'isa_transfer' }
                 ],
-                'isa-task': [
-                    { label: '만기연장', page: 'isa-extend' },
-                    { label: '연금전환', page: 'isa-pension' },
-                    { label: '발급번호 재등록', page: 'isa-reregister' }
+                'isa_task': [
+                    { label: '만기연장', page: 'isa_extend' },
+                    { label: '연금전환', page: 'isa_pension' },
+                    { label: '발급번호 재등록', page: 'isa_reregister' }
                 ]
             };
             
             const items = submenus[tabName] || [];
             navSubmenu.innerHTML = items.map(item => {
-                if (item.page === 'isa-balance') {
-                    return `<span class="top-nav-submenu-item" onclick="location.href='isa-balance.html'">${item.label}</span>`;
+                if (item.page === 'isa_balance') {
+                    return `<span class="top-nav-submenu-item" onclick="location.href='isa_balance.html'">${item.label}</span>`;
                 }
-                if (item.page === 'isa-history') {
-                    return `<span class="top-nav-submenu-item" onclick="location.href='isa-history.html'">${item.label}</span>`;
+                if (item.page === 'isa_history') {
+                    return `<span class="top-nav-submenu-item" onclick="location.href='isa_history.html'">${item.label}</span>`;
                 }
-                if (item.page === 'isa-tax') {
-                    return `<span class="top-nav-submenu-item" onclick="location.href='isa-tax-saving.html'">${item.label}</span>`;
+                if (item.page === 'isa_tax') {
+                    return `<span class="top-nav-submenu-item" onclick="location.href='isa_tax_saving.html'">${item.label}</span>`;
                 }
-                if (item.page === 'isa-info') {
-                    return `<span class="top-nav-submenu-item" onclick="location.href='isa-account-info.html'">${item.label}</span>`;
+                if (item.page === 'isa_info') {
+                    return `<span class="top-nav-submenu-item" onclick="location.href='isa_account_info.html'">${item.label}</span>`;
                 }
                 return `<span class="top-nav-submenu-item" onclick="navigateTo('${item.page}')">${item.label}</span>`;
             }).join('');

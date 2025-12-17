@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
     <style>
         :root {
             --primary: #1a73e8;
@@ -24,6 +25,12 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+        }
+
+        .sub-item.disabled {
+            color: #ccc;  /* 또는 var(--text-muted) */
+            cursor: default;
+            pointer-events: none;  /* 클릭 비활성화 */
         }
 
         body {
@@ -314,9 +321,10 @@
                 <div class="section-header">ISA</div>
                 <div class="section-content">
                     <div class="sub-item" onclick="location.href='./isa/isa_home.html'">ISA홈</div>
+                    <div class="sub-item" onclick="location.href='./isa/isa_home_no_account.html'">ISA홈(계좌미보유)</div>
                     <div class="sub-item" onclick="location.href='./isa/isa_balance.html'">ISA계좌</div>
                     <div class="sub-item" onclick="location.href='./isa/'">ISA가입/이전</div>
-                    <div class="sub-item" onclick="location.href='./isa/'">ISA업무</div>
+                    <div class="sub-item" onclick="location.href='./isa/isa_account_info.html'">ISA업무</div>
                 </div>
             </div>
 
@@ -437,6 +445,29 @@
                 item.classList.remove('active');
                 if (item.getAttribute('data-target') === currentSection) {
                     item.classList.add('active');
+                }
+            });
+        });
+
+            const activeMenus = [
+                '자산키움',
+                '자산조회', 
+                '해외주식양도세',
+                'ISA홈',
+                'ISA홈(계좌미보유)',
+                'ISA계좌',
+                'ISA업무'
+                // 필요한 메뉴 추가
+            ];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const subItems = document.querySelectorAll('.sub-item');
+            
+            subItems.forEach(item => {
+                const menuName = item.textContent.trim();
+                if (!activeMenus.includes(menuName)) {
+                    item.classList.add('disabled');
+                    item.removeAttribute('onclick');  // 클릭 이벤트 제거
                 }
             });
         });

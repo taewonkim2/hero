@@ -250,6 +250,15 @@
         .section-title-text {
             font-size: 17px;
             font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .section-title-text::before {
+            content: '●';
+            color: var(--primary);
+            font-size: 8px;
         }
 
         /* Document Dropdown */
@@ -324,7 +333,7 @@
 
         .info-row {
             display: flex;
-            border-bottom: 1px solid var(--border);
+            /* border-bottom: 1px solid var(--border); */
         }
 
         .info-row:last-child {
@@ -415,27 +424,34 @@
 
         .year-row {
             display: flex;
-            justify-content: space-between;
-            padding: 14px 16px;
-            border-bottom: 1px solid var(--border);
+            /* justify-content: space-between; */
+            /* padding: 14px 16px; */
+            /* border-bottom: 1px solid var(--border); */
         }
 
         .year-row:last-child {
             border-bottom: none;
         }
 
-        .year-row:nth-child(odd) {
+        /* .year-row:nth-child(odd) {
             background: var(--bg-primary);
-        }
+        } */
 
         .year-label {
+            width: 120px;              /* 추가: 너비 고정 */
+            padding: 14px 16px;
+            background: var(--bg-primary);  /* 추가: 배경색 */
             font-size: 14px;
             color: var(--text-secondary);
+            flex-shrink: 0;            /* 추가: 크기 고정 */
         }
 
         .year-value {
+            flex: 1;
+            padding: 14px 16px;
             font-size: 14px;
             font-weight: 500;
+            text-align: right;
         }
 
         /* Notes */
@@ -475,9 +491,9 @@
             </button>
         </div>
         <div class="top-nav-submenu">
-            <span class="top-nav-submenu-item" onclick="location.href='isa-balance.html'">ISA잔고</span>
-            <span class="top-nav-submenu-item" onclick="location.href='isa-history.html'">거래내역</span>
-            <span class="top-nav-submenu-item" onclick="location.href='isa-tax-saving.html'">절세현황</span>
+            <span class="top-nav-submenu-item" onclick="location.href='isa_balance.html'">ISA잔고</span>
+            <span class="top-nav-submenu-item" onclick="location.href='isa_history.html'">거래내역</span>
+            <span class="top-nav-submenu-item" onclick="location.href='isa_tax-saving.html'">절세현황</span>
             <span class="top-nav-submenu-item active">계좌정보</span>
         </div>
     </nav>
@@ -581,7 +597,7 @@
                     <span class="year-value">0원</span>
                 </div>
                 <div class="year-row">
-                    <span class="year-label">2030년~(6년차~)</span>
+                    <span class="year-label">2030년(6년차)</span>
                     <span class="year-value">0원</span>
                 </div>
             </div>
@@ -612,16 +628,16 @@
                 <span class="menu-label">메뉴</span>
             </div>
         </div>
-        <div class="tab-item" onclick="location.href='isa-home.html'">
+        <div class="tab-item" onclick="location.href='isa_home.html'">
             <span class="tab-label">ISA홈</span>
         </div>
         <div class="tab-item active">
             <span class="tab-label">ISA계좌</span>
         </div>
-        <div class="tab-item" onclick="switchTab('isa-join')">
+        <div class="tab-item" onclick="switchTab('isa_join')">
             <span class="tab-label">ISA가입/이전</span>
         </div>
-        <div class="tab-item" onclick="switchTab('isa-task')">
+        <div class="tab-item" onclick="switchTab('isa_task')">
             <span class="tab-label">ISA업무</span>
         </div>
     </nav>
@@ -631,7 +647,7 @@
             if (window.history.length > 1) {
                 window.history.back();
             } else {
-                location.href = 'isa-home.html';
+                location.href = 'isa_home.html';
             }
         }
 

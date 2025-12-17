@@ -564,10 +564,10 @@
             </button>
         </div>
         <div class="top-nav-submenu">
-            <span class="top-nav-submenu-item" onclick="location.href='isa-balance.html'">ISA잔고</span>
+            <span class="top-nav-submenu-item" onclick="location.href='isa_balance.html'">ISA잔고</span>
             <span class="top-nav-submenu-item active">거래내역</span>
-            <span class="top-nav-submenu-item" onclick="location.href='isa-tax-saving.html'">절세현황</span>
-            <span class="top-nav-submenu-item" onclick="location.href='isa-account-info.html'">계좌정보</span>
+            <span class="top-nav-submenu-item" onclick="location.href='isa_tax_saving.html'">절세현황</span>
+            <span class="top-nav-submenu-item" onclick="location.href='isa_account_info.html'">계좌정보</span>
         </div>
     </nav>
 
@@ -878,16 +878,16 @@
                 <span class="menu-label">메뉴</span>
             </div>
         </div>
-        <div class="tab-item" onclick="location.href='isa-home.html'">
+        <div class="tab-item" onclick="location.href='isa_home.html'">
             <span class="tab-label">ISA홈</span>
         </div>
         <div class="tab-item active">
             <span class="tab-label">ISA계좌</span>
         </div>
-        <div class="tab-item" onclick="switchTab('isa-join')">
+        <div class="tab-item" onclick="switchTab('isa_join')">
             <span class="tab-label">ISA가입/이전</span>
         </div>
-        <div class="tab-item" onclick="switchTab('isa-task')">
+        <div class="tab-item" onclick="switchTab('isa_task')">
             <span class="tab-label">ISA업무</span>
         </div>
     </nav>
@@ -897,7 +897,7 @@
             if (window.history.length > 1) {
                 window.history.back();
             } else {
-                location.href = 'isa-home.html';
+                location.href = 'isa_home.html';
             }
         }
 
@@ -956,7 +956,7 @@
                 type: type,
                 date: date
             });
-            location.href = `isa-trade-detail.html?${params.toString()}`;
+            location.href = `isa_trade-detail.html?${params.toString()}`;
         }
 
         // Close dropdown when clicking outside
