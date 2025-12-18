@@ -448,6 +448,11 @@
             border-radius: 16px;
             padding: 16px;
             box-shadow: var(--shadow);
+            margin-bottom: 12px;
+        }
+
+        .holdings-section:last-of-type {
+            margin-bottom: 0;
         }
 
         .holding-item {
@@ -614,6 +619,32 @@
             border-color: var(--primary);
             color: var(--primary);
         }
+
+        /* 예금자 보호안내 */
+        .deposit-protection-notice {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 16px;
+            margin: 16px;
+        }
+
+        .deposit-protection-notice .notice-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .deposit-protection-notice .notice-content {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .deposit-protection-notice .notice-highlight {
+            color: var(--primary);
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
@@ -646,13 +677,14 @@
 
             <!-- Product Tabs -->
             <div class="product-tabs">
-                <div class="product-tab active">주식</div>
-                <div class="product-tab">국내채권</div>
-                <div class="product-tab">해외채권</div>
-                <div class="product-tab">ELS</div>
-                <div class="product-tab">펀드</div>
-                <div class="product-tab">RP</div>
-                <div class="product-tab">발행어음</div>
+                <div class="product-tab active" data-category="all">전체</div>
+                <div class="product-tab" data-category="stock">주식</div>
+                <div class="product-tab" data-category="domestic-bond">국내채권</div>
+                <div class="product-tab" data-category="foreign-bond">해외채권</div>
+                <div class="product-tab" data-category="els">ELS</div>
+                <div class="product-tab" data-category="fund">펀드</div>
+                <div class="product-tab" data-category="rp">RP</div>
+                <div class="product-tab" data-category="note">발행어음</div>
             </div>
         </div>
 
@@ -704,8 +736,8 @@
             </div>
         </div>
 
-        <!-- Holdings Section -->
-        <div class="holdings-section">
+        <!-- Holdings Section - 주식 -->
+        <div class="holdings-section" data-category="stock">
             <!-- 삼성전자 -->
             <div class="holding-item">
                 <div class="holding-main" onclick="toggleHolding('samsung')">
@@ -715,8 +747,8 @@
                         <div class="holding-qty">150주</div>
                     </div>
                     <div class="holding-value">
-                        <div class="holding-amount">170,000원</div>
-                        <div class="holding-profit positive">+1,234원(+11.45%)</div>
+                        <div class="holding-amount">12,450,000원</div>
+                        <div class="holding-profit positive">+1,234,500원(+11.0%)</div>
                     </div>
                     <span class="holding-toggle" id="toggle-samsung">▼</span>
                 </div>
@@ -724,76 +756,27 @@
                     <div class="holding-detail-grid">
                         <div class="holding-detail-item">
                             <div class="holding-detail-label">매입가</div>
-                            <div class="holding-detail-value">1,000원</div>
+                            <div class="holding-detail-value">74,770원</div>
                         </div>
                         <div class="holding-detail-item">
                             <div class="holding-detail-label">현재가</div>
-                            <div class="holding-detail-value">500원</div>
+                            <div class="holding-detail-value">83,000원</div>
                         </div>
                         <div class="holding-detail-item">
                             <div class="holding-detail-label">가능수량</div>
-                            <div class="holding-detail-value">130주</div>
+                            <div class="holding-detail-value">150주</div>
                         </div>
                         <div class="holding-detail-item">
                             <div class="holding-detail-label">매입금액</div>
-                            <div class="holding-detail-value">150,000원</div>
+                            <div class="holding-detail-value">11,215,500원</div>
                         </div>
                         <div class="holding-detail-item">
                             <div class="holding-detail-label">수수료</div>
-                            <div class="holding-detail-value">200원</div>
+                            <div class="holding-detail-value">2,804원</div>
                         </div>
                         <div class="holding-detail-item">
                             <div class="holding-detail-label">제세금</div>
-                            <div class="holding-detail-value">200원</div>
-                        </div>
-                    </div>
-                    <div class="holding-actions">
-                        <button class="action-btn sell">매도</button>
-                        <button class="action-btn buy">매수</button>
-                        <button class="action-btn price">현재가</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 삼성전자 (두번째) -->
-            <div class="holding-item">
-                <div class="holding-main" onclick="toggleHolding('samsung2')">
-                    <div class="holding-icon">삼성</div>
-                    <div class="holding-info">
-                        <div class="holding-name">삼성전자</div>
-                        <div class="holding-qty">150주</div>
-                    </div>
-                    <div class="holding-value">
-                        <div class="holding-amount">170,000원</div>
-                        <div class="holding-profit positive">+1,234원(+11.45%)</div>
-                    </div>
-                    <span class="holding-toggle collapsed" id="toggle-samsung2">▼</span>
-                </div>
-                <div class="holding-details collapsed" id="details-samsung2">
-                    <div class="holding-detail-grid">
-                        <div class="holding-detail-item">
-                            <div class="holding-detail-label">매입가</div>
-                            <div class="holding-detail-value">1,000원</div>
-                        </div>
-                        <div class="holding-detail-item">
-                            <div class="holding-detail-label">현재가</div>
-                            <div class="holding-detail-value">500원</div>
-                        </div>
-                        <div class="holding-detail-item">
-                            <div class="holding-detail-label">가능수량</div>
-                            <div class="holding-detail-value">130주</div>
-                        </div>
-                        <div class="holding-detail-item">
-                            <div class="holding-detail-label">매입금액</div>
-                            <div class="holding-detail-value">150,000원</div>
-                        </div>
-                        <div class="holding-detail-item">
-                            <div class="holding-detail-label">수수료</div>
-                            <div class="holding-detail-value">200원</div>
-                        </div>
-                        <div class="holding-detail-item">
-                            <div class="holding-detail-label">제세금</div>
-                            <div class="holding-detail-value">200원</div>
+                            <div class="holding-detail-value">3,113원</div>
                         </div>
                     </div>
                     <div class="holding-actions">
@@ -900,6 +883,503 @@
                         <button class="action-btn price">현재가</button>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <!-- Holdings Section - 국내채권 -->
+        <div class="holdings-section" data-category="domestic-bond" style="display: none;">
+            <div class="holding-item">
+                <div class="holding-main" onclick="toggleHolding('bond1')">
+                    <div class="holding-icon">채권</div>
+                    <div class="holding-info">
+                        <div class="holding-name">국고채 3년물</div>
+                        <div class="holding-qty">50좌</div>
+                    </div>
+                    <div class="holding-value">
+                        <div class="holding-amount">5,150,000원</div>
+                        <div class="holding-profit positive">+150,000원(+3.0%)</div>
+                    </div>
+                    <span class="holding-toggle collapsed" id="toggle-bond1">▼</span>
+                </div>
+                <div class="holding-details collapsed" id="details-bond1">
+                    <div class="holding-detail-grid">
+                        <div class="holding-detail-item">
+                            <div class="holding-detail-label">매입단가</div>
+                            <div class="holding-detail-value">100,000원</div>
+                        </div>
+                        <div class="holding-detail-item">
+                            <div class="holding-detail-label">현재단가</div>
+                            <div class="holding-detail-value">103,000원</div>
+                        </div>
+                        <div class="holding-detail-item">
+                            <div class="holding-detail-label">만기일</div>
+                            <div class="holding-detail-value">2027.06.10</div>
+                        </div>
+                        <div class="holding-detail-item">
+                            <div class="holding-detail-label">매입금액</div>
+                            <div class="holding-detail-value">5,000,000원</div>
+                        </div>
+                        <div class="holding-detail-item">
+                            <div class="holding-detail-label">표면이율</div>
+                            <div class="holding-detail-value">3.5%</div>
+                        </div>
+                        <div class="holding-detail-item">
+                            <div class="holding-detail-label">세전수익률</div>
+                            <div class="holding-detail-value">3.2%</div>
+                        </div>
+                    </div>
+                    <div class="holding-actions">
+                        <button class="action-btn sell">매도</button>
+                        <button class="action-btn buy">매수</button>
+                        <button class="action-btn price">현재가</button>
+                    </div>
+                </div>
+            </div>
+            <div class="holding-item">
+                <div class="holding-main" onclick="toggleHolding('bond2')">
+                    <div class="holding-icon">채권</div>
+                    <div class="holding-info">
+                        <div class="holding-name">통안채 2년물</div>
+                        <div class="holding-qty">30좌</div>
+                    </div>
+                    <div class="holding-value">
+                        <div class="holding-amount">3,060,000원</div>
+                        <div class="holding-profit positive">+60,000원(+2.0%)</div>
+                    </div>
+                    <span class="holding-toggle collapsed" id="toggle-bond2">▼</span>
+                </div>
+                <div class="holding-details collapsed" id="details-bond2">
+                    <div class="holding-detail-grid">
+                        <div class="holding-detail-item">
+                            <div class="holding-detail-label">매입단가</div>
+                            <div class="holding-detail-value">100,000원</div>
+                        </div>
+                        <div class="holding-detail-item">
+                            <div class="holding-detail-label">현재단가</div>
+                            <div class="holding-detail-value">102,000원</div>
+                        </div>
+                        <div class="holding-detail-item">
+                            <div class="holding-detail-label">만기일</div>
+                            <div class="holding-detail-value">2026.12.15</div>
+                        </div>
+                        <div class="holding-detail-item">
+                            <div class="holding-detail-label">매입금액</div>
+                            <div class="holding-detail-value">3,000,000원</div>
+                        </div>
+                        <div class="holding-detail-item">
+                            <div class="holding-detail-label">표면이율</div>
+                            <div class="holding-detail-value">3.2%</div>
+                        </div>
+                        <div class="holding-detail-item">
+                            <div class="holding-detail-label">세전수익률</div>
+                            <div class="holding-detail-value">2.9%</div>
+                        </div>
+                    </div>
+                    <div class="holding-actions">
+                        <button class="action-btn sell">매도</button>
+                        <button class="action-btn buy">매수</button>
+                        <button class="action-btn price">현재가</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Holdings Section - 해외채권 -->
+        <div class="holdings-section" data-category="foreign-bond" style="display: none;">
+            <div class="holding-item">
+                <div class="holding-main" onclick="toggleHolding('fbond1')">
+                    <div class="holding-icon">USD</div>
+                    <div class="holding-info">
+                        <div class="holding-name">미국채 10년물</div>
+                        <div class="holding-qty">20좌</div>
+                    </div>
+                    <div class="holding-value">
+                        <div class="holding-amount">4,280,000원</div>
+                        <div class="holding-profit positive">+280,000원(+7.0%)</div>
+                    </div>
+                    <span class="holding-toggle collapsed" id="toggle-fbond1">▼</span>
+                </div>
+                <div class="holding-details collapsed" id="details-fbond1">
+                    <div class="holding-detail-grid">
+                        <div class="holding-detail-item">
+                            <div class="holding-detail-label">매입단가</div>
+                            <div class="holding-detail-value">$150</div>
+                        </div>
+                        <div class="holding-detail-item">
+                            <div class="holding-detail-label">현재단가</div>
+                            <div class="holding-detail-value">$160</div>
+                        </div>
+                        <div class="holding-detail-item">
+                            <div class="holding-detail-label">만기일</div>
+                            <div class="holding-detail-value">2034.11.15</div>
+                        </div>
+                        <div class="holding-detail-item">
+                            <div class="holding-detail-label">매입금액</div>
+                            <div class="holding-detail-value">4,000,000원</div>
+                        </div>
+                        <div class="holding-detail-item">
+                            <div class="holding-detail-label">표면이율</div>
+                            <div class="holding-detail-value">4.25%</div>
+                        </div>
+                        <div class="holding-detail-item">
+                            <div class="holding-detail-label">환율</div>
+                            <div class="holding-detail-value">1,340원</div>
+                        </div>
+                    </div>
+                    <div class="holding-actions">
+                        <button class="action-btn sell">매도</button>
+                        <button class="action-btn buy">매수</button>
+                        <button class="action-btn price">현재가</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Holdings Section - ELS -->
+        <div class="holdings-section" data-category="els" style="display: none;">
+            <div class="holding-item">
+                <div class="holding-main" onclick="toggleHolding('els1')">
+                    <div class="holding-icon">ELS</div>
+                    <div class="holding-info">
+                        <div class="holding-name">KB증권 ELS 제1234호</div>
+                        <div class="holding-qty">2좌</div>
+                    </div>
+                    <div class="holding-value">
+                        <div class="holding-amount">2,120,000원</div>
+                        <div class="holding-profit positive">+120,000원(+6.0%)</div>
+                    </div>
+                    <span class="holding-toggle collapsed" id="toggle-els1">▼</span>
+                </div>
+                <div class="holding-details collapsed" id="details-els1">
+                    <div class="holding-detail-grid">
+                        <div class="holding-detail-item">
+                            <div class="holding-detail-label">기초자산</div>
+                            <div class="holding-detail-value">KOSPI200</div>
+                        </div>
+                        <div class="holding-detail-item">
+                            <div class="holding-detail-label">조기상환</div>
+                            <div class="holding-detail-value">6개월마다</div>
+                        </div>
+                        <div class="holding-detail-item">
+                            <div class="holding-detail-label">만기일</div>
+                            <div class="holding-detail-value">2026.06.15</div>
+                        </div>
+                        <div class="holding-detail-item">
+                            <div class="holding-detail-label">매입금액</div>
+                            <div class="holding-detail-value">2,000,000원</div>
+                        </div>
+                        <div class="holding-detail-item">
+                            <div class="holding-detail-label">목표수익률</div>
+                            <div class="holding-detail-value">8.5%</div>
+                        </div>
+                        <div class="holding-detail-item">
+                            <div class="holding-detail-label">녹인배리어</div>
+                            <div class="holding-detail-value">50%</div>
+                        </div>
+                    </div>
+                    <div class="holding-actions">
+                        <button class="action-btn sell">매도</button>
+                        <button class="action-btn price">상세정보</button>
+                    </div>
+                </div>
+            </div>
+            <div class="holding-item">
+                <div class="holding-main" onclick="toggleHolding('els2')">
+                    <div class="holding-icon">ELS</div>
+                    <div class="holding-info">
+                        <div class="holding-name">신한투자 ELS 제5678호</div>
+                        <div class="holding-qty">1좌</div>
+                    </div>
+                    <div class="holding-value">
+                        <div class="holding-amount">1,050,000원</div>
+                        <div class="holding-profit positive">+50,000원(+5.0%)</div>
+                    </div>
+                    <span class="holding-toggle collapsed" id="toggle-els2">▼</span>
+                </div>
+                <div class="holding-details collapsed" id="details-els2">
+                    <div class="holding-detail-grid">
+                        <div class="holding-detail-item">
+                            <div class="holding-detail-label">기초자산</div>
+                            <div class="holding-detail-value">S&P500</div>
+                        </div>
+                        <div class="holding-detail-item">
+                            <div class="holding-detail-label">조기상환</div>
+                            <div class="holding-detail-value">3개월마다</div>
+                        </div>
+                        <div class="holding-detail-item">
+                            <div class="holding-detail-label">만기일</div>
+                            <div class="holding-detail-value">2026.09.20</div>
+                        </div>
+                        <div class="holding-detail-item">
+                            <div class="holding-detail-label">매입금액</div>
+                            <div class="holding-detail-value">1,000,000원</div>
+                        </div>
+                        <div class="holding-detail-item">
+                            <div class="holding-detail-label">목표수익률</div>
+                            <div class="holding-detail-value">7.2%</div>
+                        </div>
+                        <div class="holding-detail-item">
+                            <div class="holding-detail-label">녹인배리어</div>
+                            <div class="holding-detail-value">55%</div>
+                        </div>
+                    </div>
+                    <div class="holding-actions">
+                        <button class="action-btn sell">매도</button>
+                        <button class="action-btn price">상세정보</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Holdings Section - 펀드 -->
+        <div class="holdings-section" data-category="fund" style="display: none;">
+            <div class="holding-item">
+                <div class="holding-main" onclick="toggleHolding('fund1')">
+                    <div class="holding-icon">펀드</div>
+                    <div class="holding-info">
+                        <div class="holding-name">삼성글로벌반도체펀드</div>
+                        <div class="holding-qty">1,200좌</div>
+                    </div>
+                    <div class="holding-value">
+                        <div class="holding-amount">8,650,000원</div>
+                        <div class="holding-profit positive">+650,000원(+8.1%)</div>
+                    </div>
+                    <span class="holding-toggle collapsed" id="toggle-fund1">▼</span>
+                </div>
+                <div class="holding-details collapsed" id="details-fund1">
+                    <div class="holding-detail-grid">
+                        <div class="holding-detail-item">
+                            <div class="holding-detail-label">매입기준가</div>
+                            <div class="holding-detail-value">6,667원</div>
+                        </div>
+                        <div class="holding-detail-item">
+                            <div class="holding-detail-label">현재기준가</div>
+                            <div class="holding-detail-value">7,208원</div>
+                        </div>
+                        <div class="holding-detail-item">
+                            <div class="holding-detail-label">투자기간</div>
+                            <div class="holding-detail-value">1년 3개월</div>
+                        </div>
+                        <div class="holding-detail-item">
+                            <div class="holding-detail-label">매입금액</div>
+                            <div class="holding-detail-value">8,000,000원</div>
+                        </div>
+                        <div class="holding-detail-item">
+                            <div class="holding-detail-label">총보수</div>
+                            <div class="holding-detail-value">1.2%</div>
+                        </div>
+                        <div class="holding-detail-item">
+                            <div class="holding-detail-label">펀드유형</div>
+                            <div class="holding-detail-value">주식형</div>
+                        </div>
+                    </div>
+                    <div class="holding-actions">
+                        <button class="action-btn sell">환매</button>
+                        <button class="action-btn buy">추가매수</button>
+                        <button class="action-btn price">상세정보</button>
+                    </div>
+                </div>
+            </div>
+            <div class="holding-item">
+                <div class="holding-main" onclick="toggleHolding('fund2')">
+                    <div class="holding-icon">펀드</div>
+                    <div class="holding-info">
+                        <div class="holding-name">미래에셋인도중소형펀드</div>
+                        <div class="holding-qty">800좌</div>
+                    </div>
+                    <div class="holding-value">
+                        <div class="holding-amount">4,520,000원</div>
+                        <div class="holding-profit positive">+520,000원(+13.0%)</div>
+                    </div>
+                    <span class="holding-toggle collapsed" id="toggle-fund2">▼</span>
+                </div>
+                <div class="holding-details collapsed" id="details-fund2">
+                    <div class="holding-detail-grid">
+                        <div class="holding-detail-item">
+                            <div class="holding-detail-label">매입기준가</div>
+                            <div class="holding-detail-value">5,000원</div>
+                        </div>
+                        <div class="holding-detail-item">
+                            <div class="holding-detail-label">현재기준가</div>
+                            <div class="holding-detail-value">5,650원</div>
+                        </div>
+                        <div class="holding-detail-item">
+                            <div class="holding-detail-label">투자기간</div>
+                            <div class="holding-detail-value">8개월</div>
+                        </div>
+                        <div class="holding-detail-item">
+                            <div class="holding-detail-label">매입금액</div>
+                            <div class="holding-detail-value">4,000,000원</div>
+                        </div>
+                        <div class="holding-detail-item">
+                            <div class="holding-detail-label">총보수</div>
+                            <div class="holding-detail-value">1.5%</div>
+                        </div>
+                        <div class="holding-detail-item">
+                            <div class="holding-detail-label">펀드유형</div>
+                            <div class="holding-detail-value">해외주식형</div>
+                        </div>
+                    </div>
+                    <div class="holding-actions">
+                        <button class="action-btn sell">환매</button>
+                        <button class="action-btn buy">추가매수</button>
+                        <button class="action-btn price">상세정보</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Holdings Section - RP -->
+        <div class="holdings-section" data-category="rp" style="display: none;">
+            <div class="holding-item">
+                <div class="holding-main" onclick="toggleHolding('rp1')">
+                    <div class="holding-icon">RP</div>
+                    <div class="holding-info">
+                        <div class="holding-name">KB증권 RP (7일물)</div>
+                        <div class="holding-qty">1계약</div>
+                    </div>
+                    <div class="holding-value">
+                        <div class="holding-amount">5,003,500원</div>
+                        <div class="holding-profit positive">+3,500원(+0.07%)</div>
+                    </div>
+                    <span class="holding-toggle collapsed" id="toggle-rp1">▼</span>
+                </div>
+                <div class="holding-details collapsed" id="details-rp1">
+                    <div class="holding-detail-grid">
+                        <div class="holding-detail-item">
+                            <div class="holding-detail-label">매입금액</div>
+                            <div class="holding-detail-value">5,000,000원</div>
+                        </div>
+                        <div class="holding-detail-item">
+                            <div class="holding-detail-label">약정이율</div>
+                            <div class="holding-detail-value">3.65%</div>
+                        </div>
+                        <div class="holding-detail-item">
+                            <div class="holding-detail-label">만기일</div>
+                            <div class="holding-detail-value">2025.12.25</div>
+                        </div>
+                        <div class="holding-detail-item">
+                            <div class="holding-detail-label">가입일</div>
+                            <div class="holding-detail-value">2025.12.18</div>
+                        </div>
+                        <div class="holding-detail-item">
+                            <div class="holding-detail-label">예상이자</div>
+                            <div class="holding-detail-value">3,500원</div>
+                        </div>
+                        <div class="holding-detail-item">
+                            <div class="holding-detail-label">상품유형</div>
+                            <div class="holding-detail-value">환매조건부</div>
+                        </div>
+                    </div>
+                    <div class="holding-actions">
+                        <button class="action-btn sell">중도환매</button>
+                        <button class="action-btn price">상세정보</button>
+                    </div>
+                </div>
+            </div>
+            <div class="holding-item">
+                <div class="holding-main" onclick="toggleHolding('rp2')">
+                    <div class="holding-icon">RP</div>
+                    <div class="holding-info">
+                        <div class="holding-name">KB증권 RP (30일물)</div>
+                        <div class="holding-qty">1계약</div>
+                    </div>
+                    <div class="holding-value">
+                        <div class="holding-amount">3,012,000원</div>
+                        <div class="holding-profit positive">+12,000원(+0.4%)</div>
+                    </div>
+                    <span class="holding-toggle collapsed" id="toggle-rp2">▼</span>
+                </div>
+                <div class="holding-details collapsed" id="details-rp2">
+                    <div class="holding-detail-grid">
+                        <div class="holding-detail-item">
+                            <div class="holding-detail-label">매입금액</div>
+                            <div class="holding-detail-value">3,000,000원</div>
+                        </div>
+                        <div class="holding-detail-item">
+                            <div class="holding-detail-label">약정이율</div>
+                            <div class="holding-detail-value">3.85%</div>
+                        </div>
+                        <div class="holding-detail-item">
+                            <div class="holding-detail-label">만기일</div>
+                            <div class="holding-detail-value">2026.01.05</div>
+                        </div>
+                        <div class="holding-detail-item">
+                            <div class="holding-detail-label">가입일</div>
+                            <div class="holding-detail-value">2025.12.06</div>
+                        </div>
+                        <div class="holding-detail-item">
+                            <div class="holding-detail-label">예상이자</div>
+                            <div class="holding-detail-value">9,500원</div>
+                        </div>
+                        <div class="holding-detail-item">
+                            <div class="holding-detail-label">상품유형</div>
+                            <div class="holding-detail-value">환매조건부</div>
+                        </div>
+                    </div>
+                    <div class="holding-actions">
+                        <button class="action-btn sell">중도환매</button>
+                        <button class="action-btn price">상세정보</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Holdings Section - 발행어음 -->
+        <div class="holdings-section" data-category="note" style="display: none;">
+            <div class="holding-item">
+                <div class="holding-main" onclick="toggleHolding('note1')">
+                    <div class="holding-icon">어음</div>
+                    <div class="holding-info">
+                        <div class="holding-name">KB증권 발행어음 (91일)</div>
+                        <div class="holding-qty">1계약</div>
+                    </div>
+                    <div class="holding-value">
+                        <div class="holding-amount">10,075,000원</div>
+                        <div class="holding-profit positive">+75,000원(+0.75%)</div>
+                    </div>
+                    <span class="holding-toggle collapsed" id="toggle-note1">▼</span>
+                </div>
+                <div class="holding-details collapsed" id="details-note1">
+                    <div class="holding-detail-grid">
+                        <div class="holding-detail-item">
+                            <div class="holding-detail-label">매입금액</div>
+                            <div class="holding-detail-value">10,000,000원</div>
+                        </div>
+                        <div class="holding-detail-item">
+                            <div class="holding-detail-label">약정이율</div>
+                            <div class="holding-detail-value">4.0%</div>
+                        </div>
+                        <div class="holding-detail-item">
+                            <div class="holding-detail-label">만기일</div>
+                            <div class="holding-detail-value">2026.02.15</div>
+                        </div>
+                        <div class="holding-detail-item">
+                            <div class="holding-detail-label">가입일</div>
+                            <div class="holding-detail-value">2025.11.16</div>
+                        </div>
+                        <div class="holding-detail-item">
+                            <div class="holding-detail-label">예상이자</div>
+                            <div class="holding-detail-value">100,000원</div>
+                        </div>
+                        <div class="holding-detail-item">
+                            <div class="holding-detail-label">발행기관</div>
+                            <div class="holding-detail-value">KB증권</div>
+                        </div>
+                    </div>
+                    <div class="holding-actions">
+                        <button class="action-btn sell">중도환매</button>
+                        <button class="action-btn price">상세정보</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 예금자 보호안내 -->
+        <div class="deposit-protection-notice">
+            <div class="notice-title">예금자 보호안내</div>
+            <div class="notice-content">
+                이 금융상품은 예금자보호법에 따라 보호되지 않습니다. 다만, 이 예탁금 중 증권매수 미사용 현금잔액은 예금자보호법에 따라 원금과 소정의 이자를 합하여 1인당 <span class="notice-highlight">"1억원"</span>까지(본 금융회사의 여타 보호상품과 합산) 보호됩니다.
             </div>
         </div>
     </main>
@@ -1079,17 +1559,142 @@
             });
         }
 
+        // 상품별 자산 데이터
+        const assetData = {
+            'all': {
+                value: '45,678,900원',
+                profit: '▲ 3,456,700원',
+                rate: '+8.18%',
+                isPositive: true,
+                purchase: '42,222,200원',
+                evaluation: '45,678,900원',
+                cash: '678,900원'
+            },
+            'stock': {
+                value: '23,550,000원',
+                profit: '▲ 1,567,500원',
+                rate: '+7.14%',
+                isPositive: true,
+                purchase: '21,982,500원',
+                evaluation: '23,550,000원',
+                cash: '0원'
+            },
+            'domestic-bond': {
+                value: '8,210,000원',
+                profit: '▲ 210,000원',
+                rate: '+2.63%',
+                isPositive: true,
+                purchase: '8,000,000원',
+                evaluation: '8,210,000원',
+                cash: '0원'
+            },
+            'foreign-bond': {
+                value: '4,280,000원',
+                profit: '▲ 280,000원',
+                rate: '+7.00%',
+                isPositive: true,
+                purchase: '4,000,000원',
+                evaluation: '4,280,000원',
+                cash: '0원'
+            },
+            'els': {
+                value: '3,170,000원',
+                profit: '▲ 170,000원',
+                rate: '+5.67%',
+                isPositive: true,
+                purchase: '3,000,000원',
+                evaluation: '3,170,000원',
+                cash: '0원'
+            },
+            'fund': {
+                value: '13,170,000원',
+                profit: '▲ 1,170,000원',
+                rate: '+9.75%',
+                isPositive: true,
+                purchase: '12,000,000원',
+                evaluation: '13,170,000원',
+                cash: '0원'
+            },
+            'rp': {
+                value: '8,015,500원',
+                profit: '▲ 15,500원',
+                rate: '+0.19%',
+                isPositive: true,
+                purchase: '8,000,000원',
+                evaluation: '8,015,500원',
+                cash: '0원'
+            },
+            'note': {
+                value: '10,075,000원',
+                profit: '▲ 75,000원',
+                rate: '+0.75%',
+                isPositive: true,
+                purchase: '10,000,000원',
+                evaluation: '10,075,000원',
+                cash: '0원'
+            }
+        };
+
+        // 탭 전환 및 자산 정보 업데이트 함수
+        function switchProductTab(category) {
+            // 모든 탭 비활성화
+            document.querySelectorAll('.product-tab').forEach(t => t.classList.remove('active'));
+            // 선택된 탭 활성화
+            document.querySelector(`.product-tab[data-category="${category}"]`).classList.add('active');
+
+            // 모든 holdings-section 숨기기
+            document.querySelectorAll('.holdings-section').forEach(section => {
+                section.style.display = 'none';
+            });
+
+            // 선택된 카테고리의 holdings-section 표시
+            if (category === 'all') {
+                // 전체 선택 시 모든 섹션 표시
+                document.querySelectorAll('.holdings-section').forEach(section => {
+                    section.style.display = 'block';
+                });
+            } else {
+                // 특정 카테고리만 표시
+                const targetSection = document.querySelector(`.holdings-section[data-category="${category}"]`);
+                if (targetSection) {
+                    targetSection.style.display = 'block';
+                }
+            }
+
+            // asset-card 금액 업데이트
+            const data = assetData[category];
+            if (data) {
+                document.querySelector('.asset-value').textContent = data.value;
+
+                const profitAmount = document.querySelector('.profit-amount');
+                profitAmount.textContent = data.profit;
+                profitAmount.className = 'profit-amount ' + (data.isPositive ? 'positive' : 'negative');
+
+                document.querySelector('.profit-rate').textContent = data.rate;
+
+                // 상세 정보 업데이트
+                const detailValues = document.querySelectorAll('.detail-value');
+                if (detailValues.length >= 3) {
+                    detailValues[0].textContent = data.purchase;
+                    detailValues[1].textContent = data.evaluation;
+                    detailValues[2].textContent = data.cash;
+                }
+            }
+        }
+
         // Product tab click
         document.querySelectorAll('.product-tab').forEach(tab => {
             tab.addEventListener('click', function() {
-                document.querySelectorAll('.product-tab').forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
+                const category = this.getAttribute('data-category');
+                switchProductTab(category);
             });
         });
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             setTimeout(() => drawChart('1M'), 100);
+            // 초기 상태: 전체 탭 선택
+            switchProductTab('all');
         });
     </script>
 </body>

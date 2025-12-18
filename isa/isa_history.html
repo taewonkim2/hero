@@ -557,6 +557,32 @@
             color: var(--text-muted);
             font-size: 12px;
         }
+
+        /* 예금자 보호안내 */
+        .deposit-protection-notice {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 16px;
+            margin: 16px;
+        }
+
+        .deposit-protection-notice .notice-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .deposit-protection-notice .notice-content {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .deposit-protection-notice .notice-highlight {
+            color: var(--primary);
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
@@ -647,6 +673,14 @@
         <div class="history-section" id="historySection">
             <!-- JavaScript로 렌더링 -->
         </div>
+
+        <!-- 예금자 보호안내 -->
+        <div class="deposit-protection-notice">
+            <div class="notice-title">예금자 보호안내</div>
+            <div class="notice-content">
+                이 금융상품은 예금자보호법에 따라 보호되지 않습니다. 다만, 이 예탁금 중 증권매수 미사용 현금잔액은 예금자보호법에 따라 원금과 소정의 이자를 합하여 1인당 <span class="notice-highlight">"1억원"</span>까지(본 금융회사의 여타 보호상품과 합산) 보호됩니다.
+            </div>
+        </div>
     </main>
 
     <!-- Bottom Tab Bar -->
@@ -680,18 +714,49 @@
         // 샘플 데이터 (서버에서 받아온다고 가정)
         // ========================================
         const mockServerData = [
+            // 주식
             { id: 'T001', date: '2025.12.02', name: 'NAVER', type: 'sell', category: 'stock', quantity: 50, amount: 11500000, price: 230000, profit: 500000, profitRate: 4.55 },
             { id: 'T002', date: '2025.12.02', name: '카카오', type: 'buy', category: 'stock', quantity: 30, amount: 1620000, price: 54000 },
-            { id: 'T003', date: '2025.11.20', name: '현금', type: 'deposit', category: 'cash', amount: 5000000 },
             { id: 'T004', date: '2025.10.25', name: 'SK하이닉스', type: 'buy', category: 'stock', quantity: 20, amount: 3200000, price: 160000 },
-            { id: 'T005', date: '2025.10.25', name: 'KODEX 200', type: 'sell', category: 'fund', quantity: 100, amount: 4000000, price: 40000, profit: 200000, profitRate: 5.26 },
-            { id: 'T006', date: '2025.10.03', name: '삼성전자', type: 'sell', category: 'stock', quantity: 100, amount: 12000000, price: 12000, profit: 300000, profitRate: 20.00 },
+            { id: 'T006', date: '2025.10.03', name: '삼성전자', type: 'sell', category: 'stock', quantity: 100, amount: 12000000, price: 120000, profit: 300000, profitRate: 2.56 },
             { id: 'T007', date: '2025.10.03', name: 'LG에너지솔루션', type: 'buy', category: 'stock', quantity: 5, amount: 2000000, price: 400000 },
             { id: 'T008', date: '2025.09.15', name: '현대차', type: 'sell', category: 'stock', quantity: 30, amount: 6900000, price: 230000, profit: -150000, profitRate: -2.13 },
-            { id: 'T009', date: '2025.09.15', name: '현금', type: 'withdraw', category: 'cash', amount: 2000000 },
-            { id: 'T010', date: '2025.09.02', name: '삼성전자', type: 'buy', category: 'stock', quantity: 150, amount: 15000000, price: 10000 },
+            { id: 'T010', date: '2025.09.02', name: '삼성전자', type: 'buy', category: 'stock', quantity: 150, amount: 11215500, price: 74770 },
             { id: 'T011', date: '2025.09.02', name: 'NAVER', type: 'buy', category: 'stock', quantity: 80, amount: 17600000, price: 220000 },
-            { id: 'T012', date: '2025.09.02', name: '현금', type: 'deposit', category: 'cash', amount: 40000000 }
+
+            // 입출금
+            { id: 'T003', date: '2025.11.20', name: '현금', type: 'deposit', category: 'cash', amount: 5000000 },
+            { id: 'T009', date: '2025.09.15', name: '현금', type: 'withdraw', category: 'cash', amount: 2000000 },
+            { id: 'T012', date: '2025.09.02', name: '현금', type: 'deposit', category: 'cash', amount: 40000000 },
+
+            // 국내채권
+            { id: 'T020', date: '2025.11.15', name: '국고채 3년물', type: 'buy', category: 'domestic-bond', quantity: 50, amount: 5000000, price: 100000 },
+            { id: 'T021', date: '2025.10.20', name: '통안채 2년물', type: 'buy', category: 'domestic-bond', quantity: 30, amount: 3000000, price: 100000 },
+            { id: 'T022', date: '2025.09.10', name: '국고채 5년물', type: 'sell', category: 'domestic-bond', quantity: 20, amount: 2100000, price: 105000, profit: 100000, profitRate: 5.0 },
+
+            // 해외채권
+            { id: 'T030', date: '2025.11.10', name: '미국채 10년물', type: 'buy', category: 'foreign-bond', quantity: 20, amount: 4000000, price: 200000 },
+            { id: 'T031', date: '2025.10.05', name: '미국채 2년물', type: 'sell', category: 'foreign-bond', quantity: 10, amount: 2200000, price: 220000, profit: 200000, profitRate: 10.0 },
+
+            // ELS
+            { id: 'T040', date: '2025.12.01', name: 'KB증권 ELS 제1234호', type: 'buy', category: 'els', quantity: 2, amount: 2000000, price: 1000000 },
+            { id: 'T041', date: '2025.11.01', name: '신한투자 ELS 제5678호', type: 'buy', category: 'els', quantity: 1, amount: 1000000, price: 1000000 },
+            { id: 'T042', date: '2025.09.20', name: '미래에셋 ELS 제9999호', type: 'sell', category: 'els', quantity: 1, amount: 1080000, price: 1080000, profit: 80000, profitRate: 8.0 },
+
+            // 펀드
+            { id: 'T005', date: '2025.10.25', name: 'KODEX 200', type: 'sell', category: 'fund', quantity: 100, amount: 4000000, price: 40000, profit: 200000, profitRate: 5.26 },
+            { id: 'T050', date: '2025.11.05', name: '삼성글로벌반도체펀드', type: 'buy', category: 'fund', quantity: 1200, amount: 8000000, price: 6667 },
+            { id: 'T051', date: '2025.10.15', name: '미래에셋인도중소형펀드', type: 'buy', category: 'fund', quantity: 800, amount: 4000000, price: 5000 },
+            { id: 'T052', date: '2025.09.25', name: 'KB글로벌AI펀드', type: 'sell', category: 'fund', quantity: 500, amount: 3500000, price: 7000, profit: 500000, profitRate: 16.67 },
+
+            // RP
+            { id: 'T060', date: '2025.12.18', name: 'KB증권 RP (7일물)', type: 'buy', category: 'rp', quantity: 1, amount: 5000000, price: 5000000 },
+            { id: 'T061', date: '2025.12.06', name: 'KB증권 RP (30일물)', type: 'buy', category: 'rp', quantity: 1, amount: 3000000, price: 3000000 },
+            { id: 'T062', date: '2025.11.25', name: 'KB증권 RP (7일물)', type: 'sell', category: 'rp', quantity: 1, amount: 2001400, price: 2001400, profit: 1400, profitRate: 0.07 },
+
+            // 발행어음
+            { id: 'T070', date: '2025.11.16', name: 'KB증권 발행어음 (91일)', type: 'buy', category: 'note', quantity: 1, amount: 10000000, price: 10000000 },
+            { id: 'T071', date: '2025.10.01', name: 'KB증권 발행어음 (30일)', type: 'sell', category: 'note', quantity: 1, amount: 5025000, price: 5025000, profit: 25000, profitRate: 0.5 }
         ];
 
         // 현재 필터 상태
@@ -707,14 +772,7 @@
 
                 let categoryMatch = true;
                 if (productFilter !== 'all') {
-                    if (productFilter === 'stock') {
-                        categoryMatch = item.category === 'stock';
-                    } else if (productFilter === 'cash') {
-                        categoryMatch = item.category === 'cash';
-                    } else if (productFilter === 'fund') {
-                        categoryMatch = item.category === 'fund';
-                    }
-                    // 다른 카테고리들도 필요시 추가
+                    categoryMatch = item.category === productFilter;
                 }
 
                 return dateMatch && categoryMatch;
@@ -741,10 +799,22 @@
         // ========================================
         // 거래 유형 라벨
         // ========================================
-        function getTypeLabel(type, quantity) {
+        function getTypeLabel(type, quantity, category) {
+            // 카테고리별 단위 설정
+            let unit = '주';
+            if (category === 'domestic-bond' || category === 'foreign-bond') {
+                unit = '좌';
+            } else if (category === 'fund') {
+                unit = '좌';
+            } else if (category === 'els') {
+                unit = '좌';
+            } else if (category === 'rp' || category === 'note') {
+                unit = '계약';
+            }
+
             switch(type) {
-                case 'buy': return `${quantity}주 매수`;
-                case 'sell': return `${quantity}주 매도`;
+                case 'buy': return `${quantity}${unit} 매수`;
+                case 'sell': return `${quantity}${unit} 매도`;
                 case 'deposit': return '입금';
                 case 'withdraw': return '출금';
                 default: return type;
@@ -803,7 +873,7 @@
                                     <div class="history-content">
                                         <div class="history-title-row">
                                             <span class="history-name">${item.name}</span>
-                                            <span class="history-type ${item.type}">${getTypeLabel(item.type, item.quantity)}</span>
+                                            <span class="history-type ${item.type}">${getTypeLabel(item.type, item.quantity, item.category)}</span>
                                         </div>
                                         <div class="history-details">${getDetailsText(item)}</div>
                                         ${getProfitHtml(item)}
