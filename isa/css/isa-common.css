@@ -1,0 +1,604 @@
+/* ============================================
+   ISA Common CSS
+   공통으로 사용되는 스타일 정의
+   ============================================ */
+
+/* CSS Variables */
+:root {
+    --primary: #1a73e8;
+    --primary-light: #e8f0fe;
+    --accent: #ff6b35;
+    --positive: #e53935;  /* 상승: 적색 */
+    --negative: #1976d2;  /* 하락: 파랑 */
+    --menu-red: #d32f2f;
+    --bg-primary: #f5f6f8;
+    --bg-card: #ffffff;
+    --text-primary: #1f2937;
+    --text-secondary: #6b7280;
+    --text-muted: #9ca3af;
+    --border: #e5e7eb;
+    --shadow: 0 2px 8px rgba(0,0,0,0.06);
+    --shadow-lg: 0 4px 16px rgba(0,0,0,0.1);
+}
+
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Base Body */
+body {
+    font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.6;
+    max-width: 480px;
+    margin: 0 auto;
+    min-height: 100vh;
+    padding-top: 56px;
+    padding-bottom: 70px;
+}
+
+/* ============================================
+   Top Navigation Bar
+   ============================================ */
+.top-nav {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 480px;
+    height: 56px;
+    background: white;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    z-index: 1000;
+}
+
+.top-nav-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.back-btn {
+    background: none;
+    border: none;
+    padding: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.7;
+}
+
+.back-btn:hover {
+    opacity: 1;
+}
+
+.top-nav-submenu {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    flex: 1;
+    justify-content: flex-start;
+    margin-left: 12px;
+}
+
+.top-nav-submenu-item {
+    font-size: 13px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 6px 10px;
+    border-radius: 14px;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.top-nav-submenu-item:hover {
+    background: var(--primary-light);
+    color: var(--primary);
+}
+
+.top-nav-submenu-item.active {
+    background: var(--primary);
+    color: white;
+}
+
+/* ============================================
+   Bottom Tab Bar
+   ============================================ */
+.bottom-tab-bar {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 480px;
+    height: 70px;
+    background: white;
+    display: flex;
+    align-items: stretch;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+    z-index: 1000;
+}
+
+.tab-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--text-muted);
+    transition: color 0.2s;
+    padding: 8px 4px;
+}
+
+.tab-item.active {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.tab-item:hover {
+    color: var(--primary);
+}
+
+.tab-icon {
+    font-size: 20px;
+    margin-bottom: 4px;
+}
+
+.tab-label {
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.menu-tab {
+    flex: 0.8;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 8px;
+}
+
+.menu-button-box {
+    background: var(--menu-red);
+    border-radius: 10px;
+    padding: 8px 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.hamburger-icon {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    margin-bottom: 3px;
+}
+
+.hamburger-line {
+    width: 18px;
+    height: 2px;
+    background: white;
+    border-radius: 1px;
+}
+
+.menu-label {
+    font-size: 10px;
+    font-weight: 600;
+    color: white;
+}
+
+/* ============================================
+   Main Content
+   ============================================ */
+.main-content {
+    padding: 16px;
+}
+
+/* ============================================
+   Common Card Styles
+   ============================================ */
+.card {
+    background: white;
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 12px;
+    box-shadow: var(--shadow);
+}
+
+/* ============================================
+   Account Header
+   ============================================ */
+.account-header {
+    background: white;
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 12px;
+    box-shadow: var(--shadow);
+}
+
+.account-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.account-number {
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.account-type {
+    background: var(--bg-primary);
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+/* ============================================
+   Common Text Classes
+   ============================================ */
+.positive {
+    color: var(--positive);
+}
+
+.negative {
+    color: var(--negative);
+}
+
+/* ============================================
+   Action Buttons
+   ============================================ */
+.action-btn {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.action-btn.sell {
+    background: var(--negative);
+    color: white;
+}
+
+.action-btn.sell:hover {
+    background: #1565c0;
+}
+
+.action-btn.buy {
+    background: var(--positive);
+    color: white;
+}
+
+.action-btn.buy:hover {
+    background: #c62828;
+}
+
+.action-btn.price {
+    background: white;
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+}
+
+.action-btn.price:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+/* ============================================
+   Half Popup (반팝업)
+   ============================================ */
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 2000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.popup-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.half-popup {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%) translateY(100%);
+    width: 100%;
+    max-width: 480px;
+    max-height: 85vh;
+    background: white;
+    border-radius: 20px 20px 0 0;
+    z-index: 2001;
+    transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.half-popup.active {
+    transform: translateX(-50%) translateY(0);
+}
+
+.popup-handle {
+    width: 40px;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    margin: 12px auto;
+}
+
+.popup-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px 16px;
+    border-bottom: 1px solid var(--border);
+}
+
+.popup-title-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.popup-stock-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #FEE500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: #3C1E1E;
+}
+
+.popup-stock-title-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.popup-stock-name {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.popup-stock-code {
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+.popup-close-btn {
+    background: none;
+    border: none;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: background 0.2s;
+}
+
+.popup-close-btn:hover {
+    background: var(--bg-primary);
+}
+
+.popup-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+}
+
+.popup-current-price-section {
+    text-align: center;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 20px;
+}
+
+.popup-current-price {
+    font-size: 32px;
+    font-weight: 700;
+}
+
+.popup-price-change {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.popup-change-amount {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.popup-change-amount.negative {
+    color: var(--negative);
+}
+
+.popup-change-amount.positive {
+    color: var(--positive);
+}
+
+.popup-change-rate {
+    font-size: 14px;
+    color: var(--text-muted);
+}
+
+.popup-holding-info-section {
+    background: var(--bg-primary);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 20px;
+}
+
+.popup-section-title {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: var(--text-primary);
+}
+
+.popup-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.popup-info-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.popup-info-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+}
+
+.popup-info-value {
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.popup-info-value.negative {
+    color: var(--negative);
+}
+
+.popup-info-value.positive {
+    color: var(--positive);
+}
+
+.popup-detail-info-section {
+    margin-bottom: 20px;
+}
+
+.popup-detail-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.popup-detail-row:last-child {
+    border-bottom: none;
+}
+
+.popup-detail-label {
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.popup-detail-value {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.popup-detail-value.negative {
+    color: var(--negative);
+}
+
+.popup-actions {
+    display: flex;
+    gap: 10px;
+    padding: 16px 20px;
+    border-top: 1px solid var(--border);
+    background: white;
+}
+
+.popup-action-btn {
+    flex: 1;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.popup-action-btn.sell {
+    background: var(--negative);
+    color: white;
+}
+
+.popup-action-btn.sell:hover {
+    background: #1565c0;
+}
+
+.popup-action-btn.buy {
+    background: var(--positive);
+    color: white;
+}
+
+.popup-action-btn.buy:hover {
+    background: #c62828;
+}
+
+.popup-action-btn.price {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+}
+
+.popup-action-btn.price:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+/* ============================================
+   Deposit Protection Notice
+   ============================================ */
+.deposit-protection-notice {
+    background: var(--bg-primary);
+    border-radius: 12px;
+    padding: 16px;
+    margin: 16px;
+}
+
+.deposit-protection-notice .notice-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+
+.deposit-protection-notice .notice-content {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.deposit-protection-notice .notice-highlight {
+    color: var(--primary);
+    font-weight: 600;
+}

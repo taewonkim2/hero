@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ISA 계좌 홈 - 계좌 미보유</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1a73e8;
+            --primary-light: #e8f0fe;
+            --accent: #ff6b35;
+            --positive: #e53935;  /* 상승: 적색 */
+            --negative: #1976d2;  /* 하락: 파랑 */
+            --menu-red: #d32f2f;
+            --bg-primary: #f5f6f8;
+            --bg-card: #ffffff;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --text-muted: #9ca3af;
+            --border: #e5e7eb;
+            --shadow: 0 2px 8px rgba(0,0,0,0.06);
+            --shadow-lg: 0 4px 16px rgba(0,0,0,0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            max-width: 480px;
+            margin: 0 auto;
+            min-height: 100vh;
+            padding-top: 56px;
+            padding-bottom: 70px;
+        }
+
+        /* Top Navigation Bar */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 480px;
+            height: 56px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .top-nav-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            padding: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.7;
+        }
+
+        .back-btn:hover {
+            opacity: 1;
+        }
+
+        .top-nav-submenu {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex: 1;
+            justify-content: flex-start;
+            margin-left: 12px;
+        }
+
+        .top-nav-submenu-item {
+            font-size: 13px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 6px 10px;
+            border-radius: 14px;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .top-nav-submenu-item:hover,
+        .top-nav-submenu-item.active {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        /* Bottom Tab Bar */
+        .bottom-tab-bar {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 480px;
+            height: 70px;
+            background: white;
+            display: flex;
+            align-items: stretch;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .tab-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: color 0.2s;
+            padding: 8px 4px;
+        }
+
+        .tab-item.active {
+            color: var(--primary);
+        }
+
+        .tab-item:hover {
+            color: var(--primary);
+        }
+
+        .tab-icon {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+
+        .tab-label {
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        /* Menu Button (햄버거) */
+        .menu-tab {
+            flex: 0.8;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        .menu-button-box {
+            background: var(--menu-red);
+            border-radius: 10px;
+            padding: 8px 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hamburger-icon {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            margin-bottom: 3px;
+        }
+
+        .hamburger-line {
+            width: 18px;
+            height: 2px;
+            background: white;
+            border-radius: 1px;
+        }
+
+        .menu-label {
+            font-size: 10px;
+            font-weight: 600;
+            color: white;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%);
+            color: white;
+            padding: 16px 20px 24px;
+            position: relative;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 0;
+            right: 0;
+            height: 40px;
+            background: var(--bg-primary);
+            border-radius: 24px 24px 0 0;
+        }
+
+        /* No Account Section */
+        .no-account-section {
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .no-account-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .no-account-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .no-account-desc {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+
+        .no-account-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .no-account-btn {
+            background: white;
+            color: var(--primary);
+            border: none;
+            padding: 14px 28px;
+            border-radius: 24px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .no-account-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .no-account-btn.secondary {
+            background: rgba(255,255,255,0.2);
+            color: white;
+        }
+
+        .no-account-btn.secondary:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 0 16px 30px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ISA 소개 카드 */
+        .intro-card {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: var(--shadow-lg);
+            margin-bottom: 16px;
+        }
+
+        .intro-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+
+        .intro-benefits {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px;
+            background: var(--bg-primary);
+            border-radius: 12px;
+        }
+
+        .benefit-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-light);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .benefit-content {
+            flex: 1;
+        }
+
+        .benefit-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .benefit-desc {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* Tax Savings Card */
+        .tax_card {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tax_card::before {
+            content: '💰';
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 48px;
+            opacity: 0.3;
+        }
+
+        .tax_header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .tax_label {
+            font-size: 14px;
+            color: #92400e;
+            font-weight: 500;
+        }
+
+        .tax_detail-btn {
+            background: rgba(255,255,255,0.6);
+            border: none;
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            color: #92400e;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .tax_value {
+            font-size: 26px;
+            font-weight: 700;
+            color: #92400e;
+        }
+
+        /* Carousel Sections */
+        .carousel-section {
+            margin-bottom: 24px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+            padding: 0 4px;
+        }
+
+        .section-title {
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+        .section-more {
+            font-size: 13px;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+
+        .carousel-container {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            padding-bottom: 8px;
+        }
+
+        .carousel-container::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .carousel-container::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+            border-radius: 2px;
+        }
+
+        .carousel-container::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 2px;
+        }
+
+        /* Product Card */
+        .product-card {
+            min-width: 200px;
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 18px;
+            box-shadow: var(--shadow);
+            scroll-snap-align: start;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .product-tag {
+            display: inline-block;
+            background: var(--primary-light);
+            color: var(--primary);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .product-name {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            line-height: 1.4;
+        }
+
+        .product-return {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--positive);
+        }
+
+        .product-period {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* Strategy Card */
+        .strategy-card {
+            min-width: 240px;
+            background: linear-gradient(135deg, #1e3a5f 0%, #0d2137 100%);
+            border-radius: 16px;
+            padding: 18px;
+            color: white;
+            scroll-snap-align: start;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .strategy-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .strategy-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-bottom: 12px;
+        }
+
+        .strategy-name {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .strategy-desc {
+            font-size: 12px;
+            opacity: 0.7;
+            line-height: 1.5;
+        }
+
+        /* Info Carousel */
+        .info-card {
+            min-width: 280px;
+            background: var(--bg-card);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            scroll-snap-align: start;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .info-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .info-thumbnail {
+            width: 100%;
+            height: 140px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .info-thumbnail.video::after {
+            content: '';
+            width: 50px;
+            height: 50px;
+            background: rgba(255,255,255,0.9);
+            border-radius: 50%;
+            position: absolute;
+        }
+
+        .info-thumbnail.video::before {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-left: 18px solid var(--primary);
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            margin-left: 4px;
+            z-index: 1;
+        }
+
+        .info-thumbnail-text {
+            color: white;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .info-content {
+            padding: 16px;
+        }
+
+        .info-tag {
+            font-size: 11px;
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .info-title {
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+
+        /* Touch indicator */
+        .swipe-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 12px;
+        }
+
+        .swipe-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--border);
+        }
+
+        .swipe-dot.active {
+            background: var(--primary);
+            width: 18px;
+            border-radius: 3px;
+        }
+
+        /* Animations */
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-in {
+            animation: slideUp 0.5s ease-out forwards;
+        }
+
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
+        .delay-5 { animation-delay: 0.5s; }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <nav class="top-nav">
+        <div class="top-nav-left">
+            <button class="back-btn" onclick="goBack()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M15 18l-6-6 6-6"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="top-nav-submenu" id="navSubmenu">
+             <span class="top-nav-submenu-item active" onclick="navigateTo('isa_balance')">ISA 홈</span>
+        </div>
+    </nav>
+
+    <!-- Header Section - 계좌 미보유 안내 -->
+    <header class="header">
+        <div class="no-account-section">
+            <div class="no-account-icon">📋</div>
+            <div class="no-account-title">보유한 ISA 계좌가 없습니다</div>
+            <div class="no-account-desc">
+                ISA 계좌를 개설하고<br>
+                세금 혜택과 함께 다양한 금융상품에 투자하세요!
+            </div>
+            <div class="no-account-buttons">
+                <button class="no-account-btn" onclick="openAccountPage()">
+                    <span>+</span> 계좌개설
+                </button>
+                <button class="no-account-btn secondary" onclick="importAccountPage()">
+                    <span>↓</span> 가져오기
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- ISA 소개 카드 -->
+        <section class="intro-card animate-in">
+            <div class="intro-title">ISA 계좌란?</div>
+            <div class="intro-benefits">
+                <div class="benefit-item">
+                    <div class="benefit-icon">💰</div>
+                    <div class="benefit-content">
+                        <div class="benefit-title">세금 혜택</div>
+                        <div class="benefit-desc">최대 400만원까지 비과세, 초과 수익은 9.9% 분리과세</div>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon">📊</div>
+                    <div class="benefit-content">
+                        <div class="benefit-title">다양한 상품</div>
+                        <div class="benefit-desc">주식, ETF, 펀드, 채권, ELS 등 하나의 계좌에서 투자</div>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon">🔄</div>
+                    <div class="benefit-content">
+                        <div class="benefit-title">손익 통산</div>
+                        <div class="benefit-desc">이익과 손실을 합산하여 세금 부담 최소화</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tax Savings Card -->
+        <section class="tax_card animate-in delay-1" onclick="navigateTo('isa_tax_guide')" style="cursor: pointer;">
+            <div class="tax_header">
+                <span class="tax_label">ISA로 절세할 수 있는 금액</span>
+                <span class="tax_detail-btn">자세히 알아보기 →</span>
+            </div>
+            <div class="tax_value">연간 최대 400만원</div>
+        </section>
+
+        <!-- Popular Products Carousel -->
+        <section class="carousel-section animate-in delay-2">
+            <div class="section-header">
+                <span class="section-title">🔥 인기상품</span>
+                <span class="section-more">전체보기</span>
+            </div>
+            <div class="carousel-container">
+                <div class="product-card">
+                    <span class="product-tag">국내주식</span>
+                    <div class="product-name">삼성전자 우선주</div>
+                    <div class="product-return">+12.5%</div>
+                    <div class="product-period">최근 3개월 수익률</div>
+                </div>
+                <div class="product-card">
+                    <span class="product-tag">ETF</span>
+                    <div class="product-name">TIGER 미국S&P500</div>
+                    <div class="product-return">+18.2%</div>
+                    <div class="product-period">최근 3개월 수익률</div>
+                </div>
+                <div class="product-card">
+                    <span class="product-tag">채권</span>
+                    <div class="product-name">국고채 3년물</div>
+                    <div class="product-return">+3.8%</div>
+                    <div class="product-period">연환산 수익률</div>
+                </div>
+                <div class="product-card">
+                    <span class="product-tag">리츠</span>
+                    <div class="product-name">맥쿼리인프라</div>
+                    <div class="product-return">+8.5%</div>
+                    <div class="product-period">최근 3개월 수익률</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Popular Strategies Carousel -->
+        <section class="carousel-section animate-in delay-3">
+            <div class="section-header">
+                <span class="section-title">📈 인기전략</span>
+                <span class="section-more">전체보기</span>
+            </div>
+            <div class="carousel-container">
+                <div class="strategy-card">
+                    <div class="strategy-icon">🎯</div>
+                    <div class="strategy-name">배당성장 포트폴리오</div>
+                    <div class="strategy-desc">꾸준한 배당성장 기업에 분산투자하는 안정형 전략</div>
+                </div>
+                <div class="strategy-card">
+                    <div class="strategy-icon">⚡</div>
+                    <div class="strategy-name">AI반도체 집중투자</div>
+                    <div class="strategy-desc">AI 산업 성장의 수혜를 받는 반도체 기업 투자</div>
+                </div>
+                <div class="strategy-card">
+                    <div class="strategy-icon">🌍</div>
+                    <div class="strategy-name">글로벌 분산투자</div>
+                    <div class="strategy-desc">미국, 유럽, 신흥국 ETF로 구성된 글로벌 포트폴리오</div>
+                </div>
+                <div class="strategy-card">
+                    <div class="strategy-icon">🛡️</div>
+                    <div class="strategy-name">채권혼합 안정형</div>
+                    <div class="strategy-desc">채권 70% + 주식 30% 안정적 자산배분 전략</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ISA Info Carousel -->
+        <section class="carousel-section animate-in delay-4">
+            <div class="section-header">
+                <span class="section-title">📚 ISA 알아보기</span>
+            </div>
+            <div class="carousel-container">
+                <div class="info-card" onclick="navigateTo('isa_guide')">
+                    <div class="info-thumbnail">
+                        <span class="info-thumbnail-text">ISA</span>
+                    </div>
+                    <div class="info-content">
+                        <div class="info-tag">가이드</div>
+                        <div class="info-title">ISA 계좌란? 한눈에 알아보는 절세 혜택</div>
+                    </div>
+                </div>
+                <div class="info-card" onclick="playVideo('intro')">
+                    <div class="info-thumbnail video" style="background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);">
+                    </div>
+                    <div class="info-content">
+                        <div class="info-tag">영상</div>
+                        <div class="info-title">3분만에 이해하는 ISA 계좌 활용법</div>
+                    </div>
+                </div>
+                <div class="info-card" onclick="navigateTo('tax_guide')">
+                    <div class="info-thumbnail" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+                        <span class="info-thumbnail-text">💰</span>
+                    </div>
+                    <div class="info-content">
+                        <div class="info-tag">절세 꿀팁</div>
+                        <div class="info-title">ISA로 세금 아끼는 5가지 방법</div>
+                    </div>
+                </div>
+                <div class="info-card" onclick="playVideo('strategy')">
+                    <div class="info-thumbnail video" style="background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);">
+                    </div>
+                    <div class="info-content">
+                        <div class="info-tag">영상</div>
+                        <div class="info-title">ISA 전문가의 투자 전략 공개</div>
+                    </div>
+                </div>
+            </div>
+            <div class="swipe-indicator">
+                <div class="swipe-dot active"></div>
+                <div class="swipe-dot"></div>
+                <div class="swipe-dot"></div>
+                <div class="swipe-dot"></div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Bottom Tab Bar -->
+    <nav class="bottom-tab-bar">
+        <div class="menu-tab" onclick="location.href='../index.html'">
+            <div class="menu-button-box">
+                <div class="hamburger-icon">
+                    <div class="hamburger-line"></div>
+                    <div class="hamburger-line"></div>
+                    <div class="hamburger-line"></div>
+                </div>
+                <span class="menu-label">메뉴</span>
+            </div>
+        </div>
+        <div class="tab-item active" onclick="switchTab('isa_home', this)">
+            <span class="tab-label">ISA홈</span>
+        </div>
+        <div class="tab-item" onclick="switchTab('isa_account', this)">
+            <span class="tab-label">ISA계좌</span>
+        </div>
+        <div class="tab-item" onclick="switchTab('isa_join', this)">
+            <span class="tab-label">ISA가입/이전</span>
+        </div>
+        <div class="tab-item" onclick="switchTab('isa_task', this)">
+            <span class="tab-label">ISA업무</span>
+        </div>
+    </nav>
+
+    <script>
+        // Navigation functions
+        function navigateTo(page) {
+            console.log(`Navigating to: ${page}`);
+            alert(`${page} 페이지로 이동합니다.`);
+        }
+
+        function openAccountPage() {
+            console.log('Opening account creation page');
+            alert('ISA 계좌개설 페이지로 이동합니다.');
+        }
+
+        function importAccountPage() {
+            console.log('Opening account import page');
+            alert('ISA 계좌 가져오기 페이지로 이동합니다.');
+        }
+
+        function playVideo(videoId) {
+            console.log(`Playing video: ${videoId}`);
+            alert('영상을 재생합니다.');
+        }
+
+        function goBack() {
+            console.log('Going back');
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                alert('이전 페이지로 이동합니다.');
+            }
+        }
+
+        function switchTab(tabName, element) {
+            // Remove active from all tabs
+            document.querySelectorAll('.tab-item').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            // Add active to clicked tab
+            element.classList.add('active');
+
+            const navSubmenu = document.getElementById('navSubmenu');
+
+            // 서브메뉴 데이터
+            const submenus = {
+                'isa_home': [],
+                'isa_account': [
+                    { label: 'ISA잔고', page: 'isa_balance' },
+                    { label: '거래내역', page: 'isa_history' },
+                    { label: '절세현황/한도', page: 'isa_tax' },
+                    { label: '계좌정보', page: 'isa_info' }
+                ],
+                'isa_join': [
+                    { label: 'ISA소개', page: 'isa_intro' },
+                    { label: 'ISA가입', page: 'isa_signup' },
+                    { label: 'ISA이전', page: 'isa_transfer' }
+                ],
+                'isa_task': [
+                    { label: '만기연장', page: 'isa_extend' },
+                    { label: '연금전환', page: 'isa_pension' },
+                    { label: '발급번호 재등록', page: 'isa_reregister' }
+                ]
+            };
+
+            const items = submenus[tabName] || [];
+            navSubmenu.innerHTML = items.map(item => {
+                if (item.page === 'isa_balance') {
+                    return `<span class="top-nav-submenu-item" onclick="location.href='isa_balance.html'">${item.label}</span>`;
+                }
+                if (item.page === 'isa_history') {
+                    return `<span class="top-nav-submenu-item" onclick="location.href='isa_history.html'">${item.label}</span>`;
+                }
+                if (item.page === 'isa_tax') {
+                    return `<span class="top-nav-submenu-item" onclick="location.href='isa_tax_saving.html'">${item.label}</span>`;
+                }
+                if (item.page === 'isa_info') {
+                    return `<span class="top-nav-submenu-item" onclick="location.href='isa_account_info.html'">${item.label}</span>`;
+                }
+                return `<span class="top-nav-submenu-item" onclick="navigateTo('${item.page}')">${item.label}</span>`;
+            }).join('');
+
+            console.log(`Switching to tab: ${tabName}`);
+        }
+
+        // Carousel scroll indicator
+        document.querySelectorAll('.carousel-container').forEach(carousel => {
+            carousel.addEventListener('scroll', () => {
+                const section = carousel.closest('.carousel-section');
+                const indicator = section.querySelector('.swipe-indicator');
+                if (!indicator) return;
+
+                const scrollLeft = carousel.scrollLeft;
+                const itemWidth = carousel.querySelector(':first-child').offsetWidth + 12;
+                const activeIndex = Math.round(scrollLeft / itemWidth);
+
+                indicator.querySelectorAll('.swipe-dot').forEach((dot, i) => {
+                    dot.classList.toggle('active', i === activeIndex);
+                });
+            });
+        });
+
+        // Animate elements on scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.animate-in').forEach(el => {
+            el.style.opacity = '0';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>

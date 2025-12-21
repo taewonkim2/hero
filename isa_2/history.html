@@ -3,19 +3,215 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ISA 거래내역</title>
+    <title>ISA 거래내역 - 타임라인</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/isa-common.css">
     <style>
-        /* ISA History 페이지 전용 스타일 */
-
-        /* 추가 CSS 변수 */
         :root {
+            --primary: #1a73e8;
+            --primary-light: #e8f0fe;
+            --positive: #e53935;
+            --negative: #1976d2;
+            --menu-red: #d32f2f;
+            --bg-primary: #f5f6f8;
+            --bg-card: #ffffff;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --text-muted: #9ca3af;
+            --border: #e5e7eb;
+            --shadow: 0 2px 8px rgba(0,0,0,0.06);
             --timeline-color: #d1d5db;
-            --circle-size: 8px;
-            --timeline-left: 28px;
+            --circle-size : 8px;
+            --timeline-left:28px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            max-width: 480px;
+            margin: 0 auto;
+            min-height: 100vh;
+            padding-top: 56px;
+            padding-bottom: 70px;
+        }
+
+        /* Top Navigation Bar */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 480px;
+            height: 56px;
+            background: white;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .top-nav-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            padding: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.7;
+        }
+
+        .top-nav-submenu {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            flex: 1;
+            justify-content: flex-start;
+            margin-left: 12px;
+        }
+
+        .top-nav-submenu-item {
+            font-size: 13px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 6px 10px;
+            border-radius: 14px;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .top-nav-submenu-item.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Bottom Tab Bar */
+        .bottom-tab-bar {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 480px;
+            height: 70px;
+            background: white;
+            display: flex;
+            align-items: stretch;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .tab-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: color 0.2s;
+            padding: 8px 4px;
+        }
+
+        .tab-item.active {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .tab-label {
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .menu-tab {
+            flex: 0.8;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        .menu-button-box {
+            background: var(--menu-red);
+            border-radius: 10px;
+            padding: 8px 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hamburger-icon {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            margin-bottom: 3px;
+        }
+
+        .hamburger-line {
+            width: 18px;
+            height: 2px;
+            background: white;
+            border-radius: 1px;
+        }
+
+        .menu-label {
+            font-size: 10px;
+            font-weight: 600;
+            color: white;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 16px;
+        }
+
+        /* Account Header */
+        .account-header {
+            background: white;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: var(--shadow);
+        }
+
+        .account-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .account-number {
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .account-type {
+            background: var(--bg-primary);
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--text-secondary);
         }
 
         /* Product Tabs */
@@ -25,7 +221,6 @@
             overflow-x: auto;
             padding: 4px 0;
             -webkit-overflow-scrolling: touch;
-            scroll-snap-type: x mandatory;
         }
 
         .product-tabs::-webkit-scrollbar {
@@ -42,7 +237,6 @@
             cursor: pointer;
             transition: all 0.2s;
             background: white;
-            scroll-snap-align: start;
             flex-shrink: 0;
         }
 
@@ -50,11 +244,6 @@
             background: var(--text-primary);
             color: white;
             border-color: var(--text-primary);
-        }
-
-        .product-tab:hover:not(.active) {
-            border-color: var(--primary);
-            color: var(--primary);
         }
 
         /* Filter Section */
@@ -68,24 +257,19 @@
 
         .filter-row {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-        }
-
-        .date-range-container {
-            display: flex;
             align-items: center;
             gap: 8px;
         }
 
         .date-input {
+            flex: 1;
             padding: 10px 12px;
             border: 1px solid var(--border);
             border-radius: 8px;
-            font-size: 13px;
+            font-size: 14px;
             font-family: inherit;
             background: white;
+            margin-top: 10px;
         }
 
         .date-separator {
@@ -93,85 +277,7 @@
             color: var(--text-muted);
         }
 
-        /* Chart Toggle */
-        .chart-toggle-btn {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            padding: 8px 12px;
-            /* border: 1px solid var(--border); */
-            border-radius: 8px;
-            background: white;
-            transition: all 0.2s;
-        }
-
-        .chart-toggle-btn:hover {
-            border-color: var(--primary);
-        }
-
-        .chart-toggle-btn.active {
-            /* background: var(--primary-light); */
-            border-color: var(--primary);
-            color: var(--primary);
-        }
-
-        .filter-arrow {
-            font-size: 10px;
-            color: var(--text-muted);
-        }
-
-        /* Chart Section */
-        .chart-container {
-            height: 120px;
-            display: flex;
-            align-items: flex-end;
-            justify-content: space-around;
-            padding: 10px 0;
-            gap: 8px;
-            overflow: hidden;
-            transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
-            max-height: 150px;
-            opacity: 1;
-        }
-
-        .chart-container.collapsed {
-            max-height: 0;
-            opacity: 0;
-            padding: 0;
-        }
-
-        .chart-bar-wrapper {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
-            flex: 1;
-        }
-
-        .chart-bar {
-            width: 100%;
-            max-width: 40px;
-            background: #d1d5db;
-            border-radius: 4px 4px 0 0;
-            transition: height 0.3s ease;
-        }
-
-        .chart-bar.highlight {
-            background: var(--text-primary);
-        }
-
-        .chart-label {
-            font-size: 10px;
-            color: var(--text-muted);
-        }
-
-        /* ========================================
-           Timeline Styles
-           ======================================== */
-
+        /* Timeline History Section */
         .history-section {
             background: white;
             border-radius: 16px;
@@ -185,7 +291,7 @@
             padding-left: var(--timeline-left);
         }
 
-        /* Vertical line */
+        /* 세로선 - JavaScript로 동적 생성 */
         .timeline-line {
             position: absolute;
             left: calc(var(--circle-size) / 2);
@@ -193,7 +299,7 @@
             background: var(--timeline-color);
         }
 
-        /* Date header */
+        /* Date header with icon */
         .timeline-date {
             position: relative;
             display: flex;
@@ -203,11 +309,12 @@
             margin-bottom: 4px;
         }
 
+        /* 첫 번째 날짜는 상단 여백 줄임 */
         .timeline-group:first-child .timeline-date {
             padding-top: 0;
         }
 
-        /* Date dot */
+        /* Date circle - JavaScript로 동적 생성 */
         .timeline-dot {
             position: absolute;
             left: calc(-1 * var(--timeline-left));
@@ -228,25 +335,37 @@
             position: relative;
         }
 
-        /* Individual timeline item */
+        /* Individual history item */
         .timeline-item {
             display: flex;
             align-items: flex-start;
             padding: 12px 0;
             cursor: pointer;
             transition: background 0.2s;
+            border-bottom: 1px solid var(--border);
+            padding-top: 12px;
+            padding-bottom: 12px;
+            padding: 12px 0;
+            border-bottom: none; 
             position: relative;
         }
+
+        /* .timeline-item {
+            padding: 12px 0;
+            border-bottom: none; 
+            position: relative;
+        } */
 
         .timeline-item::after {
             content: '';
             position: absolute;
             bottom: 0;
-            left: 52px;
+            left: 52px;           /* 아이콘 너비(40px) + margin(12px) 만큼 띄우기 */
             right: 0;
             height: 1px;
             background: var(--border);
         }
+
 
         .timeline-item:last-child::after {
             display: none;
@@ -347,32 +466,6 @@
             color: var(--text-muted);
             font-size: 12px;
         }
-
-        /* 예금자 보호안내 */
-        .deposit-protection-notice {
-            background: var(--bg-secondary);
-            border-radius: 12px;
-            padding: 16px;
-            margin: 16px;
-        }
-
-        .deposit-protection-notice .notice-title {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 8px;
-        }
-
-        .deposit-protection-notice .notice-content {
-            font-size: 12px;
-            color: var(--text-secondary);
-            line-height: 1.6;
-        }
-
-        .deposit-protection-notice .notice-highlight {
-            color: var(--primary);
-            font-weight: 600;
-        }
     </style>
 </head>
 <body>
@@ -388,8 +481,8 @@
         <div class="top-nav-submenu">
             <span class="top-nav-submenu-item" onclick="location.href='isa_balance.html'">ISA잔고</span>
             <span class="top-nav-submenu-item active">거래내역</span>
-            <span class="top-nav-submenu-item" onclick="location.href='isa_tax_saving.html'">절세현황</span>
-            <span class="top-nav-submenu-item" onclick="location.href='isa_account_info.html'">계좌정보</span>
+            <span class="top-nav-submenu-item" onclick="location.href='isa_tax-saving.html'">절세현황</span>
+            <span class="top-nav-submenu-item" onclick="location.href='isa_account-info.html'">계좌정보</span>
         </div>
     </nav>
 
@@ -403,73 +496,36 @@
             </div>
 
             <!-- Product Tabs -->
-            <div class="product-tabs" id="productTabs">
-                <div class="product-tab active" data-type="all">전체</div>
-                <div class="product-tab" data-type="stock">주식</div>
-                <div class="product-tab" data-type="cash">입출금</div>
-                <div class="product-tab" data-type="domestic-bond">국내채권</div>
-                <div class="product-tab" data-type="foreign-bond">해외채권</div>
-                <div class="product-tab" data-type="els">ELS</div>
-                <div class="product-tab" data-type="fund">펀드</div>
-                <div class="product-tab" data-type="rp">RP</div>
-                <div class="product-tab" data-type="note">발행어음</div>
+            <div class="product-tabs">
+                <div class="product-tab active">전체</div>
+                <div class="product-tab">주식</div>
+                <div class="product-tab">입출금</div>
+                <div class="product-tab">국내채권</div>
+                <div class="product-tab">해외채권</div>
+                <div class="product-tab">ELS</div>
+                <div class="product-tab">펀드</div>
+                <div class="product-tab">RP</div>
+                <div class="product-tab">발행어음</div>
             </div>
-        </div>
-
-        <!-- Filter & Chart Section -->
-        <div class="filter-section">
-            <div class="filter-row">
-                <div class="date-range-container">
+                <div class="filter-row">
                     <input type="date" class="date-input" id="startDate" value="2025-09-12">
                     <span class="date-separator">~</span>
                     <input type="date" class="date-input" id="endDate" value="2025-12-12">
-                </div>
-                <div class="chart-toggle-btn active" onclick="toggleChart()">
-                    <!-- <span>거래추이</span> -->
-                    <span class="filter-arrow" id="chartArrow">▼</span>
-                </div>
-            </div>
-
-            <!-- Bar Chart -->
-            <div class="chart-container" id="chartContainer">
-                <div class="chart-bar-wrapper">
-                    <div class="chart-bar" style="height: 60px;"></div>
-                    <span class="chart-label">09/02</span>
-                </div>
-                <div class="chart-bar-wrapper">
-                    <div class="chart-bar" style="height: 85px;"></div>
-                    <span class="chart-label">10/03</span>
-                </div>
-                <div class="chart-bar-wrapper">
-                    <div class="chart-bar highlight" style="height: 70px;"></div>
-                    <span class="chart-label">10/25</span>
-                </div>
-                <div class="chart-bar-wrapper">
-                    <div class="chart-bar" style="height: 45px;"></div>
-                    <span class="chart-label">11/20</span>
-                </div>
-                <div class="chart-bar-wrapper">
-                    <div class="chart-bar" style="height: 55px;"></div>
-                    <span class="chart-label">11/02</span>
-                </div>
-                <div class="chart-bar-wrapper">
-                    <div class="chart-bar" style="height: 90px;"></div>
-                    <span class="chart-label">12/02</span>
-                </div>
             </div>
         </div>
 
-        <!-- Timeline History Section -->
+        <!-- Filter Section -->
+        <!-- <div class="filter-section">
+            <div class="filter-row">
+                <input type="date" class="date-input" id="startDate" value="2025-09-12">
+                <span class="date-separator">~</span>
+                <input type="date" class="date-input" id="endDate" value="2025-12-12">
+            </div>
+        </div> -->
+
+        <!-- Timeline History Section - 동적으로 렌더링됨 -->
         <div class="history-section" id="historySection">
             <!-- JavaScript로 렌더링 -->
-        </div>
-
-        <!-- 예금자 보호안내 -->
-        <div class="deposit-protection-notice">
-            <div class="notice-title">예금자 보호안내</div>
-            <div class="notice-content">
-                이 금융상품은 예금자보호법에 따라 보호되지 않습니다. 다만, 이 예탁금 중 증권매수 미사용 현금잔액은 예금자보호법에 따라 원금과 소정의 이자를 합하여 1인당 <span class="notice-highlight">"1억원"</span>까지(본 금융회사의 여타 보호상품과 합산) 보호됩니다.
-            </div>
         </div>
     </main>
 
@@ -499,76 +555,36 @@
         </div>
     </nav>
 
-    <script src="js/isa-common.js"></script>
     <script>
-        // ISA History 페이지 전용 스크립트
-
         // ========================================
         // 샘플 데이터 (서버에서 받아온다고 가정)
         // ========================================
         const mockServerData = [
-            // 주식
-            { id: 'T001', date: '2025.12.02', name: 'NAVER', type: 'sell', category: 'stock', quantity: 50, amount: 11500000, price: 230000, profit: 500000, profitRate: 4.55 },
-            { id: 'T002', date: '2025.12.02', name: '카카오', type: 'buy', category: 'stock', quantity: 30, amount: 1620000, price: 54000 },
-            { id: 'T004', date: '2025.10.25', name: 'SK하이닉스', type: 'buy', category: 'stock', quantity: 20, amount: 3200000, price: 160000 },
-            { id: 'T006', date: '2025.10.03', name: '삼성전자', type: 'sell', category: 'stock', quantity: 100, amount: 12000000, price: 120000, profit: 300000, profitRate: 2.56 },
-            { id: 'T007', date: '2025.10.03', name: 'LG에너지솔루션', type: 'buy', category: 'stock', quantity: 5, amount: 2000000, price: 400000 },
-            { id: 'T008', date: '2025.09.15', name: '현대차', type: 'sell', category: 'stock', quantity: 30, amount: 6900000, price: 230000, profit: -150000, profitRate: -2.13 },
-            { id: 'T010', date: '2025.09.02', name: '삼성전자', type: 'buy', category: 'stock', quantity: 150, amount: 11215500, price: 74770 },
-            { id: 'T011', date: '2025.09.02', name: 'NAVER', type: 'buy', category: 'stock', quantity: 80, amount: 17600000, price: 220000 },
-
-            // 입출금
-            { id: 'T003', date: '2025.11.20', name: '현금', type: 'deposit', category: 'cash', amount: 5000000 },
-            { id: 'T009', date: '2025.09.15', name: '현금', type: 'withdraw', category: 'cash', amount: 2000000 },
-            { id: 'T012', date: '2025.09.02', name: '현금', type: 'deposit', category: 'cash', amount: 40000000 },
-
-            // 국내채권
-            { id: 'T020', date: '2025.11.15', name: '국고채 3년물', type: 'buy', category: 'domestic-bond', quantity: 50, amount: 5000000, price: 100000 },
-            { id: 'T021', date: '2025.10.20', name: '통안채 2년물', type: 'buy', category: 'domestic-bond', quantity: 30, amount: 3000000, price: 100000 },
-            { id: 'T022', date: '2025.09.10', name: '국고채 5년물', type: 'sell', category: 'domestic-bond', quantity: 20, amount: 2100000, price: 105000, profit: 100000, profitRate: 5.0 },
-
-            // 해외채권
-            { id: 'T030', date: '2025.11.10', name: '미국채 10년물', type: 'buy', category: 'foreign-bond', quantity: 20, amount: 4000000, price: 200000 },
-            { id: 'T031', date: '2025.10.05', name: '미국채 2년물', type: 'sell', category: 'foreign-bond', quantity: 10, amount: 2200000, price: 220000, profit: 200000, profitRate: 10.0 },
-
-            // ELS
-            { id: 'T040', date: '2025.12.01', name: 'KB증권 ELS 제1234호', type: 'buy', category: 'els', quantity: 2, amount: 2000000, price: 1000000 },
-            { id: 'T041', date: '2025.11.01', name: '신한투자 ELS 제5678호', type: 'buy', category: 'els', quantity: 1, amount: 1000000, price: 1000000 },
-            { id: 'T042', date: '2025.09.20', name: '미래에셋 ELS 제9999호', type: 'sell', category: 'els', quantity: 1, amount: 1080000, price: 1080000, profit: 80000, profitRate: 8.0 },
-
-            // 펀드
-            { id: 'T005', date: '2025.10.25', name: 'KODEX 200', type: 'sell', category: 'fund', quantity: 100, amount: 4000000, price: 40000, profit: 200000, profitRate: 5.26 },
-            { id: 'T050', date: '2025.11.05', name: '삼성글로벌반도체펀드', type: 'buy', category: 'fund', quantity: 1200, amount: 8000000, price: 6667 },
-            { id: 'T051', date: '2025.10.15', name: '미래에셋인도중소형펀드', type: 'buy', category: 'fund', quantity: 800, amount: 4000000, price: 5000 },
-            { id: 'T052', date: '2025.09.25', name: 'KB글로벌AI펀드', type: 'sell', category: 'fund', quantity: 500, amount: 3500000, price: 7000, profit: 500000, profitRate: 16.67 },
-
-            // RP
-            { id: 'T060', date: '2025.12.18', name: 'KB증권 RP (7일물)', type: 'buy', category: 'rp', quantity: 1, amount: 5000000, price: 5000000 },
-            { id: 'T061', date: '2025.12.06', name: 'KB증권 RP (30일물)', type: 'buy', category: 'rp', quantity: 1, amount: 3000000, price: 3000000 },
-            { id: 'T062', date: '2025.11.25', name: 'KB증권 RP (7일물)', type: 'sell', category: 'rp', quantity: 1, amount: 2001400, price: 2001400, profit: 1400, profitRate: 0.07 },
-
-            // 발행어음
-            { id: 'T070', date: '2025.11.16', name: 'KB증권 발행어음 (91일)', type: 'buy', category: 'note', quantity: 1, amount: 10000000, price: 10000000 },
-            { id: 'T071', date: '2025.10.01', name: 'KB증권 발행어음 (30일)', type: 'sell', category: 'note', quantity: 1, amount: 5025000, price: 5025000, profit: 25000, profitRate: 0.5 }
+            { id: 'T001', date: '2025.12.02', name: 'NAVER', type: 'sell', quantity: 50, amount: 11500000, price: 230000, profit: 500000, profitRate: 4.55 },
+            { id: 'T002', date: '2025.12.02', name: '카카오', type: 'buy', quantity: 30, amount: 1620000, price: 54000 },
+            { id: 'T003', date: '2025.11.20', name: '현금', type: 'deposit', amount: 5000000 },
+            { id: 'T004', date: '2025.10.25', name: 'SK하이닉스', type: 'buy', quantity: 20, amount: 3200000, price: 160000 },
+            { id: 'T005', date: '2025.10.25', name: 'KODEX 200', type: 'sell', quantity: 100, amount: 4000000, price: 40000, profit: 200000, profitRate: 5.26 },
+            { id: 'T006', date: '2025.10.03', name: '삼성전자', type: 'sell', quantity: 100, amount: 12000000, price: 12000, profit: 300000, profitRate: 20.00 },
+            { id: 'T007', date: '2025.10.03', name: 'LG에너지솔루션', type: 'buy', quantity: 5, amount: 2000000, price: 400000 },
+            { id: 'T008', date: '2025.09.15', name: '현대차', type: 'sell', quantity: 30, amount: 6900000, price: 230000, profit: -150000, profitRate: -2.13 },
+            { id: 'T009', date: '2025.09.15', name: '현금', type: 'withdraw', amount: 2000000 },
+            { id: 'T010', date: '2025.09.02', name: '삼성전자', type: 'buy', quantity: 150, amount: 15000000, price: 10000 },
+            { id: 'T011', date: '2025.09.02', name: 'NAVER', type: 'buy', quantity: 80, amount: 17600000, price: 220000 },
+            { id: 'T012', date: '2025.09.02', name: '현금', type: 'deposit', amount: 40000000 }
         ];
-
-        // 현재 필터 상태
-        let currentProductFilter = 'all';
 
         // ========================================
         // 서버 API 호출 (Mock)
         // ========================================
-        async function fetchHistory(startDate, endDate, productFilter = 'all') {
+        async function fetchHistory(startDate, endDate) {
+            // 실제로는: const response = await fetch(`/api/history?from=${startDate}&to=${endDate}`);
+            // return response.json();
+
+            // Mock: 날짜 필터링
             return mockServerData.filter(item => {
                 const itemDate = item.date.replace(/\./g, '-');
-                const dateMatch = itemDate >= startDate && itemDate <= endDate;
-
-                let categoryMatch = true;
-                if (productFilter !== 'all') {
-                    categoryMatch = item.category === productFilter;
-                }
-
-                return dateMatch && categoryMatch;
+                return itemDate >= startDate && itemDate <= endDate;
             });
         }
 
@@ -584,6 +600,7 @@
                 grouped[item.date].push(item);
             });
 
+            // 날짜 내림차순 정렬 후 배열로 변환
             return Object.keys(grouped)
                 .sort((a, b) => new Date(b.replace(/\./g, '-')) - new Date(a.replace(/\./g, '-')))
                 .map(date => ({ date, items: grouped[date] }));
@@ -592,22 +609,10 @@
         // ========================================
         // 거래 유형 라벨
         // ========================================
-        function getTypeLabel(type, quantity, category) {
-            // 카테고리별 단위 설정
-            let unit = '주';
-            if (category === 'domestic-bond' || category === 'foreign-bond') {
-                unit = '좌';
-            } else if (category === 'fund') {
-                unit = '좌';
-            } else if (category === 'els') {
-                unit = '좌';
-            } else if (category === 'rp' || category === 'note') {
-                unit = '계약';
-            }
-
+        function getTypeLabel(type, quantity) {
             switch(type) {
-                case 'buy': return `${quantity}${unit} 매수`;
-                case 'sell': return `${quantity}${unit} 매도`;
+                case 'buy': return `${quantity}주 매수`;
+                case 'sell': return `${quantity}주 매도`;
                 case 'deposit': return '입금';
                 case 'withdraw': return '출금';
                 default: return type;
@@ -666,7 +671,7 @@
                                     <div class="history-content">
                                         <div class="history-title-row">
                                             <span class="history-name">${item.name}</span>
-                                            <span class="history-type ${item.type}">${getTypeLabel(item.type, item.quantity, item.category)}</span>
+                                            <span class="history-type ${item.type}">${getTypeLabel(item.type, item.quantity)}</span>
                                         </div>
                                         <div class="history-details">${getDetailsText(item)}</div>
                                         ${getProfitHtml(item)}
@@ -713,7 +718,7 @@
 
                 dot.style.top = `${dotTop}px`;
 
-                // 마지막 그룹이 아닐 때
+                // 마지막 그룹이 아닐 때만 세로선 표시
                 if (index < totalGroups - 1) {
                     const nextGroup = groups[index + 1];
                     const nextDateEl = nextGroup.querySelector('.timeline-date');
@@ -751,49 +756,45 @@
         }
 
         // ========================================
-        // 거래내역 로드
+        // 초기화 및 이벤트
         // ========================================
         async function loadHistory() {
             const startDate = document.getElementById('startDate').value;
             const endDate = document.getElementById('endDate').value;
 
-            const items = await fetchHistory(startDate, endDate, currentProductFilter);
+            const items = await fetchHistory(startDate, endDate);
             const grouped = groupByDate(items);
             renderHistory(grouped);
         }
 
-        // ========================================
-        // Navigation
-        // ========================================
+        function goBack() {
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                location.href = 'isa_home.html';
+            }
+        }
+
+        function openSideMenu() {
+            alert('메뉴가 열립니다.');
+        }
+
+        function switchTab(tabName) {
+            alert(`${tabName} 탭으로 이동합니다.`);
+        }
+
         function openTradeDetail(id, type, date) {
             const params = new URLSearchParams({ id, type, date });
             location.href = `isa_trade-detail.html?${params.toString()}`;
         }
 
-        // ========================================
-        // Chart toggle
-        // ========================================
-        function toggleChart() {
-            const container = document.getElementById('chartContainer');
-            const btn = document.querySelector('.chart-toggle-btn');
-            const arrow = document.getElementById('chartArrow');
-
-            container.classList.toggle('collapsed');
-            btn.classList.toggle('active');
-            arrow.textContent = container.classList.contains('collapsed') ? '▶' : '▼';
-        }
-
-        // ========================================
-        // Initialize
-        // ========================================
+        // 페이지 로드시 실행
         document.addEventListener('DOMContentLoaded', () => {
             // Product tab click
             document.querySelectorAll('.product-tab').forEach(tab => {
                 tab.addEventListener('click', function() {
                     document.querySelectorAll('.product-tab').forEach(t => t.classList.remove('active'));
                     this.classList.add('active');
-                    currentProductFilter = this.dataset.type;
-                    loadHistory();
                 });
             });
 

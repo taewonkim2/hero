@@ -201,184 +201,14 @@
 
     <!-- 메인 컨테이너 -->
     <div class="main-container">
-        <!-- 왼쪽 메뉴 -->
-        <nav class="left-menu">
-            <div class="menu-item active" data-target="asset">자산관리</div>
-            <div class="menu-item" data-target="today">오늘의 <br> 금융상품</div>
-            <div class="menu-item" data-target="fund">펀드</div>
-            <div class="menu-item" data-target="pension">연금</div>
-            <div class="menu-item" data-target="els">ELS/ELB</div>
-            <div class="menu-item" data-target="domestic-bond">국내채권</div>
-            <div class="menu-item" data-target="foreign-bond">해외채권</div>
-            <div class="menu-item" data-target="rp">RP</div>
-            <div class="menu-item" data-target="isa">ISA</div>
-            <div class="menu-item" data-target="wrap">Wrap</div>
-            <div class="menu-item" data-target="advisory">투자자문</div>
-            <div class="menu-item" data-target="trust">신탁</div>
-            <div class="menu-item" data-target="business">금융상품업무</div>
-            <div class="menu-item" data-target="coupon">상품쿠폰</div>
+        <!-- 왼쪽 메뉴 (CSV에서 동적 생성) -->
+        <nav class="left-menu" id="leftMenu">
+            <!-- CSV 로드 후 동적 생성 -->
         </nav>
 
-        <!-- 오른쪽 컨텐츠 -->
+        <!-- 오른쪽 컨텐츠 (CSV에서 동적 생성) -->
         <div class="right-content" id="rightContent">
-            <!-- 자산관리 -->
-            <div class="section" id="asset">
-                <div class="section-header">자산관리</div>
-                <div class="section-content">
-                    <div class="sub-item" onclick="location.href='./asset/asset_kiwoom.html'">자산키움</div>
-                    <div class="sub-item" onclick="location.href='./asset/asset_inquiry.html'">자산조회</div>
-                    <div class="sub-item" onclick="location.href='./asset/tax_overseas.html'">해외주식양도세</div>
-                </div>
-            </div>
-            <div class="section" id="today">
-                <div class="section-header">오늘의 금융상품</div>
-                <div class="section-content">
-                    <!-- <div class="sub-item" onclick="location.href='/자산관리/asset_kiwoom.html'">오늘의 금융상품</div> -->
-                    <div class="sub-item">오늘의 금융상품</div>
-                </div>
-            </div>
-
-            <!-- 펀드 -->
-            <div class="section" id="fund">
-                <div class="section-header">펀드</div>
-                <div class="section-content">
-                    <div class="sub-item">펀드찾기</div>
-                    <div class="sub-item">펀드매매</div>
-                    <div class="sub-item">펀드계좌</div>
-                    <div class="sub-item">펀드업무</div>
-                    <div class="sub-item">자동투자</div>
-                    <div class="sub-item">잔돈투자</div>
-                    <div class="sub-item">펀드자동이체</div>
-                    <div class="sub-item">계좌자동이체</div>
-                </div>
-            </div>
-
-            <!-- 연금 -->
-            <div class="section" id="pension">
-                <div class="section-header">연금</div>
-                <div class="section-content">
-                    <div class="sub-item">연금저축소개</div>
-                    <div class="sub-item">연금계좌개설</div>
-                    <div class="sub-item">연금펀드매매</div>
-                    <div class="sub-item">연금ETF/리츠매매</div>
-                    <div class="sub-item">카우GO연금</div>
-                    <div class="sub-item">연금출금/이전</div>
-                    <div class="sub-item">연금계좌</div>
-                    <div class="sub-item">연금업무</div>
-                    <div class="sub-item">만기ISA연금전환</div>
-                </div>
-            </div>
-
-            <!-- ELS/ELB -->
-            <div class="section" id="els">
-                <div class="section-header">ELS/ELB</div>
-                <div class="section-content">
-                    <div class="sub-item">상품소개</div>
-                    <div class="sub-item">판매상품</div>
-                    <div class="sub-item">상품청약</div>
-                    <div class="sub-item">상품중도상환</div>
-                    <div class="sub-item">상품계좌</div>
-                    <div class="sub-item">상품공지사항</div>
-                </div>
-            </div>
-
-            <!-- 국내채권 -->
-            <div class="section" id="domestic-bond">
-                <div class="section-header">국내채권</div>
-                <div class="section-content">
-                    <div class="sub-item">장외채권</div>
-                    <div class="sub-item">단기사채</div>
-                    <div class="sub-item">신종자본증권</div>
-                    <div class="sub-item">장내채권</div>
-                    <div class="sub-item">국내채권계좌</div>
-                </div>
-            </div>
-
-            <!-- 해외채권 -->
-            <div class="section" id="foreign-bond">
-                <div class="section-header">해외채권</div>
-                <div class="section-content">
-                    <div class="sub-item">해외채권소개</div>
-                    <div class="sub-item">해외채권매매</div>
-                    <div class="sub-item">해외채권계좌</div>
-                    <div class="sub-item">해외채권공지사항</div>
-                </div>
-            </div>
-
-            <!-- RP -->
-            <div class="section" id="rp">
-                <div class="section-header">RP</div>
-                <div class="section-content">
-                    <div class="sub-item" onclick="location.href='./rp/rp_home.html'">RP홈</div>
-                    <div class="sub-item">원화RP매매</div>
-                    <div class="sub-item">외화RP매매</div>
-                    <div class="sub-item">RP계좌</div>
-                </div>
-            </div>
-
-            <!-- ISA -->
-            <div class="section" id="isa">
-                <div class="section-header">ISA</div>
-                <div class="section-content">
-                    <div class="sub-item" onclick="location.href='./isa/isa_home.html'">ISA홈</div>
-                    <div class="sub-item" onclick="location.href='./isa/isa_home_no_account.html'">ISA홈(계좌미보유)</div>
-                    <div class="sub-item" onclick="location.href='./isa/isa_balance.html'">ISA계좌</div>
-                    <div class="sub-item" onclick="location.href='./isa/'">ISA가입/이전</div>
-                    <div class="sub-item" onclick="location.href='./isa/isa_account_info.html'">ISA업무</div>
-                </div>
-            </div>
-
-            <!-- Wrap -->
-            <div class="section" id="wrap">
-                <div class="section-header">Wrap</div>
-                <div class="section-content">
-                    <div class="sub-item">Wrap소개</div>
-                    <div class="sub-item">Wrap가입</div>
-                    <div class="sub-item">Wrap상품</div>
-                    <div class="sub-item">Wrap계좌</div>
-                    <div class="sub-item">Wrap수익률</div>
-                </div>
-            </div>
-
-            <!-- 투자자문 -->
-            <div class="section" id="advisory">
-                <div class="section-header">투자자문</div>
-                <div class="section-content">
-                    <div class="sub-item">투자자문소개</div>
-                    <div class="sub-item">투자자문사찾기</div>
-                    <div class="sub-item">MY자문사</div>
-                </div>
-            </div>
-
-            <!-- 신탁 -->
-            <div class="section" id="trust">
-                <div class="section-header">신탁</div>
-                <div class="section-content">
-                    <div class="sub-item">신탁가입/해지</div>
-                </div>
-            </div>
-
-            <!-- 금융상품업무 -->
-            <div class="section" id="business">
-                <div class="section-header">금융상품업무</div>
-                <div class="section-content">
-                    <div class="sub-item">투자수려</div>
-                </div>
-            </div>
-
-            <!-- 상품쿠폰 -->
-            <div class="section" id="coupon">
-                <div class="section-header">상품쿠폰</div>
-                <div class="section-content">
-                    <div class="sub-item">펀드쿠폰</div>
-                    <div class="sub-item">랩/ISA쿠폰</div>
-                    <div class="sub-item">채권쿠폰</div>
-                    <div class="sub-item">쿠폰선물하기</div>
-                </div>
-            </div>
-
-            <!-- 하단 여백 -->
-            <div style="height: 100px;"></div>
+            <!-- CSV 로드 후 동적 생성 -->
         </div>
     </div>
 
@@ -407,70 +237,189 @@
     </nav>
 
     <script>
-        // 왼쪽 메뉴 클릭 시 오른쪽 스크롤
-        const menuItems = document.querySelectorAll('.menu-item');
-        const rightContent = document.getElementById('rightContent');
+        // CSV 파일 로드 및 메뉴 생성
+        async function loadMenuFromCSV() {
+            try {
+                const response = await fetch('./menutree.csv');
+                const csvText = await response.text();
+                const menuData = parseCSV(csvText);
+                buildMenu(menuData);
+                initMenuEvents();
+            } catch (error) {
+                console.error('CSV 로드 실패:', error);
+            }
+        }
 
-        menuItems.forEach(item => {
-            item.addEventListener('click', function() {
-                // active 클래스 변경
-                menuItems.forEach(m => m.classList.remove('active'));
-                this.classList.add('active');
+        // CSV 파싱
+        function parseCSV(csvText) {
+            const lines = csvText.trim().split('\n');
+            const data = [];
 
-                // 해당 섹션으로 스크롤
-                const targetId = this.getAttribute('data-target');
-                const targetSection = document.getElementById(targetId);
-                
-                if (targetSection) {
-                    targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            lines.forEach(line => {
+                if (!line.trim()) return;
+
+                // BOM 제거
+                line = line.replace(/^\uFEFF/, '');
+
+                const cols = line.split(',');
+                if (cols.length >= 5) {
+                    data.push({
+                        category: cols[0].trim(),      // A열: 대분류
+                        subMenu: cols[1].trim(),       // B열: 중분류 (index.html에서 미사용)
+                        itemName: cols[2].trim(),      // C열: 메뉴명
+                        filePath: cols[3].trim(),      // D열: 파일경로
+                        isActive: cols[4].trim() === 'O'  // E열: 활성화 여부
+                    });
                 }
             });
-        });
 
-        // 스크롤 시 왼쪽 메뉴 active 상태 변경
-        rightContent.addEventListener('scroll', function() {
-            const sections = document.querySelectorAll('.section');
-            let currentSection = '';
+            return data;
+        }
 
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop - rightContent.offsetTop;
-                const sectionHeight = section.offsetHeight;
-                
-                if (rightContent.scrollTop >= sectionTop - 50) {
-                    currentSection = section.getAttribute('id');
+        // 절대경로를 상대경로로 변환
+        function toRelativePath(absolutePath) {
+            if (!absolutePath) return '';
+            // C:\Users\bichn\Downloads\hero\ 이후 경로만 추출
+            const match = absolutePath.match(/hero[\\\/](.+)$/i);
+            if (match) {
+                return './' + match[1].replace(/\\/g, '/');
+            }
+            return absolutePath;
+        }
+
+        // 카테고리명을 ID로 변환
+        function categoryToId(category) {
+            const idMap = {
+                '자산관리': 'asset',
+                '오늘의 금융상품': 'today',
+                '종목포커스': 'focus',
+                '펀드': 'fund',
+                'RP': 'rp',
+                'ELS/ELB': 'els',
+                '국내채권': 'domestic-bond',
+                '해외채권': 'foreign-bond',
+                'ISA': 'isa',
+                'WRAP': 'wrap',
+                '투자자문': 'advisory'
+            };
+            return idMap[category] || category.toLowerCase().replace(/\s+/g, '-');
+        }
+
+        // 메뉴 생성
+        function buildMenu(data) {
+            const leftMenu = document.getElementById('leftMenu');
+            const rightContent = document.getElementById('rightContent');
+
+            // 카테고리별로 그룹화
+            const categories = {};
+            data.forEach(item => {
+                if (!categories[item.category]) {
+                    categories[item.category] = [];
                 }
+                categories[item.category].push(item);
             });
 
+            // 왼쪽 메뉴 생성
+            let isFirst = true;
+            Object.keys(categories).forEach(category => {
+                const menuItem = document.createElement('div');
+                menuItem.className = 'menu-item' + (isFirst ? ' active' : '');
+                menuItem.setAttribute('data-target', categoryToId(category));
+
+                // "오늘의 금융상품"은 줄바꿈 처리
+                if (category === '오늘의 금융상품') {
+                    menuItem.innerHTML = '오늘의 <br> 금융상품';
+                } else {
+                    menuItem.textContent = category;
+                }
+
+                leftMenu.appendChild(menuItem);
+                isFirst = false;
+            });
+
+            // 오른쪽 컨텐츠 생성
+            Object.keys(categories).forEach(category => {
+                const section = document.createElement('div');
+                section.className = 'section';
+                section.id = categoryToId(category);
+
+                const header = document.createElement('div');
+                header.className = 'section-header';
+                header.textContent = category;
+                section.appendChild(header);
+
+                const content = document.createElement('div');
+                content.className = 'section-content';
+
+                categories[category].forEach(item => {
+                    const subItem = document.createElement('div');
+                    subItem.className = 'sub-item';
+                    subItem.textContent = item.itemName;
+
+                    if (item.isActive && item.filePath) {
+                        const relativePath = toRelativePath(item.filePath);
+                        subItem.onclick = () => location.href = relativePath;
+                    } else {
+                        subItem.classList.add('disabled');
+                    }
+
+                    content.appendChild(subItem);
+                });
+
+                section.appendChild(content);
+                rightContent.appendChild(section);
+            });
+
+            // 하단 여백 추가
+            const spacer = document.createElement('div');
+            spacer.style.height = '100px';
+            rightContent.appendChild(spacer);
+        }
+
+        // 메뉴 이벤트 초기화
+        function initMenuEvents() {
+            const menuItems = document.querySelectorAll('.menu-item');
+            const rightContent = document.getElementById('rightContent');
+
+            // 왼쪽 메뉴 클릭 시 오른쪽 스크롤
             menuItems.forEach(item => {
-                item.classList.remove('active');
-                if (item.getAttribute('data-target') === currentSection) {
-                    item.classList.add('active');
-                }
-            });
-        });
+                item.addEventListener('click', function() {
+                    menuItems.forEach(m => m.classList.remove('active'));
+                    this.classList.add('active');
 
-            const activeMenus = [
-                '자산키움',
-                '자산조회', 
-                '해외주식양도세',
-                'ISA홈',
-                'ISA홈(계좌미보유)',
-                'ISA계좌',
-                'ISA업무'
-                // 필요한 메뉴 추가
-            ];
+                    const targetId = this.getAttribute('data-target');
+                    const targetSection = document.getElementById(targetId);
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const subItems = document.querySelectorAll('.sub-item');
-            
-            subItems.forEach(item => {
-                const menuName = item.textContent.trim();
-                if (!activeMenus.includes(menuName)) {
-                    item.classList.add('disabled');
-                    item.removeAttribute('onclick');  // 클릭 이벤트 제거
-                }
+                    if (targetSection) {
+                        targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                });
             });
-        });
+
+            // 스크롤 시 왼쪽 메뉴 active 상태 변경
+            rightContent.addEventListener('scroll', function() {
+                const sections = document.querySelectorAll('.section');
+                let currentSection = '';
+
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop - rightContent.offsetTop;
+
+                    if (rightContent.scrollTop >= sectionTop - 50) {
+                        currentSection = section.getAttribute('id');
+                    }
+                });
+
+                menuItems.forEach(item => {
+                    item.classList.remove('active');
+                    if (item.getAttribute('data-target') === currentSection) {
+                        item.classList.add('active');
+                    }
+                });
+            });
+        }
+
+        // 페이지 로드 시 CSV 로드
+        document.addEventListener('DOMContentLoaded', loadMenuFromCSV);
     </script>
 </body>
 </html>

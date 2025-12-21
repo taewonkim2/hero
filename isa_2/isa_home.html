@@ -7,9 +7,192 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/isa-common.css">
     <style>
-        /* ISA Home 페이지 전용 스타일 */
+        :root {
+            --primary: #1a73e8;
+            --primary-light: #e8f0fe;
+            --accent: #ff6b35;
+            --positive: #e53935;  /* 상승: 적색 */
+            --negative: #1976d2;  /* 하락: 파랑 */
+            --menu-red: #d32f2f;
+            --bg-primary: #f5f6f8;
+            --bg-card: #ffffff;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --text-muted: #9ca3af;
+            --border: #e5e7eb;
+            --shadow: 0 2px 8px rgba(0,0,0,0.06);
+            --shadow-lg: 0 4px 16px rgba(0,0,0,0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            max-width: 480px;
+            margin: 0 auto;
+            min-height: 100vh;
+            padding-top: 56px;
+            padding-bottom: 70px;
+        }
+
+        /* Top Navigation Bar */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 480px;
+            height: 56px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .top-nav-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            padding: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.7;
+        }
+
+        .back-btn:hover {
+            opacity: 1;
+        }
+
+        .top-nav-submenu {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex: 1;
+            justify-content: flex-start;
+            margin-left: 12px;
+        }
+
+        .top-nav-submenu-item {
+            font-size: 13px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 6px 10px;
+            border-radius: 14px;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .top-nav-submenu-item:hover,
+        .top-nav-submenu-item.active {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        /* Bottom Tab Bar */
+        .bottom-tab-bar {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 480px;
+            height: 70px;
+            background: white;
+            display: flex;
+            align-items: stretch;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .tab-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: color 0.2s;
+            padding: 8px 4px;
+        }
+
+        .tab-item.active {
+            color: var(--primary);
+        }
+
+        .tab-item:hover {
+            color: var(--primary);
+        }
+
+        .tab-icon {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+
+        .tab-label {
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        /* Menu Button (햄버거) */
+        .menu-tab {
+            flex: 0.8;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        .menu-button-box {
+            background: var(--menu-red);
+            border-radius: 10px;
+            padding: 8px 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hamburger-icon {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            margin-bottom: 3px;
+        }
+
+        .hamburger-line {
+            width: 18px;
+            height: 2px;
+            background: white;
+            border-radius: 1px;
+        }
+
+        .menu-label {
+            font-size: 10px;
+            font-weight: 600;
+            color: white;
+        }
 
         /* Header */
         .header {
@@ -1439,10 +1622,7 @@
         </div>
     </nav>
 
-    <script src="js/isa-common.js"></script>
     <script>
-        // ISA Home 페이지 전용 스크립트
-
         // More Menu Toggle
         function toggleMoreMenu(event) {
             event.stopPropagation();
@@ -1459,6 +1639,13 @@
             overlay.classList.remove('show');
         }
 
+        // Navigation functions
+        function navigateTo(page) {
+            closeMoreMenu();
+            console.log(`Navigating to: ${page}`);
+            alert(`${page} 페이지로 이동합니다.`);
+        }
+
         function openExtendPage() {
             console.log('Opening extend page');
             alert('만기연장 신청 페이지로 이동합니다.');
@@ -1469,7 +1656,20 @@
             alert('영상을 재생합니다.');
         }
 
-        // 탭 전환 (페이지 전용 - 서브메뉴 기능 포함)
+        // function openSideMenu() {
+        //     console.log('Opening side menu');
+        //     alert('메뉴가 열립니다.');
+        // }
+
+        function goBack() {
+            console.log('Going back');
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                alert('이전 페이지로 이동합니다.');
+            }
+        }
+
         function switchTab(tabName, element) {
             // Remove active from all tabs
             document.querySelectorAll('.tab-item').forEach(tab => {
@@ -1477,9 +1677,9 @@
             });
             // Add active to clicked tab
             element.classList.add('active');
-
+            
             const navSubmenu = document.getElementById('navSubmenu');
-
+            
             // 서브메뉴 데이터
             const submenus = {
                 'isa_home': [],
@@ -1500,7 +1700,7 @@
                     { label: '발급번호 재등록', page: 'isa_reregister' }
                 ]
             };
-
+            
             const items = submenus[tabName] || [];
             navSubmenu.innerHTML = items.map(item => {
                 if (item.page === 'isa_balance') {
@@ -1517,7 +1717,7 @@
                 }
                 return `<span class="top-nav-submenu-item" onclick="navigateTo('${item.page}')">${item.label}</span>`;
             }).join('');
-
+            
             console.log(`Switching to tab: ${tabName}`);
         }
 
@@ -1525,7 +1725,18 @@
         function toggleCategory(categoryId) {
             const content = document.getElementById(`content-${categoryId}`);
             const toggle = document.getElementById(`toggle-${categoryId}`);
+            
+            if (content && toggle) {
+                content.classList.toggle('collapsed');
+                toggle.classList.toggle('collapsed');
+            }
+        }
 
+        // Chart toggle function
+        function toggleChart() {
+            const content = document.getElementById('chartContent');
+            const toggle = document.getElementById('chartToggle');
+            
             if (content && toggle) {
                 content.classList.toggle('collapsed');
                 toggle.classList.toggle('collapsed');
