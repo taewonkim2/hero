@@ -33,18 +33,20 @@ ELS/ELB,ELS업무,공지사항,,X
 해외채권,해외채권 발견,브라질국채,,X
 해외채권,해외채권 잔고,해외채권 잔고,,X
 해외채권,해외채권 업무,공지사항,,X
-ISA,ISA발견,발견,,O
+ISA,ISA발견,발견_상단menu,C:\Users\bichn\Downloads\hero\isa\isa_discovery.html,O
+ISA,ISA발견,발견_scroll,C:\Users\bichn\Downloads\hero\isa\isa-discovery-scroll.html,O
+ISA,ISA발견,발견_swipe,C:\Users\bichn\Downloads\hero\isa\isa-discovery-swipe.html,O
 ISA,ISA잔고,잔고,C:\Users\bichn\Downloads\hero\isa\isa_balance.html,O
 ISA,ISA잔고,절세현황,C:\Users\bichn\Downloads\hero\isa\isa_tax_saving.html,O
 ISA,ISA시작,ISA가입,,X
 ISA,ISA시작,신청내역,,X
-ISA,ISA업무,이전,,X
-ISA,ISA업무,입출금,,X
-ISA,ISA업무,해지,,X
-ISA,ISA업무,만기연장,,X
-ISA,ISA업무,연금전환,,X
-ISA,ISA업무,계좌정보,C:\Users\bichn\Downloads\hero\isa\isa_account_info.html,O
-ISA,ISA업무,ISA 튜토리얼,,X
+ISA,ISA업무,ISA업무,C:\Users\bichn\Downloads\files\isa-task.html,O
+ISA,ISA업무,ISA업무,,X
+ISA,ISA업무,ISA업무,,X
+ISA,ISA업무,ISA업무,,X
+ISA,ISA업무,ISA업무,,X
+ISA,ISA업무,ISA업무,,O
+ISA,ISA업무,ISA업무,,X
 WRAP,WRAP발견,발견,,X
 WRAP,WRAP잔고,잔고,,X
 WRAP,WRAP시작,WRAP가입,,X

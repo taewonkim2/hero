@@ -4,945 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>자산조회</title>
-    <style>
-        /* ========================================
-           Font Face
-           ======================================== */
-        @font-face {
-            font-family: 'DAKI';
-            src: url('../font/DAKIL.TTF') format('truetype');
-            font-weight: 300;
-            font-style: normal;
-        }
-        @font-face {
-            font-family: 'DAKI';
-            src: url('../font/DAKIM.TTF') format('truetype');
-            font-weight: 500;
-            font-style: normal;
-        }
-
-        /* ========================================
-           Base Variables (common.css 기반)
-           ======================================== */
-        :root {
-            --bg-primary: #FFFFFF;
-            --gray-50: #f9fafb;
-            --gray-100: #f3f4f6;
-            --gray-200: #e5e7eb;
-            --gray-300: #d1d5db;
-            --gray-400: #9ca3af;
-            --gray-500: #6b7280;
-            --gray-600: #4b5563;
-            --gray-700: #374151;
-            --gray-800: #1f2937;
-            --kiwoom-red: #E31837;
-            --kiwoom-blue: #2563eb;
-            --radius-sm: 8px;
-            --radius-md: 12px;
-            --radius-lg: 16px;
-            --shadow: 0 2px 8px rgba(0,0,0,0.06);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'DAKI', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--gray-100);
-            max-width: 480px;
-            margin: 0 auto;
-            min-height: 100vh;
-        }
-
-        /* ========================================
-           Header
-           ======================================== */
-        .header {
-            background: white;
-            padding: 14px 16px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            border-bottom: 1px solid var(--gray-200);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .back-btn {
-            width: 24px;
-            height: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--gray-600);
-            cursor: pointer;
-        }
-
-        .header-title {
-            font-size: 17px;
-            font-weight: 600;
-            color: var(--gray-800);
-        }
-
-        /* ========================================
-           Asset Card (asset_kiwoom.html 동일 스타일)
-           ======================================== */
-        .asset-card {
-            background: linear-gradient(135deg, #1e3a5f 0%, #0d2137 100%);
-            margin: 12px 16px;
-            padding: 20px;
-            border-radius: 20px;
-            box-shadow: var(--shadow);
-        }
-
-        .asset-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 8px;
-        }
-
-        .asset-header-left {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .asset-label {
-            font-size: 14px;
-            color: var(--bg-primary);
-        }
-
-        .asset-info-icon {
-            width: 18px;
-            height: 18px;
-            background: transparent;
-            border: 1px solid var(--bg-primary);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 11px;
-            color: var(--bg-primary);
-        }
-
-        .asset-deposit-btn {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            padding: 6px 14px;
-            background: rgba(255, 255, 255, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 20px;
-            color: white;
-            font-size: 13px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .asset-deposit-btn:hover {
-            background: rgba(255, 255, 255, 0.25);
-        }
-
-        .asset-amount {
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--bg-primary);
-            letter-spacing: 1px;
-            margin-bottom: 16px;
-        }
-
-        .asset-change {
-            font-size: 13px;
-            color: var(--gray-500);
-            margin-top: 4px;
-        }
-
-        .asset-change span {
-            color: var(--kiwoom-red);
-            font-weight: 500;
-        }
-
-        .asset-change-row {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .asset-change-info-icon {
-            width: 16px;
-            height: 16px;
-            background: transparent;
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 10px;
-            color: rgba(255, 255, 255, 0.7);
-            cursor: pointer;
-            flex-shrink: 0;
-        }
-
-        /* ========================================
-           Tooltip
-           ======================================== */
-        .tooltip-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            z-index: 200;
-        }
-
-        .tooltip-overlay.active {
-            display: block;
-        }
-
-        .tooltip {
-            position: absolute;
-            background: white;
-            border-radius: 12px;
-            padding: 16px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-            max-width: 280px;
-            z-index: 201;
-        }
-
-        .tooltip-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 8px;
-        }
-
-        .tooltip-title {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--gray-800);
-        }
-
-        .tooltip-close {
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            color: var(--gray-400);
-            font-size: 18px;
-        }
-
-        .tooltip-content {
-            font-size: 13px;
-            color: var(--gray-600);
-            line-height: 1.5;
-        }
-
-        /* ========================================
-           Bottom Sheet (반팝업)
-           ======================================== */
-        .bottom-sheet-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 300;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .bottom-sheet-overlay.active {
-            display: flex;
-            align-items: flex-end;
-            justify-content: center;
-            opacity: 1;
-        }
-
-        .bottom-sheet {
-            background: white;
-            border-radius: 20px 20px 0 0;
-            width: 100%;
-            max-width: 480px;
-            padding: 20px;
-            transform: translateY(100%);
-            transition: transform 0.3s ease;
-        }
-
-        .bottom-sheet-overlay.active .bottom-sheet {
-            transform: translateY(0);
-        }
-
-        .bottom-sheet-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .bottom-sheet-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--gray-800);
-        }
-
-        .bottom-sheet-close {
-            width: 24px;
-            height: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            color: var(--gray-500);
-            font-size: 20px;
-        }
-
-        .bottom-sheet-desc {
-            font-size: 14px;
-            color: var(--gray-600);
-            line-height: 1.5;
-            margin-bottom: 24px;
-        }
-
-        .bottom-sheet-buttons {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 16px;
-        }
-
-        .bottom-sheet-btn {
-            flex: 1;
-            padding: 16px;
-            border-radius: 12px;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            text-align: center;
-            border: 1px solid var(--gray-300);
-            background: white;
-            color: var(--gray-700);
-            transition: all 0.2s;
-        }
-
-        .bottom-sheet-btn:hover {
-            background: var(--gray-50);
-        }
-
-        .bottom-sheet-btn.primary {
-            background: var(--kiwoom-red);
-            border-color: var(--kiwoom-red);
-            color: white;
-        }
-
-        .bottom-sheet-btn.primary:hover {
-            background: #c41530;
-        }
-
-        .bottom-sheet-checkbox {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 13px;
-            color: var(--gray-500);
-        }
-
-        .bottom-sheet-checkbox input {
-            width: 16px;
-            height: 16px;
-        }
-
-        /* ========================================
-           Toast Message
-           ======================================== */
-        .toast {
-            position: fixed;
-            bottom: 80px;
-            left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            background: var(--gray-800);
-            color: white;
-            padding: 14px 24px;
-            border-radius: 8px;
-            font-size: 14px;
-            z-index: 400;
-            opacity: 0;
-            transition: all 0.3s ease;
-            max-width: calc(100% - 32px);
-            text-align: center;
-        }
-
-        .toast.show {
-            transform: translateX(-50%) translateY(0);
-            opacity: 1;
-        }
-
-        /* ========================================
-           Tab Section (자산별/기관별)
-           ======================================== */
-        .tab-section {
-            background: transparent;
-            padding: 0 20px;
-            /* border-bottom 제거 */
-        }
-
-        .tab-container {
-            display: flex;
-            border: 1px solid var(--gray-300);
-            border-radius: 8px;
-            overflow: hidden;
-            margin: 16px 0;
-        }
-
-        .tab-item {
-            flex: 1;
-            padding: 12px;
-            text-align: center;
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--gray-500);
-            background: white;
-            cursor: pointer;
-            transition: all 0.2s;
-            border: none;
-        }
-
-        .tab-item.active {
-            background: var(--gray-800);
-            color: white;
-        }
-
-        .tab-item:first-child {
-            border-right: 1px solid var(--gray-300);
-        }
-
-        /* ========================================
-           Update Info
-           ======================================== */
-        .update-info {
-            background: transparent;
-            padding: 12px 20px;
-            display: flex;
-            justify-content: flex-end;
-            /* border-bottom: 1px solid var(--gray-200); */
-        }
-
-        .update-time {
-            font-size: 12px;
-            color: var(--gray-400);
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .update-time svg {
-            width: 14px;
-            height: 14px;
-        }
-
-        /* ========================================
-           Category Card (투자/은행/보험 분류)
-           ======================================== */
-        .category-list {
-            padding: 12px 16px;
-        }
-
-        .category-card {
-            background: white;
-            border-radius: 16px;
-            margin-bottom: 16px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-            overflow: hidden;
-        }
-
-        .category-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 20px;
-            cursor: pointer;
-        }
-
-        .category-header-left {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .category-title-row {
-            display: flex;
-            align-items: baseline;
-            gap: 8px;
-        }
-
-        .category-title {
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--gray-800);
-        }
-
-        .category-amount {
-            font-size: 22px;
-            font-weight: 700;
-            color: var(--gray-800);
-        }
-
-        .category-change {
-            font-size: 13px;
-            color: var(--kiwoom-red);
-            text-align:right;
-        }
-
-        .category-change.negative {
-            color: var(--kiwoom-blue);
-        }
-
-        .category-expand-icon {
-            /* 1. 모양 만들기 (텍스트 ▲ 대신 선으로 그림) */
-            display: block;
-            width: 8px;
-            height: 8px;
-            flex-shrink: 0;
-            
-            /* 색상은 회색(gray-400) 정도로 설정 */
-            border-bottom: 2px solid var(--gray-400); 
-            border-right: 2px solid var(--gray-400);
-            border-top: none;
-            border-left: none;
-            
-            /* 2. 회전 준비 */
-            transform: rotate(45deg); /* 기본 v 모양 */
-            transform-origin: center center;
-            transition: transform 0.3s ease;
-            
-            /* 3. 위치 보정 */
-            margin-right: 4px; /* 필요시 여백 조정 */
-            margin-bottom: 4px;
-        }
-
-        .category-content,
-        .institution-details {
-            max-height: 0;                /* 높이를 0으로 해서 숨김 */
-            overflow: hidden;             /* 내용이 넘치면 안 보이게 */
-            opacity: 0;                   /* 투명하게 (페이드 효과용) */
-            transition: max-height 0.3s ease-out, opacity 0.3s ease-out; /* 0.3초 동안 스르륵 */
-            padding: 0;                   /* 닫혔을 때 패딩도 없어야 깔끔함 */
-        }
-
-        /* .category-content.hidden {
-            display: none;
-        } */
-
-        .category-content.active,
-            .institution-details.active {
-                opacity: 1;                   /* 불투명하게 등장 */
-                /* max-height는 자바스크립트가 내용물 길이에 맞춰서 직접 넣어줍니다 */
-            }
-
-            /* (중요) 기존에 있던 .hidden { display: none } 코드는 애니메이션을 방해하므로 지우거나 아래처럼 무력화하세요 */
-            .hidden {
-                display: block !important; /* 이제 display:none은 쓰지 않습니다 */
-            }
-        .category-content.hidden,
-            .institution-details.hidden {
-                display: block !important;
-            }
-
-        /* ========================================
-           Institution List (기관별 목록)
-           ======================================== */
-        .institution-list {
-            padding: 0;
-        }
-
-        .institution-card {
-            background: white;
-            padding: 16px 20px;
-            border-top: 1px solid var(--gray-100);
-            /* margin-left: 36px; */
-        }
-
-        .institution-card:last-child {
-            border-bottom: none;
-        }
-
-        .institution-header {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            margin-bottom: 0;
-        }
-
-        .institution-header-left {
-            display: flex;
-            align-items: flex-start;
-            gap: 8px;
-        }
-
-        .institution-logo {
-            width: 28px;
-            height: 28px;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 9px;
-            font-weight: 700;
-            color: white;
-            flex-shrink: 0;
-        }
-
-        .institution-logo.kiwoom {
-            background: var(--kiwoom-red);
-        }
-
-        .institution-logo.kb {
-            background: #FFB81C;
-            color: #333;
-        }
-
-        .institution-logo.hyundai {
-            background: #002c5f;
-        }
-
-        .institution-logo.shinhan {
-            background: #0046ff;
-        }
-
-        .institution-logo.hana {
-            background: #009490;
-        }
-
-        .institution-logo.woori {
-            background: #0066b3;
-        }
-
-        .institution-logo.nh {
-            background: #03853b;
-        }
-
-        .institution-logo.samsung {
-            background: #1428a0;
-        }
-
-        .institution-logo.mirae {
-            background: #f37321;
-        }
-
-        .institution-logo.toss {
-            background: #0064ff;
-        }
-
-        .institution-info {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .institution-name-row {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .institution-name {
-            font-size: 15px;
-            font-weight: 600;
-            color: var(--gray-800);
-        }
-
-        .institution-count {
-            font-size: 13px;
-            color: var(--gray-500);
-            font-weight: 400;
-        }
-
-        .institution-change {
-            font-size: 13px;
-            color: var(--gray-500);
-        }
-
-        .institution-change.positive {
-            color: var(--kiwoom-red);
-        }
-
-        .institution-change.negative {
-            color: var(--kiwoom-blue);
-        }
-
-        .chart-icon-small {
-            width: 56px;
-            height: 35px;
-            flex-shrink: 0;
-        }
-
-        .chart-icon-small.up path {
-            stroke: var(--kiwoom-red);
-        }
-
-        .chart-icon-small.down path {
-            stroke: var(--kiwoom-blue);
-        }
-
-        .chart-icon-small.flat path {
-            stroke: #eab308;
-        }
-
-        .institution-total {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-top: 12px;
-            padding-top: 12px;
-            /* border-top: 1px solid var(--gray-100); */
-            cursor: pointer;
-        }
-
-        .institution-total-left {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .institution-total-label {
-            font-size: 13px;
-            color: var(--gray-600);
-            margin-left: 36px;
-        }
-
-        .institution-total-right {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .institution-total-amount {
-            font-size: 15px;
-            font-weight: 600;
-            color: var(--gray-800);
-        }
-
-
-
-        .expand-icon {
-            display: block;
-            width: 8px;
-            height: 8px;
-            flex-shrink: 0;
-            
-            /* 아래, 오른쪽 테두리를 45도 돌리면 'v'가 됩니다. 계산하기 가장 좋습니다. */
-            border-bottom: 1px solid var(--gray-600);
-            border-right: 1px solid var(--gray-600);
-            border-top: none;
-            border-left: none;
-            
-            /* 시작 각도: 45도 */
-            transform: rotate(45deg); 
-            
-            /* 중심축 고정 (제자리 회전) */
-            transform-origin: center center;
-            
-            /* 펼쳐질 때와 접힐 때 모두 부드럽게 (여기 설정해야 양방향 다 먹습니다) */
-            transition: transform 0.3s ease; 
-            
-            margin-bottom: 4px;
-        }
-
-/* 2. 펼쳐진 상태 (^ 모양) */
-        .expand-icon.expanded {
-
-            margin-bottom: 0px; /* 뒤집혔을 때 위치 미세 보정 */
-        }
-
-        /* ========================================
-           Institution Details (펼침 영역)
-           ======================================== */
-        .institution-details {
-            margin-top: 12px;
-            padding-top: 12px;
-            /* border-top: 1px solid var(--gray-200); */
-            padding-left: 36px;
-        }
-
-        .institution-details.hidden {
-            display: none;
-        }
-
-        .detail-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            padding: 10px 0;
-            padding-left: 24px;
-            position: relative;
-        }
-
-        /* 트리 라인 - 세로선 */
-        .detail-item::before {
-            content: '';
-            position: absolute;
-            left: 6px;
-            top: 0;
-            bottom: 0;
-            width: 1px;
-            background: var(--gray-300);
-        }
-
-        /* 트리 라인 - 가로선 (가지) */
-        .detail-item::after {
-            content: '';
-            position: absolute;
-            left: 6px;
-            top: 20px;
-            width: 12px;
-            height: 1px;
-            background: var(--gray-300);
-        }
-
-        /* 마지막 아이템의 세로선은 가지까지만 */
-        .detail-item:last-child::before {
-            bottom: calc(100% - 20px);
-        }
-
-        .detail-item-left {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .detail-account-name {
-            font-size: 14px;
-            font-weight: 500;
-            /* color: var(--kiwoom-red); */
-            color:black;
-        }
-
-        .detail-account-number {
-            font-size: 12px;
-            color: var(--gray-400);
-        }
-
-        .detail-item-right {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 4px;
-        }
-
-        .detail-amount {
-            font-size: 15px;
-            /* font-weight: 600; */
-            color: var(--gray-800);
-        }
-
-        .detail-profit {
-            font-size: 12px;
-            color: var(--kiwoom-red);
-        }
-
-        .detail-profit.negative {
-            color: var(--kiwoom-blue);
-        }
-
-        /* ========================================
-           Bottom Navigation
-           ======================================== */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100%;
-            max-width: 480px;
-            background: white;
-            border-top: 1px solid var(--gray-200);
-            display: flex;
-            align-items: center;
-            padding: 0;
-            z-index: 100;
-        }
-
-        .nav-menu-btn {
-            width: 60px;
-            height: 56px;
-            background: var(--kiwoom-red);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 10px;
-            font-weight: 500;
-            cursor: pointer;
-            gap: 4px;
-        }
-
-        .hamburger {
-            display: flex;
-            flex-direction: column;
-            gap: 3px;
-        }
-
-        .hamburger-line {
-            width: 16px;
-            height: 2px;
-            background: white;
-            border-radius: 1px;
-        }
-
-        .nav-tabs {
-            flex: 1;
-            display: flex;
-        }
-
-        .nav-tab {
-            flex: 1;
-            padding: 16px;
-            text-align: center;
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--gray-500);
-            cursor: pointer;
-            position: relative;
-        }
-
-        .nav-tab.active {
-            color: var(--kiwoom-red);
-            font-weight: 600;
-        }
-
-        .nav-tab.active::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 40px;
-            height: 2px;
-            background: var(--kiwoom-red);
-        }
-
-        /* ========================================
-           Content Padding for Bottom Nav
-           ======================================== */
-        .content {
-            padding-bottom: 70px;
-        }
-    </style>
+    <link rel="stylesheet" href="css/asset-common.css">
+    <link rel="stylesheet" href="css/asset-inquiry.css">
 </head>
 <body>
     <!-- Header -->
     <header class="header">
-        <div class="back-btn" onclick="history.back()" style="cursor: pointer;">
+        <div class="back-btn">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M15 18l-6-6 6-6"></path>
             </svg>
@@ -958,13 +26,13 @@
                     <span class="asset-label">내 통합자산</span>
                     <div class="asset-info-icon">!</div>
                 </div>
-                <button class="asset-deposit-btn" onclick="openBottomSheet()">+자산연결하기</button>
+                <button class="asset-deposit-btn">+자산연결하기</button>
             </div>
             <div class="asset-amount">159,569,478 원</div>
             <div class="asset-change">
                 <div class="asset-change-row">
                     00월 00일 보다 <span>+159,569,478(00.00%)</span> 늘었어요
-                    <div class="asset-change-info-icon" onclick="openTooltip(event)">!</div>
+                    <div class="asset-change-info-icon">!</div>
                 </div>
             </div>
         </div>
@@ -998,7 +66,7 @@
         <div class="category-list">
             <!-- ========== 투자 카테고리 ========== -->
             <div class="category-card">
-                <div class="category-header" onclick="toggleCategory(this)">
+                <div class="category-header">
                     <div class="category-header-left">
                         <div class="category-title-row">
                             <span class="category-title">투자</span>
@@ -1030,7 +98,7 @@
                                     <path d="M18 2 L22 3 L21 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
                                 </svg>
                             </div>
-                            <div class="institution-total" onclick="toggleInstitution(event, this)">
+                            <div class="institution-total">
                                 <span class="institution-total-label">총자산</span>
                                 <div class="institution-total-right">
                                     <span class="institution-total-amount">000,000,000원</span>
@@ -1095,7 +163,7 @@
                                     <path d="M19 5 L22 8 L19 11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
                                 </svg>
                             </div>
-                            <div class="institution-total" onclick="toggleInstitution(event, this)">
+                            <div class="institution-total">
                                 <span class="institution-total-label">총자산</span>
                                 <div class="institution-total-right">
                                     <span class="institution-total-amount">000,000,000원</span>
@@ -1146,7 +214,7 @@
                                     <path d="M18 2 L22 3 L21 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
                                 </svg>
                             </div>
-                            <div class="institution-total" onclick="toggleInstitution(event, this)">
+                            <div class="institution-total">
                                 <span class="institution-total-label">총자산</span>
                                 <div class="institution-total-right">
                                     <span class="institution-total-amount">12,700,000원</span>
@@ -1197,7 +265,7 @@
                                     <path d="M18 13 L22 12 L21 8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
                                 </svg>
                             </div>
-                            <div class="institution-total" onclick="toggleInstitution(event, this)">
+                            <div class="institution-total">
                                 <span class="institution-total-label">총자산</span>
                                 <div class="institution-total-right">
                                     <span class="institution-total-amount">21,900,000원</span>
@@ -1258,7 +326,7 @@
                                     <path d="M18 2 L22 3 L21 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
                                 </svg>
                             </div>
-                            <div class="institution-total" onclick="toggleInstitution(event, this)">
+                            <div class="institution-total">
                                 <span class="institution-total-label">총자산</span>
                                 <div class="institution-total-right">
                                     <span class="institution-total-amount">1,850,000원</span>
@@ -1284,7 +352,7 @@
 
             <!-- ========== 은행 카테고리 ========== -->
             <div class="category-card">
-                <div class="category-header" onclick="toggleCategory(this)">
+                <div class="category-header">
                     <div class="category-header-left">
                         <div class="category-title-row">
                             <span class="category-title">은행</span>
@@ -1316,7 +384,7 @@
                                     <path d="M18 13 L22 12 L21 8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
                                 </svg>
                             </div>
-                            <div class="institution-total" onclick="toggleInstitution(event, this)">
+                            <div class="institution-total">
                                 <span class="institution-total-label">총자산</span>
                                 <div class="institution-total-right">
                                     <span class="institution-total-amount">5,230,000원</span>
@@ -1357,7 +425,7 @@
                                     <path d="M18 2 L22 3 L21 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
                                 </svg>
                             </div>
-                            <div class="institution-total" onclick="toggleInstitution(event, this)">
+                            <div class="institution-total">
                                 <span class="institution-total-label">총자산</span>
                                 <div class="institution-total-right">
                                     <span class="institution-total-amount">6,520,000원</span>
@@ -1408,7 +476,7 @@
                                     <path d="M18 13 L22 12 L21 8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
                                 </svg>
                             </div>
-                            <div class="institution-total" onclick="toggleInstitution(event, this)">
+                            <div class="institution-total">
                                 <span class="institution-total-label">총자산</span>
                                 <div class="institution-total-right">
                                     <span class="institution-total-amount">3,150,000원</span>
@@ -1449,7 +517,7 @@
                                     <path d="M18 2 L22 3 L21 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
                                 </svg>
                             </div>
-                            <div class="institution-total" onclick="toggleInstitution(event, this)">
+                            <div class="institution-total">
                                 <span class="institution-total-label">총자산</span>
                                 <div class="institution-total-right">
                                     <span class="institution-total-amount">9,800,000원</span>
@@ -1500,7 +568,7 @@
                                     <path d="M19 5 L22 8 L19 11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
                                 </svg>
                             </div>
-                            <div class="institution-total" onclick="toggleInstitution(event, this)">
+                            <div class="institution-total">
                                 <span class="institution-total-label">총자산</span>
                                 <div class="institution-total-right">
                                     <span class="institution-total-amount">2,450,000원</span>
@@ -1526,7 +594,7 @@
 
             <!-- ========== 보험 카테고리 ========== -->
             <div class="category-card">
-                <div class="category-header" onclick="toggleCategory(this)">
+                <div class="category-header">
                     <div class="category-header-left">
                         <div class="category-title-row">
                             <span class="category-title">보험</span>
@@ -1558,7 +626,7 @@
                                     <path d="M18 2 L22 3 L21 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
                                 </svg>
                             </div>
-                            <div class="institution-total" onclick="toggleInstitution(event, this)">
+                            <div class="institution-total">
                                 <span class="institution-total-label">총자산</span>
                                 <div class="institution-total-right">
                                     <span class="institution-total-amount">8,500,000원</span>
@@ -1599,7 +667,7 @@
                                     <path d="M18 2 L22 3 L21 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
                                 </svg>
                             </div>
-                            <div class="institution-total" onclick="toggleInstitution(event, this)">
+                            <div class="institution-total">
                                 <span class="institution-total-label">총자산</span>
                                 <div class="institution-total-right">
                                     <span class="institution-total-amount">6,730,000원</span>
@@ -1626,11 +694,11 @@
     </div>
 
     <!-- Tooltip Overlay -->
-    <div class="tooltip-overlay" id="tooltipOverlay" onclick="closeTooltip()">
-        <div class="tooltip" id="tooltip" onclick="event.stopPropagation()">
+    <div class="tooltip-overlay" id="tooltipOverlay">
+        <div class="tooltip" id="tooltip">
             <div class="tooltip-header">
                 <span class="tooltip-title">자산조회 날짜 비교 기준</span>
-                <span class="tooltip-close" onclick="closeTooltip()">&times;</span>
+                <span class="tooltip-close">&times;</span>
             </div>
             <div class="tooltip-content">
                 마지막으로 자산조회 화면을 접속한 날짜를 기준으로 자산을 비교해 드려요.
@@ -1639,21 +707,21 @@
     </div>
 
     <!-- Bottom Sheet Overlay -->
-    <div class="bottom-sheet-overlay" id="bottomSheetOverlay" onclick="closeBottomSheet()">
-        <div class="bottom-sheet" onclick="event.stopPropagation()">
+    <div class="bottom-sheet-overlay" id="bottomSheetOverlay">
+        <div class="bottom-sheet">
             <div class="bottom-sheet-header">
                 <span class="bottom-sheet-title">내 자산, 전부 모아보기</span>
-                <span class="bottom-sheet-close" onclick="closeBottomSheet()">&times;</span>
+                <span class="bottom-sheet-close">&times;</span>
             </div>
             <div class="bottom-sheet-desc">
                 <strong>내 자산, 전부 모아보기</strong><br>
                 마이데이터로 숨겨진 자산까지 모아 정확하게 관리할 수 있어요.
             </div>
             <div class="bottom-sheet-buttons">
-                <button class="bottom-sheet-btn" onclick="selectKiwoomOnly()">
+                <button class="bottom-sheet-btn">
                     키움자산만<br>볼래요
                 </button>
-                <button class="bottom-sheet-btn primary" onclick="closeBottomSheet()">
+                <button class="bottom-sheet-btn primary">
                     다른 기관도 연결할<br>래요.
                 </button>
             </div>
@@ -1683,229 +751,7 @@
         </div>
     </nav>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            
-            // ★ 핵심: 안쪽(institution-details)은 건드리지 않습니다. 
-            // CSS(max-height: 0)에 의해 기본적으로 닫혀 있게 됩니다.
-
-            // 1. [바깥쪽] 카테고리(category-content)만 찾아서 엽니다.
-            const allCategories = document.querySelectorAll('.category-content');
-            
-            allCategories.forEach(category => {
-                // 1-1. 내용 펼치기
-                category.classList.add('active');
-                
-                // 이때 scrollHeight는 안쪽 내용이 닫혀있으므로 '기관 목록'만큼의 높이만 잡힙니다. (딱 원하시는 대로)
-                category.style.maxHeight = category.scrollHeight + "px";
-
-                // 1-2. 카테고리 화살표 회전시키기 (v -> ^)
-                const card = category.closest('.category-card');
-                const icon = card.querySelector('.category-expand-icon');
-                
-                if (icon) {
-                    icon.classList.add('expanded');
-                    icon.style.transform = 'rotate(225deg)'; // 열린 상태 각도
-                    icon.dataset.deg = "225"; 
-                }
-            });
-        });
-
-        // Tab 전환 기능
-        document.querySelectorAll('.tab-item').forEach(tab => {
-            tab.addEventListener('click', function() {
-                document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
-            });
-        });
-
-        // 하단 네비게이션 탭 전환
-        document.querySelectorAll('.nav-tab').forEach(tab => {
-            tab.addEventListener('click', function() {
-                document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
-            });
-        });
-
-        // function toggleCategory(element) {
-        //     // 1. 필요한 요소 찾기
-        //     const expandIcon = element.querySelector('.category-expand-icon');
-        //     const card = element.closest('.category-card');
-        //     const contentSection = card.querySelector('.category-content');
-
-        //     // 2. 아이콘 회전 로직 (시계방향 무한 회전)
-        //     if (expandIcon) {
-        //         // 현재 각도 가져오기 (없으면 45도)
-        //         let currentDeg = expandIcon.dataset.deg ? parseInt(expandIcon.dataset.deg) : 45;
-                
-        //         // 180도 더하기 (계속 증가 -> 시계방향)
-        //         currentDeg += 180;
-
-        //         // 스타일 적용
-        //         expandIcon.style.transform = `rotate(${currentDeg}deg)`;
-                
-        //         // 다음을 위해 저장
-        //         expandIcon.dataset.deg = currentDeg;
-                
-        //         // (참고) expanded 클래스는 CSS 애니메이션용이 아니라 상태 표시용으로 남겨둠
-        //         expandIcon.classList.toggle('expanded');
-        //     }
-
-        //     // 3. 내용 펼치기/접기
-        //     if (contentSection) {
-        //         contentSection.classList.toggle('hidden');
-        //     }
-        // }
-
-        function toggleCategory(element) {
-            const expandIcon = element.querySelector('.category-expand-icon');
-            const card = element.closest('.category-card');
-            const contentSection = card.querySelector('.category-content');
-
-            // 아이콘 회전 로직 (기존 유지)
-            if (expandIcon) {
-                let currentDeg = expandIcon.dataset.deg ? parseInt(expandIcon.dataset.deg) : 45;
-                currentDeg += 180;
-                expandIcon.style.transform = `rotate(${currentDeg}deg)`;
-                expandIcon.dataset.deg = currentDeg;
-                expandIcon.classList.toggle('expanded');
-            }
-
-            // [핵심] 스르륵 펼치기/접기 로직
-            if (contentSection) {
-                // 이미 열려있다면 (maxHeight가 설정되어 있다면) -> 닫기
-                if (contentSection.style.maxHeight) {
-                    contentSection.style.maxHeight = null; // 높이 제거 (0으로 돌아감)
-                    contentSection.classList.remove('active');
-                } 
-                // 닫혀있다면 -> 열기
-                else {
-                    contentSection.classList.add('active');
-                    // scrollHeight는 숨겨진 내용의 전체 높이입니다
-                    contentSection.style.maxHeight = contentSection.scrollHeight + "px"; 
-                }
-            }
-        }
-
-
-        // function toggleInstitution(event, element) {
-        //     event.stopPropagation();
-        //     const expandIcon = element.querySelector('.expand-icon');
-        //     const card = element.closest('.institution-card');
-        //     const detailsSection = card.querySelector('.institution-details');
-
-        //     if (expandIcon) {
-        //         // 1. 클래스 토글 (위치 보정용 CSS 스타일 적용을 위해 유지)
-        //         expandIcon.classList.toggle('expanded');
-
-        //         // 2. [핵심] 현재 각도를 가져와서 180도를 더해줌 (무조건 시계방향 전진)
-        //         // 데이터 속성(data-deg)에 현재 각도를 저장해둡니다. 없으면 초기값 45도.
-        //         let currentDeg = expandIcon.dataset.deg ? parseInt(expandIcon.dataset.deg) : 45;
-                
-        //         currentDeg += 180; // 계속 180도씩 더함 (45 -> 225 -> 405 -> 585 ...)
-
-        //         // 스타일 직접 적용
-        //         expandIcon.style.transform = `rotate(${currentDeg}deg)`;
-                
-        //         // 다음번을 위해 저장
-        //         expandIcon.dataset.deg = currentDeg;
-        //     }
-
-        //     if (detailsSection) {
-        //         detailsSection.classList.toggle('hidden');
-        //     }
-        // }
-
-        /* 2. 기관별 (키움/삼성 등) 상세 토글 함수 */
-        function toggleInstitution(event, element) {
-            event.stopPropagation();
-            const expandIcon = element.querySelector('.expand-icon');
-            const card = element.closest('.institution-card');
-            const detailsSection = card.querySelector('.institution-details');
-
-            // 아이콘 회전 로직 (기존 유지)
-            if (expandIcon) {
-                expandIcon.classList.toggle('expanded');
-                let currentDeg = expandIcon.dataset.deg ? parseInt(expandIcon.dataset.deg) : 45;
-                currentDeg += 180; 
-                expandIcon.style.transform = `rotate(${currentDeg}deg)`;
-                expandIcon.dataset.deg = currentDeg;
-            }
-
-            // [핵심] 스르륵 펼치기/접기 로직
-            if (detailsSection) {
-                // 상위 카테고리 높이 재조정 (중첩된 아코디언 문제 해결)
-                // 안쪽을 펼치면 바깥쪽(카테고리) 높이도 같이 늘어나야 짤리지 않습니다.
-                const parentContent = card.closest('.category-content');
-
-                if (detailsSection.style.maxHeight) {
-                    // 닫을 때
-                    detailsSection.style.maxHeight = null;
-                    detailsSection.classList.remove('active');
-                } else {
-                    // 열 때
-                    detailsSection.classList.add('active');
-                    detailsSection.style.maxHeight = detailsSection.scrollHeight + "px";
-                    
-                    // ★ 중요: 안쪽이 열리면서 높이가 커졌으니, 감싸고 있는 부모의 높이도 늘려줍니다.
-                    if (parentContent && parentContent.style.maxHeight) {
-                        parentContent.style.maxHeight = (parentContent.scrollHeight + detailsSection.scrollHeight) + "px";
-                    }
-                }
-            }
-        }
-
-        // Tooltip 기능
-        function openTooltip(event) {
-            event.stopPropagation();
-            const tooltipOverlay = document.getElementById('tooltipOverlay');
-            const tooltip = document.getElementById('tooltip');
-
-            // 클릭한 위치 근처에 tooltip 위치 설정
-            const rect = event.target.getBoundingClientRect();
-            tooltip.style.top = (rect.bottom + 10) + 'px';
-            tooltip.style.left = Math.max(16, Math.min(rect.left - 100, window.innerWidth - 296)) + 'px';
-
-            tooltipOverlay.classList.add('active');
-        }
-
-        function closeTooltip() {
-            document.getElementById('tooltipOverlay').classList.remove('active');
-        }
-
-        // Bottom Sheet 기능
-        function openBottomSheet() {
-            const overlay = document.getElementById('bottomSheetOverlay');
-            overlay.style.display = 'flex';
-            // Force reflow for animation
-            overlay.offsetHeight;
-            overlay.classList.add('active');
-        }
-
-        function closeBottomSheet() {
-            const overlay = document.getElementById('bottomSheetOverlay');
-            overlay.classList.remove('active');
-            setTimeout(() => {
-                overlay.style.display = 'none';
-            }, 300);
-        }
-
-        // 키움자산만 볼래요 클릭
-        function selectKiwoomOnly() {
-            closeBottomSheet();
-            showToast('키움증권 자산만 조회하도록 설정되었습니다');
-        }
-
-        // Toast 메시지 표시
-        function showToast(message) {
-            const toast = document.getElementById('toast');
-            toast.textContent = message;
-            toast.classList.add('show');
-
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
-        }
-    </script>
+    <script src="js/asset-common.js"></script>
+    <script src="js/asset-inquiry.js"></script>
 </body>
 </html>

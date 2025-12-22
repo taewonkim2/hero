@@ -1,0 +1,824 @@
+/* ========================================
+   Tax Overseas Styles (해외주식양도세 전용)
+   ======================================== */
+
+/* ========================================
+   Sub Header (세금연결, 타사포함)
+   ======================================== */
+.sub-header {
+    /* background: white; */
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    /* border-bottom: 1px solid var(--gray-200); */
+}
+
+.add-tax-btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 16px;
+    background: transparent;
+    border: 1px solid var(--kiwoom-purple);
+    border-radius: 20px;
+    color: var(--kiwoom-purple);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.toggle-section {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.toggle-label {
+    font-size: 13px;
+    color: var(--gray-600);
+}
+
+.toggle-switch {
+    width: 44px;
+    height: 24px;
+    background: var(--gray-300);
+    border-radius: 12px;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.toggle-switch.active {
+    background: var(--kiwoom-purple);
+}
+
+.toggle-switch::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: white;
+    border-radius: 50%;
+    top: 2px;
+    left: 2px;
+    transition: left 0.3s;
+}
+
+.toggle-switch.active::after {
+    left: 22px;
+}
+
+.toggle-status {
+    font-size: 11px;
+    color: var(--gray-400);
+}
+
+/* ========================================
+   Main Banner Card
+   ======================================== */
+.banner-card {
+    background: linear-gradient(135deg, var(--kiwoom-navy) 0%, #0d2137 100%);
+    margin: 16px;
+    padding: 24px 20px;
+    border-radius: 20px;
+    text-align: center;
+}
+
+.banner-text {
+    font-size: 18px;
+    font-weight: 600;
+    color: white;
+    line-height: 1.5;
+}
+
+.banner-highlight {
+    color: #fbbf24;
+}
+
+/* ========================================
+   Tax Summary Card (접기/펼치기)
+   ======================================== */
+.tax-summary-card {
+    background: white;
+    margin: 0 16px 16px;
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+}
+
+.tax-summary-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+}
+
+.tax-summary-title-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.tax-summary-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--gray-800);
+}
+
+.tax-summary-year {
+    font-size: 13px;
+    color: var(--gray-500);
+}
+
+.expand-icon {
+    font-size: 12px;
+    color: var(--gray-400);
+    transition: transform 0.3s;
+}
+
+.expand-icon.expanded {
+    transform: rotate(180deg);
+}
+
+.tax-summary-content {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--gray-200);
+}
+
+.tax-summary-content.hidden {
+    display: none;
+}
+
+.tax-summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    /* border-bottom: 1px solid var(--gray-100); */
+}
+
+.tax-summary-row:last-child {
+    border-bottom: none;
+}
+
+.tax-summary-label {
+    font-size: 14px;
+    color: var(--gray-600);
+}
+
+.tax-summary-value {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--gray-800);
+}
+
+/* Tree Line Detail Items */
+.detail-tree-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    padding-left: 24px;
+    position: relative;
+}
+
+.detail-tree-item::before {
+    content: '';
+    position: absolute;
+    left: 6px;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: var(--gray-300);
+}
+
+.detail-tree-item::after {
+    content: '';
+    position: absolute;
+    left: 6px;
+    top: 50%;
+    width: 12px;
+    height: 1px;
+    background: var(--gray-300);
+}
+
+.detail-tree-item:last-child::before {
+    bottom: 50%;
+}
+
+.detail-tree-label {
+    font-size: 13px;
+    color: var(--gray-500);
+}
+
+.detail-tree-value {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--gray-700);
+}
+
+/* Detail Tree Group */
+.detail-tree-group {
+    overflow: hidden;
+}
+
+.detail-tree-group.hidden {
+    display: none;
+}
+
+/* ========================================
+   Tab Section (asset_inquiry.html 스타일)
+   ======================================== */
+.tab-section {
+    padding: 0 16px;
+    margin-bottom: 16px;
+}
+
+.tab-container {
+    display: flex;
+    border: 1px solid var(--gray-300);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.tab-item {
+    flex: 1;
+    padding: 12px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--gray-500);
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+}
+
+.tab-item.active {
+    background: var(--gray-800);
+    color: white;
+}
+
+.tab-item:first-child {
+    border-right: 1px solid var(--gray-300);
+}
+
+/* ========================================
+   Section Card
+   ======================================== */
+.section-card {
+    background: white;
+    margin: 0 16px 16px;
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+}
+
+.section-card.hidden {
+    display: none;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--gray-100);
+}
+
+.section-title-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    /* border-bottom: 1px solid var(--gray-100); */
+}
+
+.section-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--gray-800);
+}
+
+.section-info-icon {
+    width: 18px;
+    height: 18px;
+    background: var(--gray-200);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    color: var(--gray-500);
+    cursor: pointer;
+}
+
+.section-badge {
+    padding: 4px 10px;
+    background: var(--kiwoom-navy);
+    border-radius: 12px;
+    font-size: 11px;
+    color: white;
+    font-weight: 500;
+}
+
+.section-badge.warning {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.section-badge.purple {
+    background: var(--kiwoom-purple);
+}
+
+/* ========================================
+   Chart Legend (범례)
+   ======================================== */
+.chart-legend {
+    display: flex;
+    gap: 20px;
+    padding: 16px 20px;
+    /* border-bottom: 1px solid var(--gray-100); */
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--gray-600);
+}
+
+.legend-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+}
+
+.legend-color.dangsa {
+    background: var(--chart-dangsa);
+}
+
+.legend-color.tasa {
+    background: var(--chart-tasa);
+}
+
+/* ========================================
+   Bar Chart Section
+   ======================================== */
+.chart-section {
+    padding: 20px;
+}
+
+/* Chart Tooltip/Message */
+.chart-message {
+    position: relative;
+    margin-bottom: 12px;
+}
+
+.chart-message-box {
+    display: inline-block;
+    background: var(--kiwoom-purple);
+    color: white;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    position: relative;
+    width:170px;
+}
+
+.chart-message-box.warning {
+    background: #d97706;
+}
+
+.chart-message-arrow {
+    position: absolute;
+    bottom: -6px;
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid var(--kiwoom-purple);
+}
+
+.chart-message-box.warning .chart-message-arrow {
+    border-top-color: #d97706;
+}
+
+/* Bar Chart */
+.bar-chart-container {
+    margin-top: 8px;
+}
+
+.bar-chart {
+    height: 32px;
+    background: var(--gray-100);
+    border-radius: 6px;
+    overflow: hidden;
+    display: flex;
+    position: relative;
+}
+
+.bar-segment {
+    height: 100%;
+    transition: width 0.3s ease;
+}
+
+.bar-segment.dangsa {
+    background: var(--chart-dangsa);
+}
+
+.bar-segment.tasa {
+    background: var(--chart-tasa);
+}
+
+.bar-chart-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+    font-size: 11px;
+    color: var(--gray-400);
+}
+
+.bar-chart-max {
+    position: absolute;
+    right: 0;
+    top: -20px;
+    font-size: 11px;
+    color: var(--gray-500);
+}
+
+/* Chart Data Display */
+.chart-data {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--gray-100);
+}
+
+.chart-data-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+}
+
+.chart-data-row.with-border {
+    border-top: 1px solid var(--gray-100);
+    padding-top: 12px;
+    margin-top: 4px;
+}
+
+.chart-data-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--gray-600);
+}
+
+.chart-data-value {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--gray-800);
+}
+
+/* Section Content */
+.section-content {
+    padding: 16px 20px;
+}
+
+.content-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+}
+
+.content-label {
+    font-size: 14px;
+    color: var(--gray-600);
+}
+
+.content-value {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--gray-800);
+}
+
+/* Empty State */
+.empty-state {
+    padding: 32px 20px;
+    text-align: center;
+}
+
+.empty-icon {
+    width: 48px;
+    height: 48px;
+    margin: 0 auto 16px;
+    background: var(--gray-100);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gray-400);
+    font-size: 20px;
+}
+
+.empty-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: 8px;
+}
+
+.empty-desc {
+    font-size: 13px;
+    color: var(--gray-500);
+    line-height: 1.5;
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    gap: 8px;
+    padding: 16px 20px;
+}
+
+.action-btn {
+    flex: 1;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    text-align: center;
+    border: 1px solid var(--gray-300);
+    background: white;
+    color: var(--gray-700);
+}
+
+.action-btn.primary {
+    background: var(--kiwoom-navy);
+    border-color: var(--kiwoom-navy);
+    color: white;
+}
+
+/* Edit Icon */
+.edit-icon {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gray-400);
+    cursor: pointer;
+}
+
+/* Account Info */
+.account-info {
+    font-size: 12px;
+    color: var(--gray-500);
+}
+
+/* ========================================
+   Bottom Navigation
+   ======================================== */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 480px;
+    background: white;
+    border-top: 1px solid var(--gray-200);
+    display: flex;
+    align-items: center;
+    padding: 0;
+    z-index: 100;
+}
+
+.nav-menu-btn {
+    width: 60px;
+    height: 56px;
+    background: var(--kiwoom-red);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 10px;
+    font-weight: 500;
+    cursor: pointer;
+    gap: 4px;
+}
+
+.hamburger {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.hamburger-line {
+    width: 16px;
+    height: 2px;
+    background: white;
+    border-radius: 1px;
+}
+
+.nav-tabs {
+    flex: 1;
+    display: flex;
+}
+
+.nav-tab {
+    flex: 1;
+    padding: 16px 8px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--gray-500);
+    cursor: pointer;
+    position: relative;
+}
+
+.nav-tab.active {
+    color: var(--kiwoom-red);
+    font-weight: 600;
+}
+
+/* ========================================
+   Content Padding
+   ======================================== */
+.content {
+    padding-bottom: 70px;
+}
+
+/* ========================================
+   Bottom Slide Popup
+   ======================================== */
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 200;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s;
+}
+
+.popup-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.popup-container {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%) translateY(100%);
+    width: 100%;
+    max-width: 480px;
+    background: white;
+    border-radius: 20px 20px 0 0;
+    z-index: 201;
+    transition: transform 0.3s ease-out;
+}
+
+.popup-overlay.active + .popup-container,
+.popup-container.active {
+    transform: translateX(-50%) translateY(0);
+}
+
+.popup-header {
+    padding: 20px;
+    text-align: center;
+    border-bottom: 1px solid var(--gray-200);
+    position: relative;
+}
+
+.popup-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--gray-800);
+}
+
+.popup-close {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--gray-500);
+    font-size: 20px;
+}
+
+.popup-content {
+    padding: 24px 20px;
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+.popup-subtitle {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--kiwoom-purple);
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+.popup-text {
+    font-size: 14px;
+    color: var(--gray-600);
+    line-height: 1.8;
+    margin-bottom: 16px;
+}
+
+.popup-text.example-box {
+    background: var(--gray-50);
+    padding: 16px;
+    border-radius: 12px;
+    margin-bottom: 0;
+}
+
+.popup-text-highlight {
+    color: var(--kiwoom-purple);
+    font-weight: 500;
+}
+
+.popup-list {
+    margin-bottom: 16px;
+}
+
+.popup-list-item {
+    font-size: 13px;
+    color: var(--gray-600);
+    line-height: 1.8;
+    padding-left: 12px;
+    position: relative;
+}
+
+.popup-list-item::before {
+    content: '·';
+    position: absolute;
+    left: 0;
+    color: var(--gray-400);
+}
+
+.popup-button {
+    width: 100%;
+    padding: 16px;
+    background: var(--kiwoom-purple);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 16px;
+}
+
+/* ========================================
+   Back Button (분리된 인라인 스타일)
+   ======================================== */
+.back-btn {
+    cursor: pointer;
+}
+
+/* ========================================
+   Chart Message Positioning Classes
+   ======================================== */
+.chart-message-box.position-right {
+    margin-left: calc(100% - 170px);
+}
+
+.chart-message-box.position-center {
+    margin-left: calc(50% - 85px);
+}
+
+.chart-message-arrow.position-right {
+    left: calc(100% - 14px);
+}
+
+/* Warning arrow (inline positioned) */
+.chart-message .warning-arrow-inline {
+    position: absolute;
+    bottom: -6px;
+    left: 90%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid #d97706;
+}

@@ -4,890 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>해외주식양도세</title>
-    <style>
-        /* ========================================
-           Font Face
-           ======================================== */
-        @font-face {
-            font-family: 'DAKI';
-            src: url('../font/DAKIL.TTF') format('truetype');
-            font-weight: 300;
-            font-style: normal;
-        }
-        @font-face {
-            font-family: 'DAKI';
-            src: url('../font/DAKIM.TTF') format('truetype');
-            font-weight: 500;
-            font-style: normal;
-        }
-
-        /* ========================================
-           Base Variables
-           ======================================== */
-        :root {
-            --bg-primary: #FFFFFF;
-            --gray-50: #f9fafb;
-            --gray-100: #f3f4f6;
-            --gray-200: #e5e7eb;
-            --gray-300: #d1d5db;
-            --gray-400: #9ca3af;
-            --gray-500: #6b7280;
-            --gray-600: #4b5563;
-            --gray-700: #374151;
-            --gray-800: #1f2937;
-            --kiwoom-red: #E31837;
-            --kiwoom-blue: #2563eb;
-            --kiwoom-purple: #6366f1;
-            --kiwoom-navy: #1e3a5f;
-            --chart-dangsa: #6366f1;
-            --chart-tasa: #a5b4fc;
-            --radius-sm: 8px;
-            --radius-md: 12px;
-            --radius-lg: 16px;
-            --shadow: 0 2px 8px rgba(0,0,0,0.06);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'DAKI', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--gray-100);
-            max-width: 480px;
-            margin: 0 auto;
-            min-height: 100vh;
-        }
-
-        /* ========================================
-           Header
-           ======================================== */
-        .header {
-            background: white;
-            padding: 14px 16px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            border-bottom: 1px solid var(--gray-200);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .back-btn {
-            width: 24px;
-            height: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--gray-600);
-            cursor: pointer;
-        }
-
-        .header-title {
-            font-size: 17px;
-            font-weight: 600;
-            color: var(--gray-800);
-        }
-
-        .header-nav {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            margin-left: auto;
-        }
-
-        .header-nav-item {
-            font-size: 14px;
-            color: var(--gray-500);
-            cursor: pointer;
-        }
-
-        .header-nav-item.active {
-            color: var(--gray-800);
-            font-weight: 600;
-        }
-
-        /* ========================================
-           Sub Header (세금연결, 타사포함)
-           ======================================== */
-        .sub-header {
-            /* background: white; */
-            padding: 12px 16px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            /* border-bottom: 1px solid var(--gray-200); */
-        }
-
-        .add-tax-btn {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            padding: 8px 16px;
-            background: transparent;
-            border: 1px solid var(--kiwoom-purple);
-            border-radius: 20px;
-            color: var(--kiwoom-purple);
-            font-size: 13px;
-            font-weight: 500;
-            cursor: pointer;
-        }
-
-        .toggle-section {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .toggle-label {
-            font-size: 13px;
-            color: var(--gray-600);
-        }
-
-        .toggle-switch {
-            width: 44px;
-            height: 24px;
-            background: var(--gray-300);
-            border-radius: 12px;
-            position: relative;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .toggle-switch.active {
-            background: var(--kiwoom-purple);
-        }
-
-        .toggle-switch::after {
-            content: '';
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            background: white;
-            border-radius: 50%;
-            top: 2px;
-            left: 2px;
-            transition: left 0.3s;
-        }
-
-        .toggle-switch.active::after {
-            left: 22px;
-        }
-
-        .toggle-status {
-            font-size: 11px;
-            color: var(--gray-400);
-        }
-
-        /* ========================================
-           Main Banner Card
-           ======================================== */
-        .banner-card {
-            background: linear-gradient(135deg, var(--kiwoom-navy) 0%, #0d2137 100%);
-            margin: 16px;
-            padding: 24px 20px;
-            border-radius: 20px;
-            text-align: center;
-        }
-
-        .banner-text {
-            font-size: 18px;
-            font-weight: 600;
-            color: white;
-            line-height: 1.5;
-        }
-
-        .banner-highlight {
-            color: #fbbf24;
-        }
-
-        /* ========================================
-           Tax Summary Card (접기/펼치기)
-           ======================================== */
-        .tax-summary-card {
-            background: white;
-            margin: 0 16px 16px;
-            padding: 20px;
-            border-radius: 16px;
-            box-shadow: var(--shadow);
-        }
-
-        .tax-summary-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            cursor: pointer;
-        }
-
-        .tax-summary-title-row {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .tax-summary-title {
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--gray-800);
-        }
-
-        .tax-summary-year {
-            font-size: 13px;
-            color: var(--gray-500);
-        }
-
-        .expand-icon {
-            font-size: 12px;
-            color: var(--gray-400);
-            transition: transform 0.3s;
-        }
-
-        .expand-icon.expanded {
-            transform: rotate(180deg);
-        }
-
-        .tax-summary-content {
-            margin-top: 16px;
-            padding-top: 16px;
-            border-top: 1px solid var(--gray-200);
-        }
-
-        .tax-summary-content.hidden {
-            display: none;
-        }
-
-        .tax-summary-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 0;
-            /* border-bottom: 1px solid var(--gray-100); */
-        }
-
-        .tax-summary-row:last-child {
-            border-bottom: none;
-        }
-
-        .tax-summary-label {
-            font-size: 14px;
-            color: var(--gray-600);
-        }
-
-        .tax-summary-value {
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--gray-800);
-        }
-
-        /* Tree Line Detail Items */
-        .detail-tree-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 0;
-            padding-left: 24px;
-            position: relative;
-        }
-
-        .detail-tree-item::before {
-            content: '';
-            position: absolute;
-            left: 6px;
-            top: 0;
-            bottom: 0;
-            width: 1px;
-            background: var(--gray-300);
-        }
-
-        .detail-tree-item::after {
-            content: '';
-            position: absolute;
-            left: 6px;
-            top: 50%;
-            width: 12px;
-            height: 1px;
-            background: var(--gray-300);
-        }
-
-        .detail-tree-item:last-child::before {
-            bottom: 50%;
-        }
-
-        .detail-tree-label {
-            font-size: 13px;
-            color: var(--gray-500);
-        }
-
-        .detail-tree-value {
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--gray-700);
-        }
-
-        /* Detail Tree Group */
-        .detail-tree-group {
-            overflow: hidden;
-        }
-
-        .detail-tree-group.hidden {
-            display: none;
-        }
-
-        /* ========================================
-           Tab Section (asset_inquiry.html 스타일)
-           ======================================== */
-        .tab-section {
-            padding: 0 16px;
-            margin-bottom: 16px;
-        }
-
-        .tab-container {
-            display: flex;
-            border: 1px solid var(--gray-300);
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        .tab-item {
-            flex: 1;
-            padding: 12px;
-            text-align: center;
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--gray-500);
-            background: white;
-            cursor: pointer;
-            transition: all 0.2s;
-            border: none;
-        }
-
-        .tab-item.active {
-            background: var(--gray-800);
-            color: white;
-        }
-
-        .tab-item:first-child {
-            border-right: 1px solid var(--gray-300);
-        }
-
-        /* ========================================
-           Section Card
-           ======================================== */
-        .section-card {
-            background: white;
-            margin: 0 16px 16px;
-            border-radius: 16px;
-            box-shadow: var(--shadow);
-            overflow: hidden;
-        }
-
-        .section-card.hidden {
-            display: none;
-        }
-
-        .section-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 16px 20px;
-            border-bottom: 1px solid var(--gray-100);
-        }
-
-        .section-title-row {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            /* border-bottom: 1px solid var(--gray-100); */
-        }
-
-        .section-title {
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--gray-800);
-        }
-
-        .section-info-icon {
-            width: 18px;
-            height: 18px;
-            background: var(--gray-200);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 11px;
-            color: var(--gray-500);
-            cursor: pointer;
-        }
-
-        .section-badge {
-            padding: 4px 10px;
-            background: var(--kiwoom-navy);
-            border-radius: 12px;
-            font-size: 11px;
-            color: white;
-            font-weight: 500;
-        }
-
-        .section-badge.warning {
-            background: #fef3c7;
-            color: #d97706;
-        }
-
-        .section-badge.purple {
-            background: var(--kiwoom-purple);
-        }
-
-        /* ========================================
-           Chart Legend (범례)
-           ======================================== */
-        .chart-legend {
-            display: flex;
-            gap: 20px;
-            padding: 16px 20px;
-            /* border-bottom: 1px solid var(--gray-100); */
-        }
-
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 13px;
-            color: var(--gray-600);
-        }
-
-        .legend-color {
-            width: 12px;
-            height: 12px;
-            border-radius: 3px;
-        }
-
-        .legend-color.dangsa {
-            background: var(--chart-dangsa);
-        }
-
-        .legend-color.tasa {
-            background: var(--chart-tasa);
-        }
-
-        /* ========================================
-           Bar Chart Section
-           ======================================== */
-        .chart-section {
-            padding: 20px;
-        }
-
-        /* Chart Tooltip/Message */
-        .chart-message {
-            position: relative;
-            margin-bottom: 12px;
-        }
-
-        .chart-message-box {
-            display: inline-block;
-            background: var(--kiwoom-purple);
-            color: white;
-            padding: 8px 14px;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 500;
-            position: relative;
-            width:170px;
-        }
-
-        .chart-message-box.warning {
-            background: #d97706;
-        }
-
-        .chart-message-arrow {
-            position: absolute;
-            bottom: -6px;
-            width: 0;
-            height: 0;
-            border-left: 6px solid transparent;
-            border-right: 6px solid transparent;
-            border-top: 6px solid var(--kiwoom-purple);
-        }
-
-        .chart-message-box.warning .chart-message-arrow {
-            border-top-color: #d97706;
-        }
-
-        /* Bar Chart */
-        .bar-chart-container {
-            margin-top: 8px;
-        }
-
-        .bar-chart {
-            height: 32px;
-            background: var(--gray-100);
-            border-radius: 6px;
-            overflow: hidden;
-            display: flex;
-            position: relative;
-        }
-
-        .bar-segment {
-            height: 100%;
-            transition: width 0.3s ease;
-        }
-
-        .bar-segment.dangsa {
-            background: var(--chart-dangsa);
-        }
-
-        .bar-segment.tasa {
-            background: var(--chart-tasa);
-        }
-
-        .bar-chart-labels {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 8px;
-            font-size: 11px;
-            color: var(--gray-400);
-        }
-
-        .bar-chart-max {
-            position: absolute;
-            right: 0;
-            top: -20px;
-            font-size: 11px;
-            color: var(--gray-500);
-        }
-
-        /* Chart Data Display */
-        .chart-data {
-            margin-top: 16px;
-            padding-top: 16px;
-            border-top: 1px solid var(--gray-100);
-        }
-
-        .chart-data-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 0;
-        }
-
-        .chart-data-label {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 14px;
-            color: var(--gray-600);
-        }
-
-        .chart-data-value {
-            font-size: 15px;
-            font-weight: 600;
-            color: var(--gray-800);
-        }
-
-        /* Section Content */
-        .section-content {
-            padding: 16px 20px;
-        }
-
-        .content-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 0;
-        }
-
-        .content-label {
-            font-size: 14px;
-            color: var(--gray-600);
-        }
-
-        .content-value {
-            font-size: 15px;
-            font-weight: 600;
-            color: var(--gray-800);
-        }
-
-        /* Empty State */
-        .empty-state {
-            padding: 32px 20px;
-            text-align: center;
-        }
-
-        .empty-icon {
-            width: 48px;
-            height: 48px;
-            margin: 0 auto 16px;
-            background: var(--gray-100);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--gray-400);
-            font-size: 20px;
-        }
-
-        .empty-title {
-            font-size: 15px;
-            font-weight: 600;
-            color: var(--gray-800);
-            margin-bottom: 8px;
-        }
-
-        .empty-desc {
-            font-size: 13px;
-            color: var(--gray-500);
-            line-height: 1.5;
-        }
-
-        /* Action Buttons */
-        .action-buttons {
-            display: flex;
-            gap: 8px;
-            padding: 16px 20px;
-        }
-
-        .action-btn {
-            flex: 1;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 13px;
-            font-weight: 500;
-            cursor: pointer;
-            text-align: center;
-            border: 1px solid var(--gray-300);
-            background: white;
-            color: var(--gray-700);
-        }
-
-        .action-btn.primary {
-            background: var(--kiwoom-navy);
-            border-color: var(--kiwoom-navy);
-            color: white;
-        }
-
-        /* Edit Icon */
-        .edit-icon {
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--gray-400);
-            cursor: pointer;
-        }
-
-        /* Account Info */
-        .account-info {
-            font-size: 12px;
-            color: var(--gray-500);
-        }
-
-        /* ========================================
-           Bottom Navigation
-           ======================================== */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100%;
-            max-width: 480px;
-            background: white;
-            border-top: 1px solid var(--gray-200);
-            display: flex;
-            align-items: center;
-            padding: 0;
-            z-index: 100;
-        }
-
-        .nav-menu-btn {
-            width: 60px;
-            height: 56px;
-            background: var(--kiwoom-red);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 10px;
-            font-weight: 500;
-            cursor: pointer;
-            gap: 4px;
-        }
-
-        .hamburger {
-            display: flex;
-            flex-direction: column;
-            gap: 3px;
-        }
-
-        .hamburger-line {
-            width: 16px;
-            height: 2px;
-            background: white;
-            border-radius: 1px;
-        }
-
-        .nav-tabs {
-            flex: 1;
-            display: flex;
-        }
-
-        .nav-tab {
-            flex: 1;
-            padding: 16px 8px;
-            text-align: center;
-            font-size: 12px;
-            font-weight: 500;
-            color: var(--gray-500);
-            cursor: pointer;
-            position: relative;
-        }
-
-        .nav-tab.active {
-            color: var(--kiwoom-red);
-            font-weight: 600;
-        }
-
-        /* ========================================
-           Content Padding
-           ======================================== */
-        .content {
-            padding-bottom: 70px;
-        }
-
-        /* ========================================
-           Bottom Slide Popup
-           ======================================== */
-        .popup-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 200;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s, visibility 0.3s;
-        }
-
-        .popup-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .popup-container {
-            position: fixed;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%) translateY(100%);
-            width: 100%;
-            max-width: 480px;
-            background: white;
-            border-radius: 20px 20px 0 0;
-            z-index: 201;
-            transition: transform 0.3s ease-out;
-        }
-
-        .popup-overlay.active + .popup-container,
-        .popup-container.active {
-            transform: translateX(-50%) translateY(0);
-        }
-
-        .popup-header {
-            padding: 20px;
-            text-align: center;
-            border-bottom: 1px solid var(--gray-200);
-            position: relative;
-        }
-
-        .popup-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--gray-800);
-        }
-
-        .popup-close {
-            position: absolute;
-            right: 16px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 24px;
-            height: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            color: var(--gray-500);
-            font-size: 20px;
-        }
-
-        .popup-content {
-            padding: 24px 20px;
-            max-height: 60vh;
-            overflow-y: auto;
-        }
-
-        .popup-subtitle {
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--kiwoom-purple);
-            margin-bottom: 16px;
-            text-align: center;
-        }
-
-        .popup-text {
-            font-size: 14px;
-            color: var(--gray-600);
-            line-height: 1.8;
-            margin-bottom: 16px;
-        }
-
-        .popup-text-highlight {
-            color: var(--kiwoom-purple);
-            font-weight: 500;
-        }
-
-        .popup-list {
-            margin-bottom: 16px;
-        }
-
-        .popup-list-item {
-            font-size: 13px;
-            color: var(--gray-600);
-            line-height: 1.8;
-            padding-left: 12px;
-            position: relative;
-        }
-
-        .popup-list-item::before {
-            content: '·';
-            position: absolute;
-            left: 0;
-            color: var(--gray-400);
-        }
-
-        .popup-button {
-            width: 100%;
-            padding: 16px;
-            background: var(--kiwoom-purple);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 16px;
-        }
-    </style>
+    <link rel="stylesheet" href="css/asset-common.css">
+    <link rel="stylesheet" href="css/tax-overseas.css">
 </head>
 <body>
     <!-- Header -->
     <header class="header">
-        <div class="back-btn" onclick="history.back()" style="cursor: pointer;">
+        <div class="back-btn">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M15 18l-6-6 6-6"></path>
             </svg>
@@ -907,7 +30,7 @@
         </button>
         <div class="toggle-section">
             <span class="toggle-label">타사 포함</span>
-            <div class="toggle-switch" onclick="toggleSwitch(this)"></div>
+            <div class="toggle-switch"></div>
             <span class="toggle-status">OFF</span>
         </div>
     </div>
@@ -923,7 +46,7 @@
 
         <!-- Tax Summary Card (접기/펼치기) -->
         <div class="tax-summary-card">
-            <div class="tax-summary-header" onclick="toggleTaxSummary()">
+            <div class="tax-summary-header">
                 <div class="tax-summary-title-row">
                     <span class="tax-summary-title">내 예상 소득 및 세금</span>
                     <span class="tax-summary-year">2025 년</span>
@@ -967,8 +90,8 @@
         <!-- Tab Section (asset_inquiry 스타일) -->
         <div class="tab-section">
             <div class="tab-container">
-                <button class="tab-item active" onclick="switchTab('overseas')">해외주식양도세</button>
-                <button class="tab-item" onclick="switchTab('income')">종합소득세</button>
+                <button class="tab-item active">해외주식양도세</button>
+                <button class="tab-item">종합소득세</button>
             </div>
         </div>
 
@@ -978,7 +101,7 @@
             <div class="section-header">
                 <div class="section-title-row">
                     <span class="section-title">해외주식 양도소득</span>
-                    <div class="section-info-icon" onclick="openPopup('taxInfoPopup')">?</div>
+                    <div class="section-info-icon">?</div>
                 </div>
                 <span class="section-badge purple">양도세 미발생</span>
             </div>
@@ -997,9 +120,9 @@
             <div class="chart-section">
                 <div class="chart-message">
                     <!-- 당사+타사 = 100%, box 170px, 화살표가 오른쪽 끝 가리킴 -->
-                    <div class="chart-message-box" id="overseasMessage" style="margin-left: calc(100% - 170px);">
+                    <div class="chart-message-box position-right" id="overseasMessage">
                         양도소득 250만원까지는<br>세금 걱정 없어요
-                        <div class="chart-message-arrow" style="left: calc(100% - 14px);"></div>
+                        <div class="chart-message-arrow position-right"></div>
                     </div>
                 </div>
                 <div class="bar-chart-container">
@@ -1030,7 +153,7 @@
                         </div>
                         <span class="chart-data-value">1,000,000 원</span>
                     </div>
-                    <div class="chart-data-row" style="border-top: 1px solid var(--gray-100); padding-top: 12px; margin-top: 4px;">
+                    <div class="chart-data-row with-border">
                         <div class="chart-data-label">
                             예상 양도소득세
                         </div>
@@ -1063,13 +186,13 @@
             </div>
             <!-- Bar Chart -->
             <div class="chart-section">
-                <div class="chart-message" style="position: relative;">
+                <div class="chart-message">
                     <!-- box는 가운데 배치 -->
-                    <div class="chart-message-box warning" style="margin-left: calc(50% - 85px);">
+                    <div class="chart-message-box warning position-center">
                         금융소득 2,000만원 초과시<br>종합과세 대상이에요
                     </div>
                     <!-- 화살표는 90% 지점(bar 끝)을 가리킴 -->
-                    <div style="position: absolute; bottom: -6px; left: 90%; transform: translateX(-50%); width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 6px solid #d97706;"></div>
+                    <div class="warning-arrow-inline"></div>
                 </div>
                 <div class="bar-chart-container">
                     <div class="bar-chart">
@@ -1099,7 +222,7 @@
                         </div>
                         <span class="chart-data-value">3,000,000 원</span>
                     </div>
-                    <div class="chart-data-row" style="border-top: 1px solid var(--gray-100); padding-top: 12px; margin-top: 4px;">
+                    <div class="chart-data-row with-border">
                         <div class="chart-data-label">
                             예상 원천징수세액
                         </div>
@@ -1190,11 +313,11 @@
     </div>
 
     <!-- Tax Info Popup -->
-    <div class="popup-overlay" id="taxInfoPopupOverlay" onclick="closePopup('taxInfoPopup')"></div>
+    <div class="popup-overlay" id="taxInfoPopupOverlay"></div>
     <div class="popup-container" id="taxInfoPopup">
         <div class="popup-header">
             <span class="popup-title">기본공제 안내</span>
-            <div class="popup-close" onclick="closePopup('taxInfoPopup')">×</div>
+            <div class="popup-close">×</div>
         </div>
         <div class="popup-content">
             <div class="popup-subtitle">해외주식 양도소득세는<br>250만원 기본공제가 적용됩니다</div>
@@ -1207,13 +330,13 @@
                 <div class="popup-list-item">과세표준: 세금을 계산할 때 기준이 되는 금액</div>
                 <div class="popup-list-item">세율: 총 22% - 소득세 20% + 주민세 2%</div>
             </div>
-            <div class="popup-text" style="background: var(--gray-50); padding: 16px; border-radius: 12px; margin-bottom: 0;">
+            <div class="popup-text example-box">
                 예) 해외주식 양도소득: 300 만원<br>
                 기본공제: 250 만원<br>
                 과세표준: 300 만원 - 250 만원 = 50만원<br>
                 해외주식 양도소득세: 50 만원 × 22% = 11 만원
             </div>
-            <button class="popup-button" onclick="closePopup('taxInfoPopup')">확인</button>
+            <button class="popup-button">확인</button>
         </div>
     </div>
 
@@ -1235,77 +358,7 @@
         </div>
     </nav>
 
-    <script>
-        // Toggle Switch
-        function toggleSwitch(element) {
-            element.classList.toggle('active');
-            const status = element.nextElementSibling;
-            status.textContent = element.classList.contains('active') ? 'ON' : 'OFF';
-        }
-
-        // Tax Summary 당사/타사 접기/펼치기
-        function toggleTaxSummary() {
-            const incomeTreeGroup = document.getElementById('incomeTreeGroup');
-            const taxTreeGroup = document.getElementById('taxTreeGroup');
-            const icon = document.getElementById('taxSummaryIcon');
-
-            incomeTreeGroup.classList.toggle('hidden');
-            taxTreeGroup.classList.toggle('hidden');
-            icon.classList.toggle('expanded');
-        }
-
-        // Tab 전환 (해외주식양도세 / 종합소득세)
-        function switchTab(tabType) {
-            // 탭 버튼 활성화
-            document.querySelectorAll('.tab-item').forEach(tab => tab.classList.remove('active'));
-            event.target.classList.add('active');
-
-            // 해외주식양도세 섹션
-            const overseasSection = document.getElementById('section-overseas');
-
-            // 종합소득세 섹션들
-            const incomeSections = [
-                document.getElementById('section-interest'),
-                document.getElementById('section-pension'),
-                document.getElementById('section-other'),
-                document.getElementById('section-employment'),
-                document.getElementById('section-business')
-            ];
-
-            if (tabType === 'overseas') {
-                overseasSection.classList.remove('hidden');
-                incomeSections.forEach(section => section.classList.add('hidden'));
-            } else {
-                overseasSection.classList.add('hidden');
-                incomeSections.forEach(section => section.classList.remove('hidden'));
-            }
-        }
-
-        // 하단 네비게이션 탭 전환
-        document.querySelectorAll('.nav-tab').forEach(tab => {
-            tab.addEventListener('click', function() {
-                document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
-            });
-        });
-
-        // Popup 열기
-        function openPopup(popupId) {
-            const overlay = document.getElementById(popupId + 'Overlay');
-            const popup = document.getElementById(popupId);
-            overlay.classList.add('active');
-            popup.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        // Popup 닫기
-        function closePopup(popupId) {
-            const overlay = document.getElementById(popupId + 'Overlay');
-            const popup = document.getElementById(popupId);
-            overlay.classList.remove('active');
-            popup.classList.remove('active');
-            document.body.style.overflow = '';
-        }
-    </script>
+    <script src="js/asset-common.js"></script>
+    <script src="js/tax-overseas.js"></script>
 </body>
 </html>

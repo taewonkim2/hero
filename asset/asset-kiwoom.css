@@ -911,3 +911,18 @@ body {
 .delay-3 { animation-delay: 0.3s; }
 .delay-4 { animation-delay: 0.4s; }
 .delay-5 { animation-delay: 0.5s; }
+
+/* ========================================
+   Separated Inline Styles
+   ======================================== */
+/* Back button SVG */
+.header-top svg {
+    cursor: pointer;
+}
+
+/* ETF label in menu item */
+.etf-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #2563eb;
+}

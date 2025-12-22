@@ -1,0 +1,500 @@
+/* ========================================
+   RP Common CSS
+   rp 폴더 내 모든 HTML 공통 스타일
+   ======================================== */
+
+:root {
+    --primary: #1a73e8;
+    --primary-light: #e8f0fe;
+    --accent: #ff6b35;
+    --positive: #e53935;
+    --negative: #1976d2;
+    --menu-red: #d32f2f;
+    --bg-primary: #f5f6f8;
+    --bg-card: #ffffff;
+    --text-primary: #1f2937;
+    --text-secondary: #6b7280;
+    --text-muted: #9ca3af;
+    --border: #e5e7eb;
+    --shadow: 0 2px 8px rgba(0,0,0,0.06);
+    --shadow-lg: 0 4px 16px rgba(0,0,0,0.1);
+    --krw-color: #1a73e8;
+    --usd-color: #10b981;
+    --jpy-color: #f59e0b;
+    --eur-color: #8b5cf6;
+    --risk-very-low: #22c55e;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.6;
+    max-width: 480px;
+    margin: 0 auto;
+    min-height: 100vh;
+    padding-top: 56px;
+    padding-bottom: 70px;
+}
+
+/* ========================================
+   Top Navigation Bar
+   ======================================== */
+.top-nav {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 480px;
+    height: 56px;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    z-index: 1000;
+}
+
+.top-nav-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.back-btn {
+    background: none;
+    border: none;
+    padding: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.7;
+}
+
+.page-title {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+/* Top Nav with Header */
+.top-nav-header {
+    height: 56px;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    justify-content: space-between;
+}
+
+/* Sub Navigation inside top-nav */
+.sub-nav {
+    display: flex;
+    border-top: 1px solid var(--border);
+}
+
+.sub-nav-item {
+    flex: 1;
+    padding: 14px 0;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+}
+
+.sub-nav-item.active {
+    color: var(--primary);
+    border-bottom-color: var(--primary);
+    font-weight: 600;
+}
+
+/* ========================================
+   Bottom Tab Bar
+   ======================================== */
+.bottom-tab-bar {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 480px;
+    height: 70px;
+    background: white;
+    display: flex;
+    align-items: stretch;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+    z-index: 1000;
+}
+
+.tab-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--text-muted);
+    transition: color 0.2s;
+    padding: 8px 4px;
+}
+
+.tab-item.active {
+    color: var(--primary);
+}
+
+.tab-label {
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.menu-tab {
+    flex: 0.8;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 8px;
+}
+
+.menu-button-box {
+    background: var(--menu-red);
+    border-radius: 10px;
+    padding: 8px 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.hamburger-icon {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    margin-bottom: 4px;
+}
+
+.hamburger-icon span {
+    width: 16px;
+    height: 2px;
+    background: white;
+    border-radius: 1px;
+}
+
+.menu-label {
+    font-size: 10px;
+    color: white;
+    font-weight: 500;
+}
+
+/* ========================================
+   Cards
+   ======================================== */
+.card {
+    background: var(--bg-card);
+    border-radius: 16px;
+    padding: 20px;
+    margin: 12px 16px;
+    box-shadow: var(--shadow);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.card-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+/* ========================================
+   Currency Tabs
+   ======================================== */
+.currency-tabs {
+    display: flex;
+    gap: 8px;
+    padding: 16px;
+    background: white;
+    margin-bottom: 8px;
+}
+
+.currency-tab {
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1px solid var(--border);
+    background: white;
+    color: var(--text-secondary);
+}
+
+.currency-tab.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+.currency-tab.krw.active {
+    background: var(--krw-color);
+    border-color: var(--krw-color);
+}
+
+.currency-tab.usd.active {
+    background: var(--usd-color);
+    border-color: var(--usd-color);
+}
+
+.currency-tab.jpy.active {
+    background: var(--jpy-color);
+    border-color: var(--jpy-color);
+}
+
+.currency-tab.eur.active {
+    background: var(--eur-color);
+    border-color: var(--eur-color);
+}
+
+/* ========================================
+   Balance Summary
+   ======================================== */
+.balance-summary {
+    background: linear-gradient(135deg, #1e3a5f 0%, #0d2137 100%);
+    border-radius: 16px;
+    padding: 24px 20px;
+    margin: 0 16px 16px;
+    color: white;
+}
+
+.balance-label {
+    font-size: 13px;
+    opacity: 0.8;
+    margin-bottom: 8px;
+}
+
+.balance-amount {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.balance-sub {
+    font-size: 13px;
+    opacity: 0.7;
+}
+
+/* ========================================
+   RP Item List
+   ======================================== */
+.rp-list {
+    padding: 0 16px;
+}
+
+.rp-item {
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+    box-shadow: var(--shadow);
+}
+
+.rp-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+}
+
+.rp-item-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.rp-item-rate {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--positive);
+}
+
+.rp-item-info {
+    display: flex;
+    gap: 16px;
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+.rp-item-label {
+    color: var(--text-muted);
+}
+
+/* ========================================
+   Buttons
+   ======================================== */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #1557b0;
+}
+
+.btn-outline {
+    background: white;
+    color: var(--primary);
+    border: 1px solid var(--primary);
+}
+
+.btn-full {
+    width: 100%;
+}
+
+/* ========================================
+   Half Popup (반팝업)
+   ======================================== */
+.half-popup-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 2000;
+}
+
+.half-popup-overlay.active {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.half-popup {
+    background: white;
+    border-radius: 20px 20px 0 0;
+    width: 100%;
+    max-width: 480px;
+    max-height: 80vh;
+    overflow-y: auto;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+}
+
+.half-popup-overlay.active .half-popup {
+    transform: translateY(0);
+}
+
+.half-popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    background: white;
+}
+
+.half-popup-title {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.half-popup-close {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--text-muted);
+    font-size: 24px;
+}
+
+.half-popup-content {
+    padding: 20px;
+}
+
+/* ========================================
+   Form Elements
+   ======================================== */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 16px;
+    color: var(--text-primary);
+    transition: border-color 0.2s;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+/* ========================================
+   Utility Classes
+   ======================================== */
+.hidden {
+    display: none !important;
+}
+
+.text-positive {
+    color: var(--positive);
+}
+
+.text-negative {
+    color: var(--negative);
+}
+
+.text-muted {
+    color: var(--text-muted);
+}
+
+.mb-8 { margin-bottom: 8px; }
+.mb-12 { margin-bottom: 12px; }
+.mb-16 { margin-bottom: 16px; }
+.mb-20 { margin-bottom: 20px; }

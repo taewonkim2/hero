@@ -18,6 +18,25 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 서비스 버튼 스케일 효과
     addScaleEffect('.service-btn');
+
+    // Back 버튼 이벤트 바인딩
+    const backBtn = document.querySelector('.header-top svg');
+    if (backBtn) {
+        backBtn.addEventListener('click', function() {
+            history.back();
+        });
+    }
+
+    // Section 토글 이벤트 바인딩
+    const sectionIds = ['popular', 'strategy', 'single', 'hot', 'trending'];
+    sectionIds.forEach(function(sectionId) {
+        const header = document.querySelector('#section-' + sectionId + ' .section-header');
+        if (header) {
+            header.addEventListener('click', function() {
+                toggleSection(sectionId);
+            });
+        }
+    });
 });
 
 /* ========================================

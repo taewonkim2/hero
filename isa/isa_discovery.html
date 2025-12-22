@@ -1,0 +1,1318 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>ISA 발견</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #F5F5F5;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 430px;
+      margin: 0 auto;
+      background: #FFFFFF;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      box-shadow: 0 0 40px rgba(0,0,0,0.1);
+    }
+
+    /* Status Bar */
+    .status-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 20px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    /* Header Navigation */
+    .header-nav {
+      display: flex;
+      align-items: center;
+      padding: 8px 16px;
+      border-bottom: 1px solid #F0F0F0;
+    }
+
+    .back-btn {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      padding: 8px;
+      margin-right: 8px;
+    }
+
+    .header-tabs {
+      display: flex;
+      gap: 4px;
+      overflow-x: auto;
+      flex: 1;
+      scrollbar-width: none;
+    }
+
+    .header-tabs::-webkit-scrollbar {
+      display: none;
+    }
+
+    .header-tab {
+      background: transparent;
+      color: #888888;
+      border: none;
+      padding: 10px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+      text-align: center;
+      line-height: 1.3;
+    }
+
+    .header-tab.active {
+      background: #1A1A1A;
+      color: #FFFFFF;
+      font-weight: 600;
+    }
+
+    /* Segmented Button */
+    .segment-container {
+      display: flex;
+      margin: 16px 20px;
+      background: #F5F5F5;
+      border-radius: 12px;
+      padding: 4px;
+    }
+
+    .segment-btn {
+      flex: 1;
+      padding: 12px 8px;
+      border: none;
+      border-radius: 10px;
+      background: transparent;
+      color: #888888;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .segment-btn.active {
+      background: #FFFFFF;
+      color: #1A1A1A;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    /* Tabs */
+    .tabs-container {
+      display: flex;
+      border-bottom: 2px solid #F0F0F0;
+      position: relative;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 14px 8px;
+      border: none;
+      background: transparent;
+      color: #AAAAAA;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.2s ease;
+    }
+
+    .tab-btn.active {
+      color: #1A1A1A;
+      font-weight: 700;
+    }
+
+    .tab-btn.active::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 10%;
+      width: 80%;
+      height: 3px;
+      background: #1A1A1A;
+      border-radius: 2px;
+    }
+
+    /* Period Dropdown */
+    .dropdown-container {
+      display: flex;
+      justify-content: flex-end;
+      padding: 12px 20px;
+      position: relative;
+    }
+
+    .dropdown-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 16px;
+      border: 1px solid #E0E0E0;
+      border-radius: 8px;
+      background: #FFFFFF;
+      font-size: 14px;
+      color: #1A1A1A;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    .dropdown-btn .arrow {
+      transition: transform 0.2s ease;
+    }
+
+    .dropdown-btn.open .arrow {
+      transform: rotate(180deg);
+    }
+
+    .dropdown-menu {
+      position: absolute;
+      top: 52px;
+      right: 20px;
+      background: #FFFFFF;
+      border: 1px solid #E0E0E0;
+      border-radius: 8px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+      z-index: 100;
+      overflow: hidden;
+      display: none;
+    }
+
+    .dropdown-menu.show {
+      display: block;
+    }
+
+    .dropdown-item {
+      display: block;
+      width: 100%;
+      padding: 12px 24px;
+      border: none;
+      background: #FFFFFF;
+      font-size: 14px;
+      color: #1A1A1A;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .dropdown-item:hover {
+      background: #F5F5F5;
+    }
+
+    .dropdown-item.active {
+      background: #F5F5F5;
+      font-weight: 600;
+    }
+
+    /* List Container */
+    .list-container {
+      flex: 1;
+      overflow-y: auto;
+      padding-bottom: 80px;
+    }
+
+    /* List Item */
+    .list-item {
+      display: flex;
+      align-items: center;
+      padding: 16px 20px;
+      border-bottom: 1px solid #F5F5F5;
+      transition: background 0.15s ease;
+      cursor: pointer;
+    }
+
+    .list-item:hover {
+      background: #FAFAFA;
+    }
+
+    .rank {
+      width: 28px;
+      font-size: 16px;
+      font-weight: 700;
+      color: #888888;
+    }
+
+    .rank.top {
+      color: #1A1A1A;
+    }
+
+    .logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 12px;
+      color: #FFFFFF;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    .item-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .item-name-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+
+    .item-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: #1A1A1A;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .item-sub {
+      font-size: 12px;
+      color: #AAAAAA;
+    }
+
+    .item-right {
+      text-align: right;
+    }
+
+    .item-price {
+      font-size: 16px;
+      font-weight: 700;
+      color: #1A1A1A;
+      margin-bottom: 4px;
+    }
+
+    .item-change {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .item-change.up {
+      color: #E53935;
+    }
+
+    .item-change.down {
+      color: #1E88E5;
+    }
+
+    .item-percent {
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .item-percent.up {
+      color: #E53935;
+    }
+
+    .item-percent.down {
+      color: #1E88E5;
+    }
+
+    .item-rate {
+      font-size: 20px;
+      font-weight: 700;
+      color: #E53935;
+    }
+
+    /* Type Tags */
+    .type-tag {
+      padding: 2px 6px;
+      font-size: 10px;
+      font-weight: 600;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+
+    .type-tag.stock { background: #FFEBEE; color: #C62828; }
+    .type-tag.etf { background: #E0F2F1; color: #00695C; }
+    .type-tag.fund { background: #F3E5F5; color: #7B1FA2; }
+    .type-tag.rp { background: #E8F5E9; color: #2E7D32; }
+    .type-tag.bond { background: #E3F2FD; color: #1565C0; }
+    .type-tag.els { background: #FFF3E0; color: #E65100; }
+
+    /* ELS Status */
+    .els-status {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 4px;
+      display: inline-block;
+    }
+
+    .els-status.open { background: #E8F5E9; color: #00A651; }
+    .els-status.closed { background: #F5F5F5; color: #888888; }
+
+    /* RP Item Specific */
+    .rp-item {
+      padding: 20px;
+    }
+
+    .rp-item .rank {
+      width: 24px;
+      font-size: 15px;
+      margin-right: 12px;
+      text-align: center;
+    }
+
+    .currency-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 14px;
+      font-size: 18px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .currency-icon.krw { background: #FFF3E0; color: #FF6B00; }
+    .currency-icon.usd { background: #E8F5E9; color: #2E7D32; }
+    .currency-icon.jpy { background: #FCE4EC; color: #C2185B; }
+    .currency-icon.eur { background: #E3F2FD; color: #1565C0; }
+
+    .period-badge {
+      padding: 4px 10px;
+      background: #F5F5F5;
+      border-radius: 4px;
+      font-size: 13px;
+      color: #666666;
+      font-weight: 500;
+      display: inline-block;
+      margin-bottom: 8px;
+    }
+
+    .rate-info {
+      font-size: 12px;
+      color: #999999;
+    }
+
+    /* Empty State */
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 20px;
+      color: #888888;
+    }
+
+    .empty-state .icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+    }
+
+    .empty-state .title {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .empty-state .desc {
+      font-size: 14px;
+      margin-top: 8px;
+    }
+
+    /* Bottom Navigation */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 430px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 12px 0 28px 0;
+      background: #FFFFFF;
+      border-top: 1px solid #F0F0F0;
+      box-shadow: 0 -4px 16px rgba(0,0,0,0.04);
+    }
+
+    .nav-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px 12px;
+    }
+
+    .nav-btn .icon {
+      font-size: 20px;
+    }
+
+    .nav-btn .label {
+      font-size: 11px;
+      font-weight: 500;
+      color: #AAAAAA;
+    }
+
+    .nav-btn.active .label {
+      font-weight: 700;
+      color: #1A1A1A;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Status Bar -->
+    <div class="status-bar">
+      <span>9:41</span>
+      <div style="display: flex; gap: 6px; align-items: center;">
+        <svg width="18" height="12" viewBox="0 0 18 12"><path d="M1 4.5C3.5 1.5 7 0 9 0s5.5 1.5 8 4.5" stroke="#000" stroke-width="1.5" fill="none"/><path d="M3 7c2-2 4-3 6-3s4 1 6 3" stroke="#000" stroke-width="1.5" fill="none"/><circle cx="9" cy="10" r="2" fill="#000"/></svg>
+        <svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="1" width="16" height="10" rx="2" stroke="#000" stroke-width="1" fill="none"/><rect x="2" y="3" width="10" height="6" rx="1" fill="#000"/><rect x="16" y="4" width="2" height="4" rx="0.5" fill="#000"/></svg>
+      </div>
+    </div>
+
+    <!-- Header Navigation -->
+    <div class="header-nav">
+      <button class="back-btn">←</button>
+      <div class="header-tabs">
+        <button class="header-tab active" data-tab="절세끝판왕해외펀드">절세끝판왕<br>해외펀드</button>
+        <button class="header-tab" data-tab="따박따박배당">따박따박<br>배당</button>
+        <button class="header-tab" data-tab="안정적인이자">안정적인<br>이자</button>
+        <button class="header-tab" data-tab="ISA고수의PICK">ISA고수의<br>PICK</button>
+      </div>
+    </div>
+
+    <!-- Segmented Button -->
+    <div class="segment-container" id="segmentContainer">
+      <button class="segment-btn active" data-segment="ETF">ETF</button>
+      <button class="segment-btn" data-segment="펀드">펀드</button>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs-container" id="tabsContainer">
+      <button class="tab-btn active" data-tab="많이 산 종목">많이 산 종목</button>
+      <button class="tab-btn" data-tab="많이 보유한 종목">많이 보유한 종목</button>
+      <button class="tab-btn" data-tab="수익률이 높은 종목">수익률이 높은 종목</button>
+    </div>
+
+    <!-- Period Dropdown -->
+    <div class="dropdown-container" id="dropdownContainer">
+      <button class="dropdown-btn" id="dropdownBtn">
+        <span id="selectedPeriod">3개월</span>
+        <span class="arrow">▼</span>
+      </button>
+      <div class="dropdown-menu" id="dropdownMenu">
+        <button class="dropdown-item active" data-period="3개월">3개월</button>
+        <button class="dropdown-item" data-period="6개월">6개월</button>
+        <button class="dropdown-item" data-period="12개월">12개월</button>
+      </div>
+    </div>
+
+    <!-- List Container -->
+    <div class="list-container" id="listContainer">
+      <!-- Items will be rendered here -->
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+      <button class="nav-btn" data-menu="메뉴">
+        <span class="icon">☰</span>
+        <span class="label">메뉴</span>
+      </button>
+      <button class="nav-btn active" data-menu="ISA발견">
+        <span class="icon">🔍</span>
+        <span class="label">ISA발견</span>
+      </button>
+      <button class="nav-btn" data-menu="ISA잔고">
+        <span class="icon">💰</span>
+        <span class="label">ISA잔고</span>
+      </button>
+      <button class="nav-btn" data-menu="ISA시작">
+        <span class="icon">🚀</span>
+        <span class="label">ISA시작</span>
+      </button>
+      <button class="nav-btn" data-menu="ISA업무">
+        <span class="icon">📋</span>
+        <span class="label">ISA업무</span>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // 데이터 정의
+    const logoColors = {
+      "TIGER": "#FF6B00", "KODEX": "#1A5DC7", "ACE": "#00A651", "KBSTAR": "#FFB800",
+      "SOL": "#9B59B6", "HANARO": "#E74C3C", "ARIRANG": "#3498DB", "삼성": "#1428A0",
+      "미래": "#00A5E5", "KB": "#FFB800", "한투": "#003366", "신한": "#0046FF",
+      "NH": "#03C75A", "하나": "#009490", "SK": "#EA002C", "KT": "#E52629",
+      "POSCO": "#005386", "우리": "#0066B3", "기업": "#004A98", "현대": "#002C5F",
+      "기아": "#05141F", "KT&G": "#C8102E", "S-Oil": "#FFD100", "GS": "#0067B1",
+      "HD": "#003876", "DB": "#E31837", "메리츠": "#1E3D6B", "한국": "#0066B3",
+      "국채": "#1565C0", "회사": "#6A1B9A", "특수": "#00695C"
+    };
+
+    // ETF 데이터
+    const etfData = {
+      "많이 산 종목": [
+        { rank: 1, logo: "TIGER", name: "TIGER 미국S&P500", amount: "15,234만원", price: "78,500", change: "+1,250", percent: "+1.62%" },
+        { rank: 2, logo: "KODEX", name: "KODEX 미국나스닥100", amount: "12,890만원", price: "92,300", change: "+2,100", percent: "+2.33%" },
+        { rank: 3, logo: "ACE", name: "ACE 미국빅테크TOP7", amount: "11,567만원", price: "15,420", change: "-180", percent: "-1.15%" },
+        { rank: 4, logo: "TIGER", name: "TIGER 차이나전기차", amount: "10,234만원", price: "8,750", change: "+320", percent: "+3.80%" },
+        { rank: 5, logo: "KODEX", name: "KODEX 2차전지산업", amount: "9,876만원", price: "12,650", change: "-450", percent: "-3.43%" },
+        { rank: 6, logo: "KBSTAR", name: "KBSTAR 미국반도체", amount: "8,543만원", price: "14,200", change: "+890", percent: "+6.69%" },
+        { rank: 7, logo: "HANARO", name: "HANARO 글로벌럭셔리", amount: "7,890만원", price: "11,350", change: "+120", percent: "+1.07%" },
+        { rank: 8, logo: "TIGER", name: "TIGER 일본니케이225", amount: "7,234만원", price: "22,400", change: "+450", percent: "+2.05%" },
+        { rank: 9, logo: "SOL", name: "SOL 미국배당다우존스", amount: "6,987만원", price: "10,850", change: "+95", percent: "+0.88%" },
+        { rank: 10, logo: "KODEX", name: "KODEX 인도Nifty50", amount: "6,543만원", price: "13,700", change: "+670", percent: "+5.14%" },
+        { rank: 11, logo: "ACE", name: "ACE 글로벌반도체TOP4", amount: "6,123만원", price: "16,800", change: "+1,120", percent: "+7.14%" },
+        { rank: 12, logo: "TIGER", name: "TIGER 유로스탁스50", amount: "5,876만원", price: "14,950", change: "-210", percent: "-1.39%" },
+        { rank: 13, logo: "ARIRANG", name: "ARIRANG 미국테크TOP10", amount: "5,432만원", price: "18,200", change: "+340", percent: "+1.90%" },
+        { rank: 14, logo: "KODEX", name: "KODEX 미국AI테크", amount: "5,123만원", price: "21,500", change: "+1,850", percent: "+9.41%" },
+        { rank: 15, logo: "KBSTAR", name: "KBSTAR ESG사회책임", amount: "4,876만원", price: "9,450", change: "-85", percent: "-0.89%" },
+        { rank: 16, logo: "TIGER", name: "TIGER 글로벌클린에너지", amount: "4,543만원", price: "7,200", change: "-320", percent: "-4.26%" },
+        { rank: 17, logo: "SOL", name: "SOL 미국성장주TOP10", amount: "4,234만원", price: "13,100", change: "+280", percent: "+2.19%" },
+        { rank: 18, logo: "HANARO", name: "HANARO 미국헬스케어", amount: "3,987만원", price: "11,800", change: "+150", percent: "+1.29%" },
+        { rank: 19, logo: "ACE", name: "ACE 일본반도체", amount: "3,654만원", price: "19,300", change: "+2,100", percent: "+12.21%" },
+        { rank: 20, logo: "KODEX", name: "KODEX 베트남VN30", amount: "3,234만원", price: "8,900", change: "-180", percent: "-1.98%" },
+      ],
+      "많이 보유한 종목": [
+        { rank: 1, logo: "KODEX", name: "KODEX 미국S&P500TR", amount: "45,678만원", price: "16,200", change: "+280", percent: "+1.76%" },
+        { rank: 2, logo: "TIGER", name: "TIGER 미국테크TOP10", amount: "38,234만원", price: "14,850", change: "+520", percent: "+3.63%" },
+        { rank: 3, logo: "ACE", name: "ACE 미국나스닥100", amount: "32,567만원", price: "17,300", change: "-120", percent: "-0.69%" },
+        { rank: 4, logo: "KBSTAR", name: "KBSTAR 미국S&P500", amount: "28,900만원", price: "13,450", change: "+190", percent: "+1.43%" },
+        { rank: 5, logo: "SOL", name: "SOL 미국S&P500", amount: "25,432만원", price: "15,100", change: "+310", percent: "+2.10%" },
+        { rank: 6, logo: "TIGER", name: "TIGER 글로벌BBIG", amount: "22,100만원", price: "8,950", change: "-280", percent: "-3.03%" },
+        { rank: 7, logo: "KODEX", name: "KODEX 선진국MSCI", amount: "19,876만원", price: "12,700", change: "+85", percent: "+0.67%" },
+        { rank: 8, logo: "HANARO", name: "HANARO 미국나스닥100", amount: "17,543만원", price: "11,200", change: "+420", percent: "+3.90%" },
+        { rank: 9, logo: "ARIRANG", name: "ARIRANG 미국S&P500", amount: "15,234만원", price: "14,600", change: "+175", percent: "+1.21%" },
+        { rank: 10, logo: "ACE", name: "ACE 선진국액티브", amount: "13,890만원", price: "10,350", change: "-95", percent: "-0.91%" },
+        { rank: 11, logo: "TIGER", name: "TIGER 미국필라델피아반도체", amount: "12,456만원", price: "13,900", change: "+780", percent: "+5.94%" },
+        { rank: 12, logo: "KODEX", name: "KODEX 미국빅테크10", amount: "11,234만원", price: "19,500", change: "+650", percent: "+3.45%" },
+        { rank: 13, logo: "SOL", name: "SOL 글로벌리튬", amount: "10,123만원", price: "6,800", change: "-420", percent: "-5.82%" },
+        { rank: 14, logo: "KBSTAR", name: "KBSTAR 글로벌클라우드", amount: "9,567만원", price: "9,200", change: "+180", percent: "+2.00%" },
+        { rank: 15, logo: "ACE", name: "ACE 미국배당100", amount: "8,900만원", price: "11,450", change: "+95", percent: "+0.84%" },
+        { rank: 16, logo: "TIGER", name: "TIGER 미국MSCI리츠", amount: "8,234만원", price: "7,350", change: "-65", percent: "-0.88%" },
+        { rank: 17, logo: "HANARO", name: "HANARO 글로벌메타버스", amount: "7,654만원", price: "5,900", change: "+210", percent: "+3.69%" },
+        { rank: 18, logo: "KODEX", name: "KODEX 차이나CSI300", amount: "7,123만원", price: "10,100", change: "+340", percent: "+3.48%" },
+        { rank: 19, logo: "ARIRANG", name: "ARIRANG 글로벌수소", amount: "6,543만원", price: "4,250", change: "-180", percent: "-4.06%" },
+        { rank: 20, logo: "SOL", name: "SOL 유럽탄소배출권", amount: "5,987만원", price: "8,600", change: "+120", percent: "+1.41%" },
+      ],
+      "수익률이 높은 종목": [
+        { rank: 1, logo: "ACE", name: "ACE 일본반도체", amount: "3,654만원", price: "19,300", change: "+4,200", percent: "+27.81%" },
+        { rank: 2, logo: "KODEX", name: "KODEX 미국AI테크", amount: "5,123만원", price: "21,500", change: "+3,850", percent: "+21.82%" },
+        { rank: 3, logo: "TIGER", name: "TIGER 미국필라델피아반도체", amount: "12,456만원", price: "13,900", change: "+2,280", percent: "+19.63%" },
+        { rank: 4, logo: "ACE", name: "ACE 글로벌반도체TOP4", amount: "6,123만원", price: "16,800", change: "+2,520", percent: "+17.65%" },
+        { rank: 5, logo: "KBSTAR", name: "KBSTAR 미국반도체", amount: "8,543만원", price: "14,200", change: "+1,890", percent: "+15.35%" },
+        { rank: 6, logo: "TIGER", name: "TIGER 차이나전기차", amount: "10,234만원", price: "8,750", change: "+1,120", percent: "+14.67%" },
+        { rank: 7, logo: "KODEX", name: "KODEX 인도Nifty50", amount: "6,543만원", price: "13,700", change: "+1,670", percent: "+13.88%" },
+        { rank: 8, logo: "SOL", name: "SOL 미국성장주TOP10", amount: "4,234만원", price: "13,100", change: "+1,480", percent: "+12.74%" },
+        { rank: 9, logo: "HANARO", name: "HANARO 미국나스닥100", amount: "17,543만원", price: "11,200", change: "+1,220", percent: "+12.21%" },
+        { rank: 10, logo: "TIGER", name: "TIGER 미국테크TOP10", amount: "38,234만원", price: "14,850", change: "+1,520", percent: "+11.40%" },
+        { rank: 11, logo: "ARIRANG", name: "ARIRANG 미국테크TOP10", amount: "5,432만원", price: "18,200", change: "+1,740", percent: "+10.57%" },
+        { rank: 12, logo: "KODEX", name: "KODEX 미국빅테크10", amount: "11,234만원", price: "19,500", change: "+1,650", percent: "+9.24%" },
+        { rank: 13, logo: "ACE", name: "ACE 미국빅테크TOP7", amount: "11,567만원", price: "15,420", change: "+1,180", percent: "+8.29%" },
+        { rank: 14, logo: "KODEX", name: "KODEX 차이나CSI300", amount: "7,123만원", price: "10,100", change: "+740", percent: "+7.91%" },
+        { rank: 15, logo: "TIGER", name: "TIGER 일본니케이225", amount: "7,234만원", price: "22,400", change: "+1,450", percent: "+6.92%" },
+        { rank: 16, logo: "HANARO", name: "HANARO 글로벌메타버스", amount: "7,654만원", price: "5,900", change: "+350", percent: "+6.31%" },
+        { rank: 17, logo: "SOL", name: "SOL 미국S&P500", amount: "25,432만원", price: "15,100", change: "+810", percent: "+5.67%" },
+        { rank: 18, logo: "KBSTAR", name: "KBSTAR 글로벌클라우드", amount: "9,567만원", price: "9,200", change: "+480", percent: "+5.50%" },
+        { rank: 19, logo: "TIGER", name: "TIGER 미국S&P500", amount: "15,234만원", price: "78,500", change: "+3,250", percent: "+4.32%" },
+        { rank: 20, logo: "KODEX", name: "KODEX 미국나스닥100", amount: "12,890만원", price: "92,300", change: "+3,100", percent: "+3.48%" },
+      ]
+    };
+
+    // 펀드 데이터
+    const fundData = {
+      "많이 산 종목": [
+        { rank: 1, logo: "삼성", name: "삼성 글로벌메타버스", amount: "8,234만원", percent: "+1.24%" },
+        { rank: 2, logo: "미래", name: "미래에셋TIGER미국나스닥", amount: "7,654만원", percent: "+1.99%" },
+        { rank: 3, logo: "KB", name: "KB글로벌AI혁신", amount: "6,987만원", percent: "-1.47%" },
+        { rank: 4, logo: "한투", name: "한국투자글로벌전기차", amount: "6,543만원", percent: "+3.63%" },
+        { rank: 5, logo: "신한", name: "신한미국S&P500인덱스", amount: "6,123만원", percent: "+0.66%" },
+        { rank: 6, logo: "NH", name: "NH-Amundi글로벌반도체", amount: "5,876만원", percent: "+5.83%" },
+        { rank: 7, logo: "하나", name: "하나UBS글로벌헬스케어", amount: "5,432만원", percent: "+0.53%" },
+        { rank: 8, logo: "삼성", name: "삼성글로벌반도체", amount: "5,123만원", percent: "+6.17%" },
+        { rank: 9, logo: "미래", name: "미래에셋인도성장", amount: "4,876만원", percent: "+5.32%" },
+        { rank: 10, logo: "KB", name: "KB중국본토A주", amount: "4,543만원", percent: "-1.39%" },
+        { rank: 11, logo: "한투", name: "한국투자베트남그로스", amount: "4,234만원", percent: "+1.98%" },
+        { rank: 12, logo: "신한", name: "신한일본니케이인덱스", amount: "3,987만원", percent: "+2.51%" },
+        { rank: 13, logo: "NH", name: "NH유럽ESG리더스", amount: "3,654만원", percent: "-0.72%" },
+        { rank: 14, logo: "하나", name: "하나글로벌클린에너지", amount: "3,432만원", percent: "-5.02%" },
+        { rank: 15, logo: "삼성", name: "삼성글로벌럭셔리", amount: "3,234만원", percent: "+1.54%" },
+        { rank: 16, logo: "미래", name: "미래에셋차이나그로스", amount: "2,987만원", percent: "+6.34%" },
+        { rank: 17, logo: "KB", name: "KB글로벌리츠인프라", amount: "2,765만원", percent: "-0.50%" },
+        { rank: 18, logo: "한투", name: "한국투자미국배당", amount: "2,543만원", percent: "+1.31%" },
+        { rank: 19, logo: "신한", name: "신한글로벌바이오헬스", amount: "2,345만원", percent: "+6.10%" },
+        { rank: 20, logo: "NH", name: "NH글로벌4차산업혁명", amount: "2,123만원", percent: "+2.13%" },
+      ],
+      "많이 보유한 종목": [
+        { rank: 1, logo: "미래", name: "미래에셋글로벌그로스", amount: "32,456만원", percent: "+1.36%" },
+        { rank: 2, logo: "삼성", name: "삼성글로벌주식", amount: "28,765만원", percent: "+1.19%" },
+        { rank: 3, logo: "KB", name: "KB스타글로벌배당", amount: "25,432만원", percent: "+0.93%" },
+        { rank: 4, logo: "한투", name: "한국투자TDF2045", amount: "22,876만원", percent: "+0.54%" },
+        { rank: 5, logo: "신한", name: "신한글로벌멀티에셋", amount: "19,654만원", percent: "-0.46%" },
+        { rank: 6, logo: "NH", name: "NH-Amundi필승전략", amount: "17,543만원", percent: "+1.51%" },
+        { rank: 7, logo: "하나", name: "하나글로벌이머징", amount: "15,234만원", percent: "+5.18%" },
+        { rank: 8, logo: "미래", name: "미래에셋TDF2040", amount: "13,876만원", percent: "+0.98%" },
+        { rank: 9, logo: "삼성", name: "삼성아시아대표주식", amount: "12,543만원", percent: "+6.58%" },
+        { rank: 10, logo: "KB", name: "KB글로벌자산배분", amount: "11,234만원", percent: "-0.69%" },
+        { rank: 11, logo: "한투", name: "한국투자글로벌AI", amount: "10,123만원", percent: "+4.39%" },
+        { rank: 12, logo: "신한", name: "신한TDF2050", amount: "9,654만원", percent: "+1.24%" },
+        { rank: 13, logo: "NH", name: "NH글로벌혁신성장", amount: "8,765만원", percent: "+2.20%" },
+        { rank: 14, logo: "하나", name: "하나미국성장주", amount: "7,876만원", percent: "+2.13%" },
+        { rank: 15, logo: "미래", name: "미래에셋선진국리더스", amount: "7,234만원", percent: "+1.77%" },
+        { rank: 16, logo: "삼성", name: "삼성글로벌ETF밸런스", amount: "6,543만원", percent: "+0.71%" },
+        { rank: 17, logo: "KB", name: "KB TDF2035", amount: "5,876만원", percent: "+1.11%" },
+        { rank: 18, logo: "한투", name: "한국투자글로벌로보", amount: "5,234만원", percent: "-2.11%" },
+        { rank: 19, logo: "신한", name: "신한글로벌메타버스", amount: "4,654만원", percent: "+8.01%" },
+        { rank: 20, logo: "NH", name: "NH글로벌클린테크", amount: "4,123만원", percent: "-5.02%" },
+      ],
+      "수익률이 높은 종목": [
+        { rank: 1, logo: "삼성", name: "삼성글로벌반도체", amount: "5,123만원", percent: "+24.91%" },
+        { rank: 2, logo: "NH", name: "NH-Amundi글로벌반도체", amount: "5,876만원", percent: "+24.19%" },
+        { rank: 3, logo: "미래", name: "미래에셋인도성장", amount: "4,876만원", percent: "+19.32%" },
+        { rank: 4, logo: "한투", name: "한국투자글로벌AI", amount: "10,123만원", percent: "+17.47%" },
+        { rank: 5, logo: "삼성", name: "삼성아시아대표주식", amount: "12,543만원", percent: "+16.79%" },
+        { rank: 6, logo: "미래", name: "미래에셋차이나그로스", amount: "2,987만원", percent: "+16.02%" },
+        { rank: 7, logo: "신한", name: "신한글로벌바이오헬스", amount: "2,345만원", percent: "+14.72%" },
+        { rank: 8, logo: "신한", name: "신한글로벌메타버스", amount: "4,654만원", percent: "+14.48%" },
+        { rank: 9, logo: "한투", name: "한국투자글로벌전기차", amount: "6,543만원", percent: "+13.13%" },
+        { rank: 10, logo: "하나", name: "하나글로벌이머징", amount: "15,234만원", percent: "+11.90%" },
+        { rank: 11, logo: "KB", name: "KB글로벌AI혁신", amount: "6,987만원", percent: "+10.85%" },
+        { rank: 12, logo: "삼성", name: "삼성글로벌메타버스", amount: "8,234만원", percent: "+10.19%" },
+        { rank: 13, logo: "신한", name: "신한일본니케이인덱스", amount: "3,987만원", percent: "+8.83%" },
+        { rank: 14, logo: "미래", name: "미래에셋TIGER미국나스닥", amount: "7,654만원", percent: "+8.09%" },
+        { rank: 15, logo: "NH", name: "NH글로벌혁신성장", amount: "8,765만원", percent: "+7.37%" },
+        { rank: 16, logo: "하나", name: "하나미국성장주", amount: "7,876만원", percent: "+6.74%" },
+        { rank: 17, logo: "한투", name: "한국투자베트남그로스", amount: "4,234만원", percent: "+5.91%" },
+        { rank: 18, logo: "KB", name: "KB스타글로벌배당", amount: "25,432만원", percent: "+5.68%" },
+        { rank: 19, logo: "NH", name: "NH글로벌4차산업혁명", amount: "2,123만원", percent: "+4.72%" },
+        { rank: 20, logo: "미래", name: "미래에셋글로벌그로스", amount: "32,456만원", percent: "+4.24%" },
+      ]
+    };
+
+    // 따박따박 배당 데이터
+    const dividendStockData = [
+      { rank: 1, logo: "삼성", name: "삼성전자", dividend: "주당1,444원(2.35%)", price: "61,500", change: "+800", percent: "+1.32%" },
+      { rank: 2, logo: "SK", name: "SK텔레콤", dividend: "주당3,540원(6.82%)", price: "51,900", change: "+1,200", percent: "+2.37%" },
+      { rank: 3, logo: "KT", name: "KT", dividend: "주당1,960원(5.44%)", price: "36,050", change: "-250", percent: "-0.69%" },
+      { rank: 4, logo: "POSCO", name: "POSCO홀딩스", dividend: "주당18,000원(5.21%)", price: "345,500", change: "+4,500", percent: "+1.32%" },
+      { rank: 5, logo: "하나", name: "하나금융지주", dividend: "주당3,600원(7.14%)", price: "50,400", change: "+900", percent: "+1.82%" },
+      { rank: 6, logo: "KB", name: "KB금융", dividend: "주당2,990원(4.28%)", price: "69,800", change: "+1,100", percent: "+1.60%" },
+      { rank: 7, logo: "신한", name: "신한지주", dividend: "주당2,060원(4.89%)", price: "42,150", change: "+350", percent: "+0.84%" },
+      { rank: 8, logo: "우리", name: "우리금융지주", dividend: "주당1,000원(7.52%)", price: "13,300", change: "+150", percent: "+1.14%" },
+      { rank: 9, logo: "기업", name: "기업은행", dividend: "주당1,075원(8.21%)", price: "13,100", change: "+200", percent: "+1.55%" },
+      { rank: 10, logo: "현대", name: "현대차", dividend: "주당10,000원(4.35%)", price: "230,000", change: "+3,500", percent: "+1.54%" },
+      { rank: 11, logo: "기아", name: "기아", dividend: "주당5,000원(4.90%)", price: "102,000", change: "+1,800", percent: "+1.80%" },
+      { rank: 12, logo: "KT&G", name: "KT&G", dividend: "주당5,200원(5.65%)", price: "92,000", change: "-800", percent: "-0.86%" },
+      { rank: 13, logo: "S-Oil", name: "S-Oil", dividend: "주당4,500원(6.92%)", price: "65,000", change: "+1,200", percent: "+1.88%" },
+      { rank: 14, logo: "GS", name: "GS", dividend: "주당2,300원(5.43%)", price: "42,350", change: "+450", percent: "+1.07%" },
+      { rank: 15, logo: "HD", name: "HD현대", dividend: "주당3,000원(4.11%)", price: "73,000", change: "+800", percent: "+1.11%" },
+      { rank: 16, logo: "삼성", name: "삼성화재", dividend: "주당12,000원(3.87%)", price: "310,000", change: "+5,000", percent: "+1.64%" },
+      { rank: 17, logo: "DB", name: "DB손해보험", dividend: "주당4,000원(4.26%)", price: "93,900", change: "+1,400", percent: "+1.51%" },
+      { rank: 18, logo: "메리츠", name: "메리츠금융지주", dividend: "주당2,800원(3.45%)", price: "81,200", change: "+2,100", percent: "+2.65%" },
+      { rank: 19, logo: "NH", name: "NH투자증권", dividend: "주당700원(5.83%)", price: "12,000", change: "+150", percent: "+1.27%" },
+      { rank: 20, logo: "한국", name: "한국전력", dividend: "주당1,000원(4.76%)", price: "21,000", change: "-300", percent: "-1.41%" },
+    ];
+
+    const dividendEtfData = [
+      { rank: 1, logo: "TIGER", name: "TIGER 미국배당다우존스", dividend: "주당45원(3.82%)", price: "11,780", change: "+120", percent: "+1.03%" },
+      { rank: 2, logo: "KODEX", name: "KODEX 미국배당프리미엄", dividend: "주당52원(4.15%)", price: "12,530", change: "+180", percent: "+1.46%" },
+      { rank: 3, logo: "SOL", name: "SOL 미국배당다우존스", dividend: "주당48원(3.95%)", price: "12,150", change: "+95", percent: "+0.79%" },
+      { rank: 4, logo: "ACE", name: "ACE 미국고배당S&P", dividend: "주당55원(4.42%)", price: "12,450", change: "+210", percent: "+1.72%" },
+      { rank: 5, logo: "KBSTAR", name: "KBSTAR 미국S&P배당킹", dividend: "주당42원(3.65%)", price: "11,500", change: "+85", percent: "+0.74%" },
+      { rank: 6, logo: "TIGER", name: "TIGER 미국나스닥100커버드콜", dividend: "주당95원(8.21%)", price: "11,570", change: "-45", percent: "-0.39%" },
+      { rank: 7, logo: "KODEX", name: "KODEX 미국배당커버드콜", dividend: "주당88원(7.85%)", price: "11,210", change: "+65", percent: "+0.58%" },
+      { rank: 8, logo: "TIGER", name: "TIGER 리츠부동산인프라", dividend: "주당38원(4.92%)", price: "7,720", change: "+45", percent: "+0.59%" },
+      { rank: 9, logo: "KODEX", name: "KODEX 한국부동산리츠", dividend: "주당35원(5.12%)", price: "6,830", change: "+30", percent: "+0.44%" },
+      { rank: 10, logo: "HANARO", name: "HANARO 글로벌리츠이지스", dividend: "주당40원(5.35%)", price: "7,480", change: "+55", percent: "+0.74%" },
+      { rank: 11, logo: "ARIRANG", name: "ARIRANG 고배당주", dividend: "주당62원(4.85%)", price: "12,780", change: "+145", percent: "+1.15%" },
+      { rank: 12, logo: "KBSTAR", name: "KBSTAR 고배당", dividend: "주당58원(4.62%)", price: "12,550", change: "+120", percent: "+0.97%" },
+      { rank: 13, logo: "TIGER", name: "TIGER 은행고배당플러스", dividend: "주당72원(5.45%)", price: "13,210", change: "+180", percent: "+1.38%" },
+      { rank: 14, logo: "KODEX", name: "KODEX 배당성장", dividend: "주당48원(3.92%)", price: "12,240", change: "+95", percent: "+0.78%" },
+      { rank: 15, logo: "SOL", name: "SOL 고배당", dividend: "주당65원(5.15%)", price: "12,620", change: "+135", percent: "+1.08%" },
+      { rank: 16, logo: "ACE", name: "ACE 주주환원가치주", dividend: "주당55원(4.28%)", price: "12,850", change: "+110", percent: "+0.86%" },
+      { rank: 17, logo: "TIGER", name: "TIGER 배당성장", dividend: "주당50원(3.75%)", price: "13,330", change: "+165", percent: "+1.25%" },
+      { rank: 18, logo: "KODEX", name: "KODEX 금융고배당", dividend: "주당78원(5.82%)", price: "13,400", change: "+195", percent: "+1.48%" },
+      { rank: 19, logo: "HANARO", name: "HANARO 고배당", dividend: "주당60원(4.72%)", price: "12,710", change: "+125", percent: "+0.99%" },
+      { rank: 20, logo: "ARIRANG", name: "ARIRANG 미국다우존스고배당", dividend: "주당52원(4.35%)", price: "11,960", change: "+105", percent: "+0.89%" },
+    ];
+
+    const dividendFundData = [
+      { rank: 1, logo: "삼성", name: "삼성글로벌고배당", dividend: "주당85원(4.52%)", percent: "+8.45%" },
+      { rank: 2, logo: "미래", name: "미래에셋배당프리미엄", dividend: "주당92원(4.85%)", percent: "+7.23%" },
+      { rank: 3, logo: "KB", name: "KB고배당포커스", dividend: "주당78원(4.12%)", percent: "+9.12%" },
+      { rank: 4, logo: "한투", name: "한국투자글로벌배당", dividend: "주당88원(4.65%)", percent: "+6.87%" },
+      { rank: 5, logo: "신한", name: "신한고배당주식", dividend: "주당72원(3.95%)", percent: "+5.43%" },
+      { rank: 6, logo: "NH", name: "NH-Amundi글로벌배당", dividend: "주당95원(5.12%)", percent: "+4.21%" },
+      { rank: 7, logo: "하나", name: "하나UBS글로벌인컴", dividend: "주당82원(4.35%)", percent: "+6.54%" },
+      { rank: 8, logo: "삼성", name: "삼성아시아배당주", dividend: "주당68원(3.72%)", percent: "+3.87%" },
+      { rank: 9, logo: "미래", name: "미래에셋고배당포커스", dividend: "주당75원(4.02%)", percent: "+7.89%" },
+      { rank: 10, logo: "KB", name: "KB배당성장", dividend: "주당65원(3.55%)", percent: "+5.67%" },
+      { rank: 11, logo: "한투", name: "한국투자배당리더스", dividend: "주당80원(4.25%)", percent: "+4.98%" },
+      { rank: 12, logo: "신한", name: "신한글로벌멀티인컴", dividend: "주당98원(5.35%)", percent: "+3.21%" },
+      { rank: 13, logo: "NH", name: "NH고배당", dividend: "주당70원(3.82%)", percent: "+6.12%" },
+      { rank: 14, logo: "하나", name: "하나고배당플러스", dividend: "주당85원(4.55%)", percent: "+5.23%" },
+      { rank: 15, logo: "삼성", name: "삼성배당주장기", dividend: "주당62원(3.42%)", percent: "+8.76%" },
+      { rank: 16, logo: "미래", name: "미래에셋인컴플러스", dividend: "주당90원(4.92%)", percent: "+4.45%" },
+      { rank: 17, logo: "KB", name: "KB스타글로벌인컴", dividend: "주당88원(4.75%)", percent: "+5.89%" },
+      { rank: 18, logo: "한투", name: "한국투자인컴", dividend: "주당72원(3.92%)", percent: "+6.34%" },
+      { rank: 19, logo: "신한", name: "신한배당성장주", dividend: "주당68원(3.68%)", percent: "+7.12%" },
+      { rank: 20, logo: "NH", name: "NH글로벌인컴", dividend: "주당95원(5.18%)", percent: "+4.67%" },
+    ];
+
+    const dividendElsData = [
+      { rank: 1, logo: "삼성", name: "삼성 ELS 제28547호", underlying: "S&P500, EUROSTOXX50", yield: "연 8.5%", status: "청약중" },
+      { rank: 2, logo: "미래", name: "미래에셋 ELS 제15234호", underlying: "KOSPI200, HSCEI", yield: "연 9.2%", status: "청약중" },
+      { rank: 3, logo: "KB", name: "KB증권 ELS 제32156호", underlying: "S&P500, NIKKEI225", yield: "연 7.8%", status: "청약중" },
+      { rank: 4, logo: "한투", name: "한국투자 ELS 제18765호", underlying: "KOSPI200, S&P500", yield: "연 8.1%", status: "청약중" },
+      { rank: 5, logo: "신한", name: "신한투자 ELS 제21098호", underlying: "EUROSTOXX50, NIKKEI225", yield: "연 9.5%", status: "청약중" },
+      { rank: 6, logo: "NH", name: "NH투자 ELS 제45632호", underlying: "S&P500, KOSPI200", yield: "연 7.5%", status: "청약마감" },
+      { rank: 7, logo: "하나", name: "하나증권 ELS 제12876호", underlying: "HSCEI, EUROSTOXX50", yield: "연 10.2%", status: "청약중" },
+      { rank: 8, logo: "삼성", name: "삼성 ELS 제28532호", underlying: "NIKKEI225, S&P500", yield: "연 8.8%", status: "청약중" },
+      { rank: 9, logo: "미래", name: "미래에셋 ELS 제15221호", underlying: "KOSPI200, EUROSTOXX50", yield: "연 8.3%", status: "청약마감" },
+      { rank: 10, logo: "KB", name: "KB증권 ELS 제32145호", underlying: "S&P500, HSCEI", yield: "연 9.8%", status: "청약중" },
+      { rank: 11, logo: "한투", name: "한국투자 ELS 제18752호", underlying: "NIKKEI225, KOSPI200", yield: "연 7.2%", status: "청약중" },
+      { rank: 12, logo: "신한", name: "신한투자 ELS 제21085호", underlying: "EUROSTOXX50, S&P500", yield: "연 8.6%", status: "청약중" },
+      { rank: 13, logo: "NH", name: "NH투자 ELS 제45618호", underlying: "HSCEI, NIKKEI225", yield: "연 11.2%", status: "청약중" },
+      { rank: 14, logo: "하나", name: "하나증권 ELS 제12865호", underlying: "KOSPI200, S&P500", yield: "연 7.9%", status: "청약마감" },
+      { rank: 15, logo: "삼성", name: "삼성 ELS 제28521호", underlying: "S&P500, EUROSTOXX50", yield: "연 8.2%", status: "청약중" },
+      { rank: 16, logo: "미래", name: "미래에셋 ELS 제15198호", underlying: "NIKKEI225, HSCEI", yield: "연 10.5%", status: "청약중" },
+      { rank: 17, logo: "KB", name: "KB증권 ELS 제32132호", underlying: "KOSPI200, EUROSTOXX50", yield: "연 8.0%", status: "청약중" },
+      { rank: 18, logo: "한투", name: "한국투자 ELS 제18739호", underlying: "S&P500, NIKKEI225", yield: "연 9.1%", status: "청약마감" },
+      { rank: 19, logo: "신한", name: "신한투자 ELS 제21072호", underlying: "HSCEI, KOSPI200", yield: "연 10.8%", status: "청약중" },
+      { rank: 20, logo: "NH", name: "NH투자 ELS 제45605호", underlying: "EUROSTOXX50, NIKKEI225", yield: "연 9.3%", status: "청약중" },
+    ];
+
+    // RP 데이터
+    const rpData = [
+      { rank: 1, currency: "₩", name: "퍼스트 발행어음 특판", rate: "3.40%", period: "1년", earlyRate: "1.50%", maturityRate: "0.10%" },
+      { rank: 2, currency: "₩", name: "퍼스트 발행어음 특판", rate: "3.30%", period: "6개월", earlyRate: "1.40%", maturityRate: "0.10%" },
+      { rank: 3, currency: "₩", name: "원화 RP", rate: "2.40%", period: "31일", earlyRate: "1.20%", maturityRate: "0.10%" },
+      { rank: 4, currency: "₩", name: "원화 RP", rate: "2.35%", period: "수시", earlyRate: "2.35%", maturityRate: "0.10%" },
+      { rank: 5, currency: "₩", name: "KB 발행어음", rate: "3.25%", period: "1년", earlyRate: "1.30%", maturityRate: "0.10%" },
+      { rank: 6, currency: "₩", name: "신한 발행어음 스페셜", rate: "3.35%", period: "9개월", earlyRate: "1.45%", maturityRate: "0.10%" },
+      { rank: 7, currency: "$", name: "달러 RP", rate: "4.50%", period: "3개월", earlyRate: "2.00%", maturityRate: "0.10%" },
+      { rank: 8, currency: "$", name: "달러 RP 프리미엄", rate: "4.80%", period: "6개월", earlyRate: "2.20%", maturityRate: "0.10%" },
+      { rank: 9, currency: "¥", name: "엔화 RP", rate: "1.20%", period: "3개월", earlyRate: "0.50%", maturityRate: "0.05%" },
+      { rank: 10, currency: "€", name: "유로 RP", rate: "2.80%", period: "6개월", earlyRate: "1.20%", maturityRate: "0.10%" },
+      { rank: 11, currency: "₩", name: "하나 발행어음", rate: "3.20%", period: "1년", earlyRate: "1.35%", maturityRate: "0.10%" },
+      { rank: 12, currency: "₩", name: "NH 발행어음 플러스", rate: "3.28%", period: "9개월", earlyRate: "1.40%", maturityRate: "0.10%" },
+      { rank: 13, currency: "₩", name: "우리 발행어음", rate: "3.15%", period: "6개월", earlyRate: "1.25%", maturityRate: "0.10%" },
+      { rank: 14, currency: "$", name: "달러 RP 수시", rate: "4.20%", period: "수시", earlyRate: "4.20%", maturityRate: "0.10%" },
+      { rank: 15, currency: "₩", name: "토스 발행어음", rate: "3.50%", period: "1년", earlyRate: "1.60%", maturityRate: "0.10%" },
+      { rank: 16, currency: "₩", name: "카카오페이 발행어음", rate: "3.45%", period: "9개월", earlyRate: "1.55%", maturityRate: "0.10%" },
+      { rank: 17, currency: "¥", name: "엔화 RP 플러스", rate: "1.35%", period: "6개월", earlyRate: "0.60%", maturityRate: "0.05%" },
+      { rank: 18, currency: "€", name: "유로 RP 프리미엄", rate: "3.00%", period: "1년", earlyRate: "1.30%", maturityRate: "0.10%" },
+      { rank: 19, currency: "₩", name: "삼성 발행어음", rate: "3.38%", period: "1년", earlyRate: "1.48%", maturityRate: "0.10%" },
+      { rank: 20, currency: "₩", name: "미래에셋 RP", rate: "2.50%", period: "31일", earlyRate: "1.25%", maturityRate: "0.10%" },
+    ];
+
+    // ISA고수의 PICK 데이터
+    const isaPickData = {
+      "많이 산 종목": [
+        { rank: 1, type: "ETF", logo: "TIGER", name: "TIGER 미국S&P500", subInfo: "12,345만원", price: "78,500", change: "+1,250", percent: "+1.62%" },
+        { rank: 2, type: "주식", logo: "삼성", name: "삼성전자", subInfo: "주당1,444원(2.35%)", price: "61,500", change: "+800", percent: "+1.32%" },
+        { rank: 3, type: "RP", logo: "₩", name: "퍼스트 발행어음 특판", subInfo: "1년", rate: "3.40%" },
+        { rank: 4, type: "펀드", logo: "미래", name: "미래에셋TIGER미국나스닥", subInfo: "7,654만원", percent: "+7.23%" },
+        { rank: 5, type: "ELS", logo: "삼성", name: "삼성 ELS 제28547호", subInfo: "S&P500, EUROSTOXX50", yield: "연 8.5%", status: "청약중" },
+        { rank: 6, type: "채권", logo: "국채", name: "국고채 10년물", subInfo: "AAA등급", rate: "3.25%" },
+        { rank: 7, type: "ETF", logo: "KODEX", name: "KODEX 미국나스닥100", subInfo: "9,876만원", price: "92,300", change: "+2,100", percent: "+2.33%" },
+        { rank: 8, type: "주식", logo: "SK", name: "SK텔레콤", subInfo: "주당3,540원(6.82%)", price: "51,900", change: "+1,200", percent: "+2.37%" },
+        { rank: 9, type: "RP", logo: "$", name: "달러 RP 프리미엄", subInfo: "6개월", rate: "4.80%" },
+        { rank: 10, type: "펀드", logo: "KB", name: "KB글로벌AI혁신", subInfo: "6,987만원", percent: "+9.12%" },
+        { rank: 11, type: "ELS", logo: "미래", name: "미래에셋 ELS 제15234호", subInfo: "KOSPI200, HSCEI", yield: "연 9.2%", status: "청약중" },
+        { rank: 12, type: "채권", logo: "회사", name: "삼성전자 회사채", subInfo: "AA+등급", rate: "3.85%" },
+        { rank: 13, type: "ETF", logo: "ACE", name: "ACE 미국빅테크TOP7", subInfo: "8,234만원", price: "15,420", change: "-180", percent: "-1.15%" },
+        { rank: 14, type: "주식", logo: "현대", name: "현대차", subInfo: "주당10,000원(4.35%)", price: "230,000", change: "+3,500", percent: "+1.54%" },
+        { rank: 15, type: "RP", logo: "¥", name: "엔화 RP 플러스", subInfo: "6개월", rate: "1.35%" },
+        { rank: 16, type: "펀드", logo: "신한", name: "신한글로벌바이오헬스", subInfo: "2,345만원", percent: "+6.10%" },
+        { rank: 17, type: "ELS", logo: "KB", name: "KB증권 ELS 제32156호", subInfo: "S&P500, NIKKEI225", yield: "연 7.8%", status: "청약중" },
+        { rank: 18, type: "채권", logo: "특수", name: "한국전력 특수채", subInfo: "AAA등급", rate: "3.45%" },
+        { rank: 19, type: "ETF", logo: "TIGER", name: "TIGER 차이나전기차", subInfo: "7,123만원", price: "8,750", change: "+320", percent: "+3.80%" },
+        { rank: 20, type: "주식", logo: "KB", name: "KB금융", subInfo: "주당2,990원(4.28%)", price: "69,800", change: "+1,100", percent: "+1.60%" },
+      ],
+      "많이 보유한 종목": [
+        { rank: 1, type: "ETF", logo: "KODEX", name: "KODEX 미국S&P500TR", subInfo: "45,678만원", price: "16,200", change: "+280", percent: "+1.76%" },
+        { rank: 2, type: "펀드", logo: "미래", name: "미래에셋글로벌그로스", subInfo: "32,456만원", percent: "+4.24%" },
+        { rank: 3, type: "주식", logo: "삼성", name: "삼성전자", subInfo: "주당1,444원(2.35%)", price: "61,500", change: "+800", percent: "+1.32%" },
+        { rank: 4, type: "RP", logo: "₩", name: "원화 RP", subInfo: "수시", rate: "2.35%" },
+        { rank: 5, type: "채권", logo: "국채", name: "국고채 3년물", subInfo: "AAA등급", rate: "2.95%" },
+        { rank: 6, type: "ETF", logo: "TIGER", name: "TIGER 미국테크TOP10", subInfo: "38,234만원", price: "14,850", change: "+520", percent: "+3.63%" },
+        { rank: 7, type: "ELS", logo: "신한", name: "신한투자 ELS 제21098호", subInfo: "EUROSTOXX50, NIKKEI225", yield: "연 9.5%", status: "청약중" },
+        { rank: 8, type: "펀드", logo: "삼성", name: "삼성글로벌주식", subInfo: "28,765만원", percent: "+3.87%" },
+        { rank: 9, type: "주식", logo: "하나", name: "하나금융지주", subInfo: "주당3,600원(7.14%)", price: "50,400", change: "+900", percent: "+1.82%" },
+        { rank: 10, type: "RP", logo: "$", name: "달러 RP 수시", subInfo: "수시", rate: "4.20%" },
+        { rank: 11, type: "채권", logo: "회사", name: "SK하이닉스 회사채", subInfo: "AA등급", rate: "4.15%" },
+        { rank: 12, type: "ETF", logo: "ACE", name: "ACE 미국나스닥100", subInfo: "32,567만원", price: "17,300", change: "-120", percent: "-0.69%" },
+        { rank: 13, type: "ELS", logo: "하나", name: "하나증권 ELS 제12876호", subInfo: "HSCEI, EUROSTOXX50", yield: "연 10.2%", status: "청약중" },
+        { rank: 14, type: "펀드", logo: "KB", name: "KB스타글로벌배당", subInfo: "25,432만원", percent: "+5.68%" },
+        { rank: 15, type: "주식", logo: "POSCO", name: "POSCO홀딩스", subInfo: "주당18,000원(5.21%)", price: "345,500", change: "+4,500", percent: "+1.32%" },
+        { rank: 16, type: "RP", logo: "€", name: "유로 RP 프리미엄", subInfo: "1년", rate: "3.00%" },
+        { rank: 17, type: "채권", logo: "특수", name: "한국도로공사 특수채", subInfo: "AAA등급", rate: "3.35%" },
+        { rank: 18, type: "ETF", logo: "KBSTAR", name: "KBSTAR 미국S&P500", subInfo: "28,900만원", price: "13,450", change: "+190", percent: "+1.43%" },
+        { rank: 19, type: "ELS", logo: "NH", name: "NH투자 ELS 제45632호", subInfo: "S&P500, KOSPI200", yield: "연 7.5%", status: "청약마감" },
+        { rank: 20, type: "펀드", logo: "한투", name: "한국투자TDF2045", subInfo: "22,876만원", percent: "+2.13%" },
+      ]
+    };
+
+    // 상태 관리
+    let state = {
+      activeHeader: "절세끝판왕해외펀드",
+      activeSegment: "ETF",
+      activeDividendSegment: "주식",
+      activeInterestSegment: "RP",
+      activeTab: "많이 산 종목",
+      activePickTab: "많이 산 종목",
+      activePeriod: "3개월"
+    };
+
+    // 렌더링 함수
+    function render() {
+      updateSegments();
+      updateTabs();
+      updateDropdown();
+      renderList();
+    }
+
+    function updateSegments() {
+      const container = document.getElementById('segmentContainer');
+      
+      if (state.activeHeader === "ISA고수의PICK") {
+        container.classList.add('hidden');
+        return;
+      }
+      
+      container.classList.remove('hidden');
+      
+      let segments = [];
+      let activeSegment = "";
+      
+      if (state.activeHeader === "따박따박배당") {
+        segments = ["주식", "ETF", "펀드", "ELS"];
+        activeSegment = state.activeDividendSegment;
+      } else if (state.activeHeader === "안정적인이자") {
+        segments = ["채권", "RP"];
+        activeSegment = state.activeInterestSegment;
+      } else {
+        segments = ["ETF", "펀드"];
+        activeSegment = state.activeSegment;
+      }
+      
+      container.innerHTML = segments.map(seg => 
+        `<button class="segment-btn ${seg === activeSegment ? 'active' : ''}" data-segment="${seg}">${seg}</button>`
+      ).join('');
+    }
+
+    function updateTabs() {
+      const container = document.getElementById('tabsContainer');
+      
+      if (state.activeHeader === "따박따박배당" || state.activeHeader === "안정적인이자") {
+        container.classList.add('hidden');
+        return;
+      }
+      
+      container.classList.remove('hidden');
+      
+      let tabs = [];
+      let activeTab = "";
+      
+      if (state.activeHeader === "ISA고수의PICK") {
+        tabs = ["많이 산 종목", "많이 보유한 종목"];
+        activeTab = state.activePickTab;
+      } else {
+        tabs = ["많이 산 종목", "많이 보유한 종목", "수익률이 높은 종목"];
+        activeTab = state.activeTab;
+      }
+      
+      container.innerHTML = tabs.map(tab => 
+        `<button class="tab-btn ${tab === activeTab ? 'active' : ''}" data-tab="${tab}">${tab}</button>`
+      ).join('');
+    }
+
+    function updateDropdown() {
+      const container = document.getElementById('dropdownContainer');
+      
+      if (state.activeHeader !== "절세끝판왕해외펀드") {
+        container.classList.add('hidden');
+      } else {
+        container.classList.remove('hidden');
+      }
+    }
+
+    function renderList() {
+      const container = document.getElementById('listContainer');
+      let data = [];
+      let listType = "";
+
+      if (state.activeHeader === "절세끝판왕해외펀드") {
+        data = state.activeSegment === "ETF" ? etfData[state.activeTab] : fundData[state.activeTab];
+        listType = state.activeSegment === "ETF" ? "etf" : "fund";
+      } else if (state.activeHeader === "따박따박배당") {
+        if (state.activeDividendSegment === "주식") {
+          data = dividendStockData;
+          listType = "dividendStock";
+        } else if (state.activeDividendSegment === "ETF") {
+          data = dividendEtfData;
+          listType = "dividendEtf";
+        } else if (state.activeDividendSegment === "펀드") {
+          data = dividendFundData;
+          listType = "dividendFund";
+        } else if (state.activeDividendSegment === "ELS") {
+          data = dividendElsData;
+          listType = "els";
+        }
+      } else if (state.activeHeader === "안정적인이자") {
+        if (state.activeInterestSegment === "채권") {
+          container.innerHTML = `
+            <div class="empty-state">
+              <div class="icon">📋</div>
+              <div class="title">채권 서비스 준비중입니다</div>
+              <div class="desc">곧 만나보실 수 있어요</div>
+            </div>
+          `;
+          return;
+        } else {
+          data = rpData;
+          listType = "rp";
+        }
+      } else if (state.activeHeader === "ISA고수의PICK") {
+        data = isaPickData[state.activePickTab];
+        listType = "pick";
+      }
+
+      container.innerHTML = data.map(item => renderItem(item, listType)).join('');
+    }
+
+    function renderItem(item, listType) {
+      if (listType === "etf") {
+        return renderEtfItem(item);
+      } else if (listType === "fund") {
+        return renderFundItem(item);
+      } else if (listType === "dividendStock" || listType === "dividendEtf") {
+        return renderDividendStockItem(item);
+      } else if (listType === "dividendFund") {
+        return renderDividendFundItem(item);
+      } else if (listType === "els") {
+        return renderElsItem(item);
+      } else if (listType === "rp") {
+        return renderRpItem(item);
+      } else if (listType === "pick") {
+        return renderPickItem(item);
+      }
+      return '';
+    }
+
+    function renderEtfItem(item) {
+      const isUp = item.change.startsWith('+');
+      return `
+        <div class="list-item">
+          <div class="rank ${item.rank <= 3 ? 'top' : ''}">${item.rank}</div>
+          <div class="logo" style="background: ${logoColors[item.logo] || '#CCCCCC'}">${item.logo.substring(0, 2)}</div>
+          <div class="item-info">
+            <div class="item-name">${item.name}</div>
+            <div class="item-sub">${item.amount}</div>
+          </div>
+          <div class="item-right">
+            <div class="item-price">${item.price}</div>
+            <div class="item-change ${isUp ? 'up' : 'down'}">${item.change}(${item.percent})</div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderFundItem(item) {
+      const isUp = item.percent.startsWith('+');
+      return `
+        <div class="list-item">
+          <div class="rank ${item.rank <= 3 ? 'top' : ''}">${item.rank}</div>
+          <div class="logo" style="background: ${logoColors[item.logo] || '#CCCCCC'}">${item.logo.substring(0, 2)}</div>
+          <div class="item-info">
+            <div class="item-name">${item.name}</div>
+            <div class="item-sub">${item.amount}</div>
+          </div>
+          <div class="item-right">
+            <div class="item-percent ${isUp ? 'up' : 'down'}">${item.percent}</div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderDividendStockItem(item) {
+      const isUp = item.change.startsWith('+');
+      return `
+        <div class="list-item">
+          <div class="rank ${item.rank <= 3 ? 'top' : ''}">${item.rank}</div>
+          <div class="logo" style="background: ${logoColors[item.logo] || '#CCCCCC'}">${item.logo.substring(0, 2)}</div>
+          <div class="item-info">
+            <div class="item-name">${item.name}</div>
+            <div class="item-sub">${item.dividend}</div>
+          </div>
+          <div class="item-right">
+            <div class="item-price">${item.price}</div>
+            <div class="item-change ${isUp ? 'up' : 'down'}">${item.change}(${item.percent})</div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderDividendFundItem(item) {
+      const isUp = item.percent.startsWith('+');
+      return `
+        <div class="list-item">
+          <div class="rank ${item.rank <= 3 ? 'top' : ''}">${item.rank}</div>
+          <div class="logo" style="background: ${logoColors[item.logo] || '#CCCCCC'}">${item.logo.substring(0, 2)}</div>
+          <div class="item-info">
+            <div class="item-name">${item.name}</div>
+            <div class="item-sub">${item.dividend}</div>
+          </div>
+          <div class="item-right">
+            <div class="item-percent ${isUp ? 'up' : 'down'}">${item.percent}</div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderElsItem(item) {
+      return `
+        <div class="list-item">
+          <div class="rank ${item.rank <= 3 ? 'top' : ''}">${item.rank}</div>
+          <div class="logo" style="background: ${logoColors[item.logo] || '#CCCCCC'}">${item.logo.substring(0, 2)}</div>
+          <div class="item-info">
+            <div class="item-name">${item.name}</div>
+            <div class="item-sub">${item.underlying}</div>
+          </div>
+          <div class="item-right">
+            <div class="item-rate" style="font-size: 16px; margin-bottom: 4px;">${item.yield}</div>
+            <div class="els-status ${item.status === '청약중' ? 'open' : 'closed'}">${item.status}</div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderRpItem(item) {
+      const currencyClass = {
+        '₩': 'krw', '$': 'usd', '¥': 'jpy', '€': 'eur'
+      }[item.currency] || 'krw';
+      
+      return `
+        <div class="list-item rp-item">
+          <div class="rank ${item.rank <= 3 ? 'top' : ''}">${item.rank}</div>
+          <div class="currency-icon ${currencyClass}">${item.currency}</div>
+          <div class="item-info">
+            <div class="item-name" style="margin-bottom: 6px;">${item.name}</div>
+            <div class="period-badge">${item.period}</div>
+            <div class="rate-info">중도해지 ${item.earlyRate} / 만기 후 ${item.maturityRate}(연)</div>
+          </div>
+          <div class="item-right">
+            <div class="item-rate">연 ${item.rate}</div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderPickItem(item) {
+      const typeClasses = {
+        '주식': 'stock', 'ETF': 'etf', '펀드': 'fund', 
+        'RP': 'rp', '채권': 'bond', 'ELS': 'els'
+      };
+      
+      // RP 타입
+      if (item.type === 'RP') {
+        const currencyClass = {
+          '₩': 'krw', '$': 'usd', '¥': 'jpy', '€': 'eur'
+        }[item.logo] || 'krw';
+        
+        return `
+          <div class="list-item">
+            <div class="rank ${item.rank <= 3 ? 'top' : ''}">${item.rank}</div>
+            <div class="currency-icon ${currencyClass}" style="width: 44px; height: 44px;">${item.logo}</div>
+            <div class="item-info">
+              <div class="item-name-row">
+                <span class="type-tag ${typeClasses[item.type]}">${item.type}</span>
+                <span class="item-name">${item.name}</span>
+              </div>
+              <div class="item-sub">${item.subInfo}</div>
+            </div>
+            <div class="item-right">
+              <div class="item-rate" style="font-size: 18px;">연 ${item.rate}</div>
+            </div>
+          </div>
+        `;
+      }
+      
+      // 채권 타입
+      if (item.type === '채권') {
+        return `
+          <div class="list-item">
+            <div class="rank ${item.rank <= 3 ? 'top' : ''}">${item.rank}</div>
+            <div class="logo" style="background: ${logoColors[item.logo] || '#CCCCCC'}">${item.logo.substring(0, 2)}</div>
+            <div class="item-info">
+              <div class="item-name-row">
+                <span class="type-tag ${typeClasses[item.type]}">${item.type}</span>
+                <span class="item-name">${item.name}</span>
+              </div>
+              <div class="item-sub">${item.subInfo}</div>
+            </div>
+            <div class="item-right">
+              <div class="item-rate" style="font-size: 18px;">연 ${item.rate}</div>
+            </div>
+          </div>
+        `;
+      }
+      
+      // ELS 타입
+      if (item.type === 'ELS') {
+        return `
+          <div class="list-item">
+            <div class="rank ${item.rank <= 3 ? 'top' : ''}">${item.rank}</div>
+            <div class="logo" style="background: ${logoColors[item.logo] || '#CCCCCC'}">${item.logo.substring(0, 2)}</div>
+            <div class="item-info">
+              <div class="item-name-row">
+                <span class="type-tag ${typeClasses[item.type]}">${item.type}</span>
+                <span class="item-name">${item.name}</span>
+              </div>
+              <div class="item-sub">${item.subInfo}</div>
+            </div>
+            <div class="item-right">
+              <div class="item-rate" style="font-size: 16px; margin-bottom: 4px;">${item.yield}</div>
+              <div class="els-status ${item.status === '청약중' ? 'open' : 'closed'}">${item.status}</div>
+            </div>
+          </div>
+        `;
+      }
+      
+      // 펀드 타입
+      if (item.type === '펀드') {
+        const isUp = item.percent.startsWith('+');
+        return `
+          <div class="list-item">
+            <div class="rank ${item.rank <= 3 ? 'top' : ''}">${item.rank}</div>
+            <div class="logo" style="background: ${logoColors[item.logo] || '#CCCCCC'}">${item.logo.substring(0, 2)}</div>
+            <div class="item-info">
+              <div class="item-name-row">
+                <span class="type-tag ${typeClasses[item.type]}">${item.type}</span>
+                <span class="item-name">${item.name}</span>
+              </div>
+              <div class="item-sub">${item.subInfo}</div>
+            </div>
+            <div class="item-right">
+              <div class="item-percent ${isUp ? 'up' : 'down'}">${item.percent}</div>
+            </div>
+          </div>
+        `;
+      }
+      
+      // 주식, ETF 타입
+      const isUp = item.change.startsWith('+');
+      return `
+        <div class="list-item">
+          <div class="rank ${item.rank <= 3 ? 'top' : ''}">${item.rank}</div>
+          <div class="logo" style="background: ${logoColors[item.logo] || '#CCCCCC'}">${item.logo.substring(0, 2)}</div>
+          <div class="item-info">
+            <div class="item-name-row">
+              <span class="type-tag ${typeClasses[item.type]}">${item.type}</span>
+              <span class="item-name">${item.name}</span>
+            </div>
+            <div class="item-sub">${item.subInfo}</div>
+          </div>
+          <div class="item-right">
+            <div class="item-price">${item.price}</div>
+            <div class="item-change ${isUp ? 'up' : 'down'}">${item.change}(${item.percent})</div>
+          </div>
+        </div>
+      `;
+    }
+
+    // 이벤트 리스너
+    document.addEventListener('click', function(e) {
+      // Header tabs
+      if (e.target.classList.contains('header-tab')) {
+        document.querySelectorAll('.header-tab').forEach(t => t.classList.remove('active'));
+        e.target.classList.add('active');
+        state.activeHeader = e.target.dataset.tab;
+        render();
+      }
+      
+      // Segment buttons
+      if (e.target.classList.contains('segment-btn')) {
+        const segment = e.target.dataset.segment;
+        if (state.activeHeader === "따박따박배당") {
+          state.activeDividendSegment = segment;
+        } else if (state.activeHeader === "안정적인이자") {
+          state.activeInterestSegment = segment;
+        } else {
+          state.activeSegment = segment;
+        }
+        render();
+      }
+      
+      // Tab buttons
+      if (e.target.classList.contains('tab-btn')) {
+        const tab = e.target.dataset.tab;
+        if (state.activeHeader === "ISA고수의PICK") {
+          state.activePickTab = tab;
+        } else {
+          state.activeTab = tab;
+        }
+        render();
+      }
+      
+      // Dropdown button
+      if (e.target.closest('#dropdownBtn')) {
+        const btn = document.getElementById('dropdownBtn');
+        const menu = document.getElementById('dropdownMenu');
+        btn.classList.toggle('open');
+        menu.classList.toggle('show');
+      }
+      
+      // Dropdown items
+      if (e.target.classList.contains('dropdown-item')) {
+        state.activePeriod = e.target.dataset.period;
+        document.getElementById('selectedPeriod').textContent = state.activePeriod;
+        document.querySelectorAll('.dropdown-item').forEach(i => i.classList.remove('active'));
+        e.target.classList.add('active');
+        document.getElementById('dropdownBtn').classList.remove('open');
+        document.getElementById('dropdownMenu').classList.remove('show');
+      }
+      
+      // Close dropdown when clicking outside
+      if (!e.target.closest('.dropdown-container')) {
+        document.getElementById('dropdownBtn')?.classList.remove('open');
+        document.getElementById('dropdownMenu')?.classList.remove('show');
+      }
+      
+      // Bottom nav
+      if (e.target.closest('.nav-btn')) {
+        document.querySelectorAll('.nav-btn').forEach(n => n.classList.remove('active'));
+        e.target.closest('.nav-btn').classList.add('active');
+      }
+    });
+
+    // 초기 렌더링
+    render();
+  </script>
+</body>
+</html>

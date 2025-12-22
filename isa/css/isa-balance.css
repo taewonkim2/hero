@@ -1,0 +1,367 @@
+/* ============================================
+   ISA Balance 페이지 전용 스타일
+   ============================================ */
+
+/* Product Tabs */
+.product-tabs {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    padding: 12px 0;
+    -webkit-overflow-scrolling: touch;
+}
+
+.product-tabs::-webkit-scrollbar {
+    display: none;
+}
+
+.product-tab {
+    padding: 8px 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: white;
+}
+
+.product-tab.active {
+    background: var(--text-primary);
+    color: white;
+    border-color: var(--text-primary);
+}
+
+.product-tab:hover:not(.active) {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+/* Asset Card */
+.asset-card {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 12px;
+    box-shadow: var(--shadow);
+}
+
+.asset-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.asset-main {
+    flex: 1;
+}
+
+.asset-label {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+}
+
+.asset-value {
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.asset-profit {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 6px;
+}
+
+.profit-amount {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.profit-amount.positive {
+    color: var(--positive);
+}
+
+.profit-amount.negative {
+    color: var(--negative);
+}
+
+.profit-rate {
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+.asset-toggle {
+    background: var(--bg-primary);
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.asset-toggle:hover {
+    background: var(--border);
+}
+
+.asset-toggle.collapsed {
+    transform: rotate(-90deg);
+}
+
+/* Asset Details */
+.asset-details {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+    max-height: 200px;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+}
+
+.asset-details.collapsed {
+    max-height: 0;
+    margin-top: 0;
+    padding-top: 0;
+    border-top: none;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+}
+
+.detail-label {
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+.detail-value {
+    font-size: 13px;
+    font-weight: 500;
+}
+
+/* Chart Section */
+.chart-section {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+}
+
+.chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    padding: 8px 0;
+}
+
+.chart-title {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.chart-toggle {
+    font-size: 12px;
+    color: var(--text-muted);
+    transition: transform 0.3s;
+}
+
+.chart-toggle.collapsed {
+    transform: rotate(-90deg);
+}
+
+.chart-content {
+    max-height: 250px;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+}
+
+.chart-content.collapsed {
+    max-height: 0;
+}
+
+#profitChart {
+    width: 100%;
+    height: 150px;
+    margin-top: 10px;
+}
+
+.chart-period {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 10px;
+}
+
+.period-btn {
+    font-size: 11px;
+    color: var(--text-muted);
+    padding: 5px 12px;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: var(--bg-primary);
+}
+
+.period-btn:hover,
+.period-btn.active {
+    background: var(--primary);
+    color: white;
+}
+
+/* Holdings Section */
+.holdings-section {
+    background: white;
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: var(--shadow);
+    margin-bottom: 12px;
+}
+
+.holdings-section:last-of-type {
+    margin-bottom: 0;
+}
+
+.holding-item {
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.holding-item:last-child {
+    border-bottom: none;
+}
+
+.holding-main {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.holding-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--bg-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 12px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.holding-icon.kakao {
+    background: #FEE500;
+    color: #3C1E1E;
+}
+
+.holding-info {
+    flex: 1;
+}
+
+.holding-name {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+
+.holding-qty {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.holding-value {
+    text-align: right;
+}
+
+.holding-amount {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+
+.holding-profit {
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.holding-profit.positive {
+    color: var(--positive);
+}
+
+.holding-profit.negative {
+    color: var(--negative);
+}
+
+.holding-toggle {
+    margin-left: 12px;
+    font-size: 12px;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: transform 0.3s;
+    padding: 8px;
+}
+
+.holding-toggle.collapsed {
+    transform: rotate(-90deg);
+}
+
+.holding-toggle.arrow-right {
+    transform: rotate(-90deg);
+}
+
+/* Holding Details */
+.holding-details {
+    margin-top: 12px;
+    padding: 12px;
+    background: var(--bg-primary);
+    border-radius: 12px;
+    max-height: 300px;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+}
+
+.holding-details.collapsed {
+    max-height: 0;
+    padding: 0 12px;
+    margin-top: 0;
+}
+
+.holding-detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.holding-detail-item {
+    text-align: center;
+}
+
+.holding-detail-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-bottom: 2px;
+}
+
+.holding-detail-value {
+    font-size: 13px;
+    font-weight: 500;
+}
+
+/* Action Buttons - 페이지 전용 */
+.holding-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+}

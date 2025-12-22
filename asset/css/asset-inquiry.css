@@ -1,0 +1,499 @@
+/* ========================================
+   Asset Inquiry Styles (자산조회 전용)
+   ======================================== */
+
+/* ========================================
+   Category Card (투자/은행/보험 분류)
+   ======================================== */
+.category-list {
+    padding: 12px 16px;
+}
+
+.category-card {
+    background: white;
+    border-radius: 16px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    overflow: hidden;
+}
+
+.category-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    cursor: pointer;
+}
+
+.category-header-left {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.category-title-row {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+}
+
+.category-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--gray-800);
+}
+
+.category-amount {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--gray-800);
+}
+
+.category-change {
+    font-size: 13px;
+    color: var(--kiwoom-red);
+    text-align:right;
+}
+
+.category-change.negative {
+    color: var(--kiwoom-blue);
+}
+
+.category-expand-icon {
+    /* 1. 모양 만들기 (텍스트 ▲ 대신 선으로 그림) */
+    display: block;
+    width: 8px;
+    height: 8px;
+    flex-shrink: 0;
+
+    /* 색상은 회색(gray-400) 정도로 설정 */
+    border-bottom: 2px solid var(--gray-400);
+    border-right: 2px solid var(--gray-400);
+    border-top: none;
+    border-left: none;
+
+    /* 2. 회전 준비 */
+    transform: rotate(45deg); /* 기본 v 모양 */
+    transform-origin: center center;
+    transition: transform 0.3s ease;
+
+    /* 3. 위치 보정 */
+    margin-right: 4px; /* 필요시 여백 조정 */
+    margin-bottom: 4px;
+}
+
+.category-content,
+.institution-details {
+    max-height: 0;                /* 높이를 0으로 해서 숨김 */
+    overflow: hidden;             /* 내용이 넘치면 안 보이게 */
+    opacity: 0;                   /* 투명하게 (페이드 효과용) */
+    transition: max-height 0.3s ease-out, opacity 0.3s ease-out; /* 0.3초 동안 스르륵 */
+    padding: 0;                   /* 닫혔을 때 패딩도 없어야 깔끔함 */
+}
+
+/* .category-content.hidden {
+    display: none;
+} */
+
+.category-content.active,
+    .institution-details.active {
+        opacity: 1;                   /* 불투명하게 등장 */
+        /* max-height는 자바스크립트가 내용물 길이에 맞춰서 직접 넣어줍니다 */
+    }
+
+    /* (중요) 기존에 있던 .hidden { display: none } 코드는 애니메이션을 방해하므로 지우거나 아래처럼 무력화하세요 */
+    .hidden {
+        display: block !important; /* 이제 display:none은 쓰지 않습니다 */
+    }
+.category-content.hidden,
+    .institution-details.hidden {
+        display: block !important;
+    }
+
+/* ========================================
+   Institution List (기관별 목록)
+   ======================================== */
+.institution-list {
+    padding: 0;
+}
+
+.institution-card {
+    background: white;
+    padding: 16px 20px;
+    border-top: 1px solid var(--gray-100);
+    /* margin-left: 36px; */
+}
+
+.institution-card:last-child {
+    border-bottom: none;
+}
+
+.institution-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 0;
+}
+
+.institution-header-left {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.institution-logo {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    font-weight: 700;
+    color: white;
+    flex-shrink: 0;
+}
+
+.institution-logo.kiwoom {
+    background: var(--kiwoom-red);
+}
+
+.institution-logo.kb {
+    background: #FFB81C;
+    color: #333;
+}
+
+.institution-logo.hyundai {
+    background: #002c5f;
+}
+
+.institution-logo.shinhan {
+    background: #0046ff;
+}
+
+.institution-logo.hana {
+    background: #009490;
+}
+
+.institution-logo.woori {
+    background: #0066b3;
+}
+
+.institution-logo.nh {
+    background: #03853b;
+}
+
+.institution-logo.samsung {
+    background: #1428a0;
+}
+
+.institution-logo.mirae {
+    background: #f37321;
+}
+
+.institution-logo.toss {
+    background: #0064ff;
+}
+
+.institution-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.institution-name-row {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.institution-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--gray-800);
+}
+
+.institution-count {
+    font-size: 13px;
+    color: var(--gray-500);
+    font-weight: 400;
+}
+
+.institution-change {
+    font-size: 13px;
+    color: var(--gray-500);
+}
+
+.institution-change.positive {
+    color: var(--kiwoom-red);
+}
+
+.institution-change.negative {
+    color: var(--kiwoom-blue);
+}
+
+.chart-icon-small {
+    width: 56px;
+    height: 35px;
+    flex-shrink: 0;
+}
+
+.chart-icon-small.up path {
+    stroke: var(--kiwoom-red);
+}
+
+.chart-icon-small.down path {
+    stroke: var(--kiwoom-blue);
+}
+
+.chart-icon-small.flat path {
+    stroke: #eab308;
+}
+
+.institution-total {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 12px;
+    padding-top: 12px;
+    /* border-top: 1px solid var(--gray-100); */
+    cursor: pointer;
+}
+
+.institution-total-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.institution-total-label {
+    font-size: 13px;
+    color: var(--gray-600);
+    margin-left: 36px;
+}
+
+.institution-total-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.institution-total-amount {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--gray-800);
+}
+
+
+
+.expand-icon {
+    display: block;
+    width: 8px;
+    height: 8px;
+    flex-shrink: 0;
+
+    /* 아래, 오른쪽 테두리를 45도 돌리면 'v'가 됩니다. 계산하기 가장 좋습니다. */
+    border-bottom: 1px solid var(--gray-600);
+    border-right: 1px solid var(--gray-600);
+    border-top: none;
+    border-left: none;
+
+    /* 시작 각도: 45도 */
+    transform: rotate(45deg);
+
+    /* 중심축 고정 (제자리 회전) */
+    transform-origin: center center;
+
+    /* 펼쳐질 때와 접힐 때 모두 부드럽게 (여기 설정해야 양방향 다 먹습니다) */
+    transition: transform 0.3s ease;
+
+    margin-bottom: 4px;
+}
+
+/* 2. 펼쳐진 상태 (^ 모양) */
+.expand-icon.expanded {
+
+    margin-bottom: 0px; /* 뒤집혔을 때 위치 미세 보정 */
+}
+
+/* ========================================
+   Institution Details (펼침 영역)
+   ======================================== */
+.institution-details {
+    margin-top: 12px;
+    padding-top: 12px;
+    /* border-top: 1px solid var(--gray-200); */
+    padding-left: 36px;
+}
+
+.institution-details.hidden {
+    display: none;
+}
+
+.detail-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 10px 0;
+    padding-left: 24px;
+    position: relative;
+}
+
+/* 트리 라인 - 세로선 */
+.detail-item::before {
+    content: '';
+    position: absolute;
+    left: 6px;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: var(--gray-300);
+}
+
+/* 트리 라인 - 가로선 (가지) */
+.detail-item::after {
+    content: '';
+    position: absolute;
+    left: 6px;
+    top: 20px;
+    width: 12px;
+    height: 1px;
+    background: var(--gray-300);
+}
+
+/* 마지막 아이템의 세로선은 가지까지만 */
+.detail-item:last-child::before {
+    bottom: calc(100% - 20px);
+}
+
+.detail-item-left {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.detail-account-name {
+    font-size: 14px;
+    font-weight: 500;
+    /* color: var(--kiwoom-red); */
+    color:black;
+}
+
+.detail-account-number {
+    font-size: 12px;
+    color: var(--gray-400);
+}
+
+.detail-item-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+}
+
+.detail-amount {
+    font-size: 15px;
+    /* font-weight: 600; */
+    color: var(--gray-800);
+}
+
+.detail-profit {
+    font-size: 12px;
+    color: var(--kiwoom-red);
+}
+
+.detail-profit.negative {
+    color: var(--kiwoom-blue);
+}
+
+/* ========================================
+   Bottom Navigation
+   ======================================== */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 480px;
+    background: white;
+    border-top: 1px solid var(--gray-200);
+    display: flex;
+    align-items: center;
+    padding: 0;
+    z-index: 100;
+}
+
+.nav-menu-btn {
+    width: 60px;
+    height: 56px;
+    background: var(--kiwoom-red);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 10px;
+    font-weight: 500;
+    cursor: pointer;
+    gap: 4px;
+}
+
+.hamburger {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.hamburger-line {
+    width: 16px;
+    height: 2px;
+    background: white;
+    border-radius: 1px;
+}
+
+.nav-tabs {
+    flex: 1;
+    display: flex;
+}
+
+.nav-tab {
+    flex: 1;
+    padding: 16px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--gray-500);
+    cursor: pointer;
+    position: relative;
+}
+
+.nav-tab.active {
+    color: var(--kiwoom-red);
+    font-weight: 600;
+}
+
+.nav-tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 2px;
+    background: var(--kiwoom-red);
+}
+
+/* ========================================
+   Content Padding for Bottom Nav
+   ======================================== */
+.content {
+    padding-bottom: 70px;
+}
+
+/* ========================================
+   Back Button (분리된 인라인 스타일)
+   ======================================== */
+.back-btn {
+    cursor: pointer;
+}

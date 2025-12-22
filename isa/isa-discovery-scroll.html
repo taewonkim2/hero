@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>ISA 발견 - 스크롤</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #F5F5F5;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 430px;
+      margin: 0 auto;
+      background: #FFFFFF;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      box-shadow: 0 0 40px rgba(0,0,0,0.1);
+    }
+
+    /* Status Bar */
+    .status-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 20px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      align-items: center;
+      padding: 12px 20px;
+      border-bottom: 1px solid #F0F0F0;
+    }
+
+    .back-btn {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      margin-right: 12px;
+    }
+
+    .header-title {
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    /* Scroll Container */
+    .scroll-container {
+      flex: 1;
+      overflow-y: auto;
+      padding-bottom: 100px;
+    }
+
+    /* Section */
+    .section {
+      padding-top: 8px;
+      border-bottom: 8px solid #F5F5F5;
+    }
+
+    .section:last-child {
+      border-bottom: none;
+    }
+
+    /* Section Header */
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px 12px 20px;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-title .icon {
+      font-size: 22px;
+    }
+
+    .section-title h2 {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1A1A1A;
+    }
+
+    .view-all-btn {
+      background: none;
+      border: none;
+      color: #9ca3af;
+      font-size: 13px;
+      cursor: pointer;
+      padding: 8px 0;
+    }
+
+    /* Filter Row */
+    .filter-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px 12px 20px;
+      gap: 12px;
+    }
+
+    /* Dropdown Select */
+    .filter-select {
+      position: relative;
+    }
+
+    .filter-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border: 1px solid #E5E5E5;
+      border-radius: 20px;
+      background: #FFFFFF;
+      font-size: 13px;
+      font-weight: 500;
+      color: #1A1A1A;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .filter-btn:hover {
+      border-color: #CCCCCC;
+    }
+
+    .filter-btn.active {
+      border-color: #1A5DC7;
+      background: #F0F4FF;
+      color: #1A5DC7;
+    }
+
+    .filter-btn .arrow {
+      font-size: 10px;
+      color: #888888;
+      transition: transform 0.2s;
+    }
+
+    .filter-btn.open .arrow {
+      transform: rotate(180deg);
+    }
+
+    .filter-dropdown {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      min-width: 120px;
+      background: #FFFFFF;
+      border: 1px solid #E5E5E5;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+      z-index: 100;
+      overflow: hidden;
+      display: none;
+    }
+
+    .filter-dropdown.show {
+      display: block;
+    }
+
+    .filter-dropdown.right {
+      left: auto;
+      right: 0;
+    }
+
+    .filter-option {
+      display: block;
+      width: 100%;
+      padding: 12px 16px;
+      border: none;
+      background: none;
+      font-size: 13px;
+      color: #1A1A1A;
+      text-align: left;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .filter-option:hover {
+      background: #F5F5F5;
+    }
+
+    .filter-option.active {
+      background: #F0F4FF;
+      color: #1A5DC7;
+      font-weight: 600;
+    }
+
+    /* List Item */
+    .list-container {
+      padding: 0;
+    }
+
+    .list-item {
+      display: flex;
+      align-items: center;
+      padding: 14px 20px;
+      border-bottom: 1px solid #F5F5F5;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .list-item:hover {
+      background: #FAFAFA;
+    }
+
+    .list-item:last-child {
+      border-bottom: none;
+    }
+
+    .rank {
+      width: 24px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #AAAAAA;
+    }
+
+    .rank.top {
+      color: #1A5DC7;
+    }
+
+    .logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 12px;
+      color: #FFFFFF;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .item-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .item-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: #1A1A1A;
+      margin-bottom: 3px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .item-sub {
+      font-size: 12px;
+      color: #888888;
+    }
+
+    .item-right {
+      text-align: right;
+      margin-left: 12px;
+    }
+
+    .item-price {
+      font-size: 15px;
+      font-weight: 700;
+      color: #1A1A1A;
+      margin-bottom: 2px;
+    }
+
+    .item-change {
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .item-change.up { color: #E53935; }
+    .item-change.down { color: #1E88E5; }
+
+    .item-percent {
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .item-percent.up { color: #E53935; }
+    .item-percent.down { color: #1E88E5; }
+
+    .item-rate {
+      font-size: 16px;
+      font-weight: 700;
+      color: #E53935;
+    }
+
+    /* Type Tag */
+    .type-tag {
+      padding: 2px 6px;
+      font-size: 10px;
+      font-weight: 600;
+      border-radius: 4px;
+      margin-right: 6px;
+    }
+
+    .type-tag.stock { background: #FFEBEE; color: #C62828; }
+    .type-tag.etf { background: #E0F2F1; color: #00695C; }
+    .type-tag.fund { background: #F3E5F5; color: #7B1FA2; }
+    .type-tag.rp { background: #E8F5E9; color: #2E7D32; }
+    .type-tag.bond { background: #E3F2FD; color: #1565C0; }
+    .type-tag.els { background: #FFF3E0; color: #E65100; }
+
+    /* Currency Icon */
+    .currency-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 12px;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .currency-icon.krw { background: #FFF3E0; color: #FF6B00; }
+    .currency-icon.usd { background: #E8F5E9; color: #2E7D32; }
+
+    /* ELS Status */
+    .els-status {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    .els-status.open { background: #E8F5E9; color: #00A651; }
+    .els-status.closed { background: #F5F5F5; color: #888888; }
+
+    /* Bottom Navigation */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 430px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 12px 0 28px 0;
+      background: #FFFFFF;
+      border-top: 1px solid #F0F0F0;
+      z-index: 50;
+    }
+
+    .nav-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px 12px;
+    }
+
+    .nav-btn .icon {
+      font-size: 20px;
+    }
+
+    .nav-btn .label {
+      font-size: 11px;
+      font-weight: 500;
+      color: #AAAAAA;
+    }
+
+    .nav-btn.active .label {
+      font-weight: 700;
+      color: #1A1A1A;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Status Bar -->
+    <div class="status-bar">
+      <span>9:41</span>
+      <div style="display: flex; gap: 6px; align-items: center;">
+        <svg width="18" height="12" viewBox="0 0 18 12"><path d="M1 4.5C3.5 1.5 7 0 9 0s5.5 1.5 8 4.5" stroke="#000" stroke-width="1.5" fill="none"/><path d="M3 7c2-2 4-3 6-3s4 1 6 3" stroke="#000" stroke-width="1.5" fill="none"/><circle cx="9" cy="10" r="2" fill="#000"/></svg>
+        <svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="1" width="16" height="10" rx="2" stroke="#000" stroke-width="1" fill="none"/><rect x="2" y="3" width="10" height="6" rx="1" fill="#000"/><rect x="16" y="4" width="2" height="4" rx="0.5" fill="#000"/></svg>
+      </div>
+    </div>
+
+    <!-- Header -->
+    <div class="header">
+      <button class="back-btn">←</button>
+      <span class="header-title">ISA발견</span>
+    </div>
+
+    <!-- Scroll Container -->
+    <div class="scroll-container">
+
+      <!-- 섹션 1: 절세끝판왕 해외펀드 -->
+      <div class="section" id="section1">
+        <div class="section-header">
+          <div class="section-title">
+            <span class="icon">🌍</span>
+            <h2>절세끝판왕 해외펀드</h2>
+          </div>
+          <a href="isa-discovery.html?tab=절세끝판왕해외펀드" class="view-all-btn">전체보기</a>
+        </div>
+        <div class="filter-row">
+          <div class="filter-select" data-section="1" data-type="product">
+            <button class="filter-btn active">
+              <span class="selected-text">ETF</span>
+              <span class="arrow">▼</span>
+            </button>
+            <div class="filter-dropdown">
+              <button class="filter-option active" data-value="ETF">ETF</button>
+              <button class="filter-option" data-value="펀드">펀드</button>
+            </div>
+          </div>
+          <div class="filter-select" data-section="1" data-type="sort">
+            <button class="filter-btn">
+              <span class="selected-text">많이 산 종목</span>
+              <span class="arrow">▼</span>
+            </button>
+            <div class="filter-dropdown right">
+              <button class="filter-option active" data-value="많이 산 종목">많이 산 종목</button>
+              <button class="filter-option" data-value="많이 보유한 종목">많이 보유한 종목</button>
+              <button class="filter-option" data-value="수익률이 높은 종목">수익률이 높은 종목</button>
+            </div>
+          </div>
+        </div>
+        <div class="list-container" id="list1">
+          <!-- 동적 렌더링 -->
+        </div>
+      </div>
+
+      <!-- 섹션 2: 따박따박 배당 -->
+      <div class="section" id="section2">
+        <div class="section-header">
+          <div class="section-title">
+            <span class="icon">💵</span>
+            <h2>따박따박 배당</h2>
+          </div>
+          <a href="isa-discovery.html?tab=따박따박배당" class="view-all-btn">전체보기</a>
+        </div>
+        <div class="filter-row">
+          <div class="filter-select" data-section="2" data-type="product">
+            <button class="filter-btn active">
+              <span class="selected-text">주식</span>
+              <span class="arrow">▼</span>
+            </button>
+            <div class="filter-dropdown">
+              <button class="filter-option active" data-value="주식">주식</button>
+              <button class="filter-option" data-value="ETF">ETF</button>
+              <button class="filter-option" data-value="펀드">펀드</button>
+              <button class="filter-option" data-value="ELS">ELS</button>
+            </div>
+          </div>
+          <div class="filter-select" data-section="2" data-type="sort">
+            <button class="filter-btn">
+              <span class="selected-text">배당률 높은순</span>
+              <span class="arrow">▼</span>
+            </button>
+            <div class="filter-dropdown right">
+              <button class="filter-option active" data-value="배당률 높은순">배당률 높은순</button>
+              <button class="filter-option" data-value="배당금 높은순">배당금 높은순</button>
+              <button class="filter-option" data-value="인기순">인기순</button>
+            </div>
+          </div>
+        </div>
+        <div class="list-container" id="list2">
+          <!-- 동적 렌더링 -->
+        </div>
+      </div>
+
+      <!-- 섹션 3: 안정적인 이자 -->
+      <div class="section" id="section3">
+        <div class="section-header">
+          <div class="section-title">
+            <span class="icon">🏦</span>
+            <h2>안정적인 이자</h2>
+          </div>
+          <a href="isa-discovery.html?tab=안정적인이자" class="view-all-btn">전체보기</a>
+        </div>
+        <div class="filter-row">
+          <div class="filter-select" data-section="3" data-type="product">
+            <button class="filter-btn active">
+              <span class="selected-text">RP</span>
+              <span class="arrow">▼</span>
+            </button>
+            <div class="filter-dropdown">
+              <button class="filter-option active" data-value="RP">RP</button>
+              <button class="filter-option" data-value="채권">채권</button>
+            </div>
+          </div>
+          <div class="filter-select" data-section="3" data-type="sort">
+            <button class="filter-btn">
+              <span class="selected-text">금리 높은순</span>
+              <span class="arrow">▼</span>
+            </button>
+            <div class="filter-dropdown right">
+              <button class="filter-option active" data-value="금리 높은순">금리 높은순</button>
+              <button class="filter-option" data-value="기간 짧은순">기간 짧은순</button>
+              <button class="filter-option" data-value="인기순">인기순</button>
+            </div>
+          </div>
+        </div>
+        <div class="list-container" id="list3">
+          <!-- 동적 렌더링 -->
+        </div>
+      </div>
+
+      <!-- 섹션 4: ISA고수의 PICK -->
+      <div class="section" id="section4">
+        <div class="section-header">
+          <div class="section-title">
+            <span class="icon">👑</span>
+            <h2>ISA고수의 PICK</h2>
+          </div>
+          <a href="isa-discovery.html?tab=ISA고수의PICK" class="view-all-btn">전체보기</a>
+        </div>
+        <div class="filter-row">
+          <div class="filter-select" data-section="4" data-type="product">
+            <button class="filter-btn active">
+              <span class="selected-text">전체</span>
+              <span class="arrow">▼</span>
+            </button>
+            <div class="filter-dropdown">
+              <button class="filter-option active" data-value="전체">전체</button>
+              <button class="filter-option" data-value="주식">주식</button>
+              <button class="filter-option" data-value="ETF">ETF</button>
+              <button class="filter-option" data-value="펀드">펀드</button>
+              <button class="filter-option" data-value="RP">RP</button>
+              <button class="filter-option" data-value="ELS">ELS</button>
+            </div>
+          </div>
+          <div class="filter-select" data-section="4" data-type="sort">
+            <button class="filter-btn">
+              <span class="selected-text">많이 산 종목</span>
+              <span class="arrow">▼</span>
+            </button>
+            <div class="filter-dropdown right">
+              <button class="filter-option active" data-value="많이 산 종목">많이 산 종목</button>
+              <button class="filter-option" data-value="많이 보유한 종목">많이 보유한 종목</button>
+            </div>
+          </div>
+        </div>
+        <div class="list-container" id="list4">
+          <!-- 동적 렌더링 -->
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+      <button class="nav-btn" data-menu="메뉴">
+        <span class="icon">☰</span>
+        <span class="label">메뉴</span>
+      </button>
+      <button class="nav-btn active" data-menu="ISA발견">
+        <span class="icon">🔍</span>
+        <span class="label">ISA발견</span>
+      </button>
+      <button class="nav-btn" data-menu="ISA잔고">
+        <span class="icon">💰</span>
+        <span class="label">ISA잔고</span>
+      </button>
+      <button class="nav-btn" data-menu="ISA시작">
+        <span class="icon">🚀</span>
+        <span class="label">ISA시작</span>
+      </button>
+      <button class="nav-btn" data-menu="ISA업무">
+        <span class="icon">📋</span>
+        <span class="label">ISA업무</span>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // 샘플 데이터
+    const sampleData = {
+      section1: [
+        { rank: 1, logo: "TIGER", logoColor: "#FF6B00", name: "TIGER 미국S&P500", sub: "15,234만원", price: "78,500", change: "+1,250", percent: "+1.62%", isUp: true },
+        { rank: 2, logo: "KODEX", logoColor: "#1A5DC7", name: "KODEX 미국나스닥100", sub: "12,890만원", price: "92,300", change: "+2,100", percent: "+2.33%", isUp: true },
+        { rank: 3, logo: "ACE", logoColor: "#00A651", name: "ACE 미국빅테크TOP7", sub: "11,567만원", price: "15,420", change: "-180", percent: "-1.15%", isUp: false },
+        { rank: 4, logo: "TIGER", logoColor: "#FF6B00", name: "TIGER 차이나전기차", sub: "10,234만원", price: "8,750", change: "+320", percent: "+3.80%", isUp: true },
+        { rank: 5, logo: "KODEX", logoColor: "#1A5DC7", name: "KODEX 2차전지산업", sub: "9,876만원", price: "12,650", change: "-450", percent: "-3.43%", isUp: false },
+      ],
+      section2: [
+        { rank: 1, logo: "삼성", logoColor: "#1428A0", name: "삼성전자", sub: "주당1,444원(2.35%)", price: "61,500", change: "+800", percent: "+1.32%", isUp: true },
+        { rank: 2, logo: "SK", logoColor: "#EA002C", name: "SK텔레콤", sub: "주당3,540원(6.82%)", price: "51,900", change: "+1,200", percent: "+2.37%", isUp: true },
+        { rank: 3, logo: "KT", logoColor: "#E52629", name: "KT", sub: "주당1,960원(5.44%)", price: "36,050", change: "-250", percent: "-0.69%", isUp: false },
+        { rank: 4, logo: "POSCO", logoColor: "#005386", name: "POSCO홀딩스", sub: "주당18,000원(5.21%)", price: "345,500", change: "+4,500", percent: "+1.32%", isUp: true },
+        { rank: 5, logo: "하나", logoColor: "#009490", name: "하나금융지주", sub: "주당3,600원(7.14%)", price: "50,400", change: "+900", percent: "+1.82%", isUp: true },
+      ],
+      section3: [
+        { rank: 1, currency: "₩", name: "퍼스트 발행어음 특판", sub: "1년 · 중도해지 1.50%", rate: "연 3.40%" },
+        { rank: 2, currency: "₩", name: "퍼스트 발행어음 특판", sub: "6개월 · 중도해지 1.40%", rate: "연 3.30%" },
+        { rank: 3, currency: "$", name: "달러 RP 프리미엄", sub: "6개월 · 중도해지 2.20%", rate: "연 4.80%" },
+        { rank: 4, currency: "$", name: "달러 RP", sub: "3개월 · 중도해지 2.00%", rate: "연 4.50%" },
+        { rank: 5, currency: "₩", name: "토스 발행어음", sub: "1년 · 중도해지 1.60%", rate: "연 3.50%" },
+      ],
+      section4: [
+        { rank: 1, type: "ETF", logo: "TIGER", logoColor: "#FF6B00", name: "TIGER 미국S&P500", sub: "12,345만원", price: "78,500", change: "+1,250", percent: "+1.62%", isUp: true },
+        { rank: 2, type: "주식", logo: "삼성", logoColor: "#1428A0", name: "삼성전자", sub: "주당1,444원(2.35%)", price: "61,500", change: "+800", percent: "+1.32%", isUp: true },
+        { rank: 3, type: "RP", currency: "₩", name: "퍼스트 발행어음 특판", sub: "1년", rate: "연 3.40%" },
+        { rank: 4, type: "펀드", logo: "미래", logoColor: "#00A5E5", name: "미래에셋TIGER미국나스닥", sub: "7,654만원", onlyPercent: "+7.23%", isUp: true },
+        { rank: 5, type: "ELS", logo: "삼성", logoColor: "#1428A0", name: "삼성 ELS 제28547호", sub: "S&P500, EUROSTOXX50", yield: "연 8.5%", status: "청약중" },
+      ]
+    };
+
+    // 리스트 렌더링
+    function renderList(sectionId) {
+      const container = document.getElementById(`list${sectionId}`);
+      const data = sampleData[`section${sectionId}`];
+      
+      if (sectionId === 3) {
+        // 안정적인 이자 (RP)
+        container.innerHTML = data.map(item => `
+          <div class="list-item">
+            <span class="rank ${item.rank <= 3 ? 'top' : ''}">${item.rank}</span>
+            <div class="currency-icon ${item.currency === '₩' ? 'krw' : 'usd'}">${item.currency}</div>
+            <div class="item-info">
+              <div class="item-name">${item.name}</div>
+              <div class="item-sub">${item.sub}</div>
+            </div>
+            <div class="item-right">
+              <div class="item-rate">${item.rate}</div>
+            </div>
+          </div>
+        `).join('');
+      } else if (sectionId === 4) {
+        // ISA고수의 PICK
+        container.innerHTML = data.map(item => {
+          if (item.type === 'RP') {
+            return `
+              <div class="list-item">
+                <span class="rank ${item.rank <= 3 ? 'top' : ''}">${item.rank}</span>
+                <div class="currency-icon krw">${item.currency}</div>
+                <div class="item-info">
+                  <div style="display: flex; align-items: center;">
+                    <span class="type-tag rp">${item.type}</span>
+                    <span class="item-name">${item.name}</span>
+                  </div>
+                  <div class="item-sub">${item.sub}</div>
+                </div>
+                <div class="item-right">
+                  <div class="item-rate" style="font-size: 14px;">${item.rate}</div>
+                </div>
+              </div>
+            `;
+          } else if (item.type === 'ELS') {
+            return `
+              <div class="list-item">
+                <span class="rank ${item.rank <= 3 ? 'top' : ''}">${item.rank}</span>
+                <div class="logo" style="background: ${item.logoColor};">${item.logo.substring(0,2)}</div>
+                <div class="item-info">
+                  <div style="display: flex; align-items: center;">
+                    <span class="type-tag els">${item.type}</span>
+                    <span class="item-name">${item.name}</span>
+                  </div>
+                  <div class="item-sub">${item.sub}</div>
+                </div>
+                <div class="item-right">
+                  <div class="item-rate" style="font-size: 13px; margin-bottom: 4px;">${item.yield}</div>
+                  <span class="els-status open">${item.status}</span>
+                </div>
+              </div>
+            `;
+          } else if (item.onlyPercent) {
+            return `
+              <div class="list-item">
+                <span class="rank ${item.rank <= 3 ? 'top' : ''}">${item.rank}</span>
+                <div class="logo" style="background: ${item.logoColor};">${item.logo.substring(0,2)}</div>
+                <div class="item-info">
+                  <div style="display: flex; align-items: center;">
+                    <span class="type-tag fund">${item.type}</span>
+                    <span class="item-name">${item.name}</span>
+                  </div>
+                  <div class="item-sub">${item.sub}</div>
+                </div>
+                <div class="item-right">
+                  <div class="item-percent ${item.isUp ? 'up' : 'down'}">${item.onlyPercent}</div>
+                </div>
+              </div>
+            `;
+          } else {
+            const tagClass = item.type === '주식' ? 'stock' : 'etf';
+            return `
+              <div class="list-item">
+                <span class="rank ${item.rank <= 3 ? 'top' : ''}">${item.rank}</span>
+                <div class="logo" style="background: ${item.logoColor};">${item.logo.substring(0,2)}</div>
+                <div class="item-info">
+                  <div style="display: flex; align-items: center;">
+                    <span class="type-tag ${tagClass}">${item.type}</span>
+                    <span class="item-name">${item.name}</span>
+                  </div>
+                  <div class="item-sub">${item.sub}</div>
+                </div>
+                <div class="item-right">
+                  <div class="item-price">${item.price}</div>
+                  <div class="item-change ${item.isUp ? 'up' : 'down'}">${item.change}(${item.percent})</div>
+                </div>
+              </div>
+            `;
+          }
+        }).join('');
+      } else {
+        // 일반 ETF/주식
+        container.innerHTML = data.map(item => `
+          <div class="list-item">
+            <span class="rank ${item.rank <= 3 ? 'top' : ''}">${item.rank}</span>
+            <div class="logo" style="background: ${item.logoColor};">${item.logo.substring(0,2)}</div>
+            <div class="item-info">
+              <div class="item-name">${item.name}</div>
+              <div class="item-sub">${item.sub}</div>
+            </div>
+            <div class="item-right">
+              <div class="item-price">${item.price}</div>
+              <div class="item-change ${item.isUp ? 'up' : 'down'}">${item.change}(${item.percent})</div>
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+
+    // 초기 렌더링
+    [1, 2, 3, 4].forEach(renderList);
+
+    // 드롭다운 토글
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const dropdown = btn.nextElementSibling;
+        const isOpen = dropdown.classList.contains('show');
+        
+        // 모든 드롭다운 닫기
+        document.querySelectorAll('.filter-dropdown').forEach(d => d.classList.remove('show'));
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('open'));
+        
+        if (!isOpen) {
+          dropdown.classList.add('show');
+          btn.classList.add('open');
+        }
+      });
+    });
+
+    // 옵션 선택
+    document.querySelectorAll('.filter-option').forEach(option => {
+      option.addEventListener('click', () => {
+        const dropdown = option.closest('.filter-dropdown');
+        const btn = dropdown.previousElementSibling;
+        const value = option.dataset.value;
+        
+        // 선택 상태 업데이트
+        dropdown.querySelectorAll('.filter-option').forEach(o => o.classList.remove('active'));
+        option.classList.add('active');
+        btn.querySelector('.selected-text').textContent = value;
+        
+        // 드롭다운 닫기
+        dropdown.classList.remove('show');
+        btn.classList.remove('open');
+      });
+    });
+
+    // 외부 클릭시 드롭다운 닫기
+    document.addEventListener('click', () => {
+      document.querySelectorAll('.filter-dropdown').forEach(d => d.classList.remove('show'));
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('open'));
+    });
+
+    // 하단 네비게이션
+    document.querySelectorAll('.nav-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const menu = btn.dataset.menu;
+        if (menu === 'ISA업무') {
+          window.location.href = 'isa-task.html';
+        }
+      });
+    });
+  </script>
+</body>
+</html>

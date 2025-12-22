@@ -10,381 +10,23 @@
     <!-- 공통 CSS -->
     <link rel="stylesheet" href="css/isa-common.css">
     <!-- 페이지 전용 CSS -->
-    <style>
-        /* ============================================
-           ISA Balance 페이지 전용 스타일
-           ============================================ */
-
-        /* Product Tabs */
-        .product-tabs {
-            display: flex;
-            gap: 6px;
-            overflow-x: auto;
-            padding: 12px 0;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .product-tabs::-webkit-scrollbar {
-            display: none;
-        }
-
-        .product-tab {
-            padding: 8px 14px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            font-size: 13px;
-            font-weight: 500;
-            white-space: nowrap;
-            cursor: pointer;
-            transition: all 0.2s;
-            background: white;
-        }
-
-        .product-tab.active {
-            background: var(--text-primary);
-            color: white;
-            border-color: var(--text-primary);
-        }
-
-        .product-tab:hover:not(.active) {
-            border-color: var(--primary);
-            color: var(--primary);
-        }
-
-        /* Asset Card */
-        .asset-card {
-            background: white;
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 12px;
-            box-shadow: var(--shadow);
-        }
-
-        .asset-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-        }
-
-        .asset-main {
-            flex: 1;
-        }
-
-        .asset-label {
-            font-size: 13px;
-            color: var(--text-secondary);
-            margin-bottom: 4px;
-        }
-
-        .asset-value {
-            font-size: 28px;
-            font-weight: 700;
-        }
-
-        .asset-profit {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-top: 6px;
-        }
-
-        .profit-amount {
-            font-size: 14px;
-            font-weight: 600;
-        }
-
-        .profit-amount.positive {
-            color: var(--positive);
-        }
-
-        .profit-amount.negative {
-            color: var(--negative);
-        }
-
-        .profit-rate {
-            font-size: 13px;
-            color: var(--text-muted);
-        }
-
-        .asset-toggle {
-            background: var(--bg-primary);
-            border: none;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-size: 12px;
-            color: var(--text-muted);
-        }
-
-        .asset-toggle:hover {
-            background: var(--border);
-        }
-
-        .asset-toggle.collapsed {
-            transform: rotate(-90deg);
-        }
-
-        /* Asset Details */
-        .asset-details {
-            margin-top: 16px;
-            padding-top: 16px;
-            border-top: 1px solid var(--border);
-            max-height: 200px;
-            overflow: hidden;
-            transition: max-height 0.3s ease-out;
-        }
-
-        .asset-details.collapsed {
-            max-height: 0;
-            margin-top: 0;
-            padding-top: 0;
-            border-top: none;
-        }
-
-        .detail-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 6px 0;
-        }
-
-        .detail-label {
-            font-size: 13px;
-            color: var(--text-secondary);
-        }
-
-        .detail-value {
-            font-size: 13px;
-            font-weight: 500;
-        }
-
-        /* Chart Section */
-        .chart-section {
-            margin-top: 16px;
-            padding-top: 16px;
-            border-top: 1px solid var(--border);
-        }
-
-        .chart-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-            padding: 8px 0;
-        }
-
-        .chart-title {
-            font-size: 14px;
-            font-weight: 600;
-        }
-
-        .chart-toggle {
-            font-size: 12px;
-            color: var(--text-muted);
-            transition: transform 0.3s;
-        }
-
-        .chart-toggle.collapsed {
-            transform: rotate(-90deg);
-        }
-
-        .chart-content {
-            max-height: 250px;
-            overflow: hidden;
-            transition: max-height 0.3s ease-out;
-        }
-
-        .chart-content.collapsed {
-            max-height: 0;
-        }
-
-        #profitChart {
-            width: 100%;
-            height: 150px;
-            margin-top: 10px;
-        }
-
-        .chart-period {
-            display: flex;
-            justify-content: center;
-            gap: 6px;
-            margin-top: 10px;
-        }
-
-        .period-btn {
-            font-size: 11px;
-            color: var(--text-muted);
-            padding: 5px 12px;
-            border-radius: 14px;
-            cursor: pointer;
-            transition: all 0.2s;
-            background: var(--bg-primary);
-        }
-
-        .period-btn:hover,
-        .period-btn.active {
-            background: var(--primary);
-            color: white;
-        }
-
-        /* Holdings Section */
-        .holdings-section {
-            background: white;
-            border-radius: 16px;
-            padding: 16px;
-            box-shadow: var(--shadow);
-            margin-bottom: 12px;
-        }
-
-        .holdings-section:last-of-type {
-            margin-bottom: 0;
-        }
-
-        .holding-item {
-            padding: 16px 0;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .holding-item:last-child {
-            border-bottom: none;
-        }
-
-        .holding-main {
-            display: flex;
-            align-items: center;
-        }
-
-        .holding-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: var(--bg-primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 12px;
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--primary);
-        }
-
-        .holding-info {
-            flex: 1;
-        }
-
-        .holding-name {
-            font-size: 15px;
-            font-weight: 600;
-            margin-bottom: 2px;
-        }
-
-        .holding-qty {
-            font-size: 12px;
-            color: var(--text-muted);
-        }
-
-        .holding-value {
-            text-align: right;
-        }
-
-        .holding-amount {
-            font-size: 15px;
-            font-weight: 600;
-            margin-bottom: 2px;
-        }
-
-        .holding-profit {
-            font-size: 12px;
-            font-weight: 500;
-        }
-
-        .holding-profit.positive {
-            color: var(--positive);
-        }
-
-        .holding-profit.negative {
-            color: var(--negative);
-        }
-
-        .holding-toggle {
-            margin-left: 12px;
-            font-size: 12px;
-            color: var(--text-muted);
-            cursor: pointer;
-            transition: transform 0.3s;
-            padding: 8px;
-        }
-
-        .holding-toggle.collapsed {
-            transform: rotate(-90deg);
-        }
-
-        /* Holding Details */
-        .holding-details {
-            margin-top: 12px;
-            padding: 12px;
-            background: var(--bg-primary);
-            border-radius: 12px;
-            max-height: 300px;
-            overflow: hidden;
-            transition: max-height 0.3s ease-out;
-        }
-
-        .holding-details.collapsed {
-            max-height: 0;
-            padding: 0 12px;
-            margin-top: 0;
-        }
-
-        .holding-detail-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 12px;
-        }
-
-        .holding-detail-item {
-            text-align: center;
-        }
-
-        .holding-detail-label {
-            font-size: 11px;
-            color: var(--text-muted);
-            margin-bottom: 2px;
-        }
-
-        .holding-detail-value {
-            font-size: 13px;
-            font-weight: 500;
-        }
-
-        /* Action Buttons - 페이지 전용 */
-        .holding-actions {
-            display: flex;
-            gap: 8px;
-            margin-top: 12px;
-        }
-    </style>
+    <link rel="stylesheet" href="css/isa-balance.css">
 </head>
 <body>
     <!-- Top Navigation Bar -->
     <nav class="top-nav">
         <div class="top-nav-left">
-            <button class="back-btn" onclick="goBack()">
+            <button class="back-btn">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M15 18l-6-6 6-6"></path>
                 </svg>
             </button>
         </div>
         <div class="top-nav-submenu">
-            <span class="top-nav-submenu-item active" onclick="navigateTo('isa_balance')">ISA잔고</span>
-            <span class="top-nav-submenu-item" onclick="location.href='isa_history.html'">거래내역</span>
-            <span class="top-nav-submenu-item" onclick="location.href='isa_tax_saving.html'">절세현황/한도</span>
-            <span class="top-nav-submenu-item" onclick="location.href='isa_account_info.html'">계좌정보</span>
+            <span class="top-nav-submenu-item active">ISA잔고</span>
+            <span class="top-nav-submenu-item">거래내역</span>
+            <span class="top-nav-submenu-item">절세현황/한도</span>
+            <span class="top-nav-submenu-item">계좌정보</span>
         </div>
     </nav>
 
@@ -422,7 +64,7 @@
                         <span class="profit-rate">+8.18%</span>
                     </div>
                 </div>
-                <button class="asset-toggle" id="assetToggle" onclick="toggleAssetDetails()">▼</button>
+                <button class="asset-toggle" id="assetToggle">▼</button>
             </div>
 
             <!-- Asset Details (펼침/접힘) -->
@@ -443,17 +85,17 @@
 
             <!-- Chart Section -->
             <div class="chart-section">
-                <div class="chart-header" onclick="toggleChart()">
+                <div class="chart-header">
                     <span class="chart-title">손익추이</span>
                     <span class="chart-toggle" id="chartToggle">▼</span>
                 </div>
                 <div class="chart-content" id="chartContent">
                     <canvas id="profitChart"></canvas>
                     <div class="chart-period">
-                        <span class="period-btn active" onclick="changePeriod('1M', this)">1개월</span>
-                        <span class="period-btn" onclick="changePeriod('3M', this)">3개월</span>
-                        <span class="period-btn" onclick="changePeriod('6M', this)">6개월</span>
-                        <span class="period-btn" onclick="changePeriod('1Y', this)">1년</span>
+                        <span class="period-btn active">1개월</span>
+                        <span class="period-btn">3개월</span>
+                        <span class="period-btn">6개월</span>
+                        <span class="period-btn">1년</span>
                     </div>
                 </div>
             </div>
@@ -463,7 +105,7 @@
         <div class="holdings-section" data-category="stock">
             <!-- 삼성전자 -->
             <div class="holding-item">
-                <div class="holding-main" onclick="toggleHolding('samsung')">
+                <div class="holding-main">
                     <div class="holding-icon">삼성</div>
                     <div class="holding-info">
                         <div class="holding-name">삼성전자</div>
@@ -512,7 +154,7 @@
 
             <!-- NAVER -->
             <div class="holding-item">
-                <div class="holding-main" onclick="toggleHolding('naver')">
+                <div class="holding-main">
                     <div class="holding-icon">NV</div>
                     <div class="holding-info">
                         <div class="holding-name">NAVER</div>
@@ -561,8 +203,8 @@
 
             <!-- 카카오 - 반팝업으로 열림 -->
             <div class="holding-item">
-                <div class="holding-main" onclick="openKakaoPopup()">
-                    <div class="holding-icon" style="background: #FEE500; color: #3C1E1E;">카카오</div>
+                <div class="holding-main">
+                    <div class="holding-icon kakao">카카오</div>
                     <div class="holding-info">
                         <div class="holding-name">카카오</div>
                         <div class="holding-qty">80주</div>
@@ -571,7 +213,7 @@
                         <div class="holding-amount">4,320,000원</div>
                         <div class="holding-profit negative">-234,000원(-5.1%)</div>
                     </div>
-                    <span class="holding-toggle collapsed" style="transform: rotate(-90deg);">▶</span>
+                    <span class="holding-toggle arrow-right" id="toggle-kakao">▶</span>
                 </div>
             </div>
         </div>
@@ -579,7 +221,7 @@
         <!-- Holdings Section - 국내채권 -->
         <div class="holdings-section" data-category="domestic-bond" style="display: none;">
             <div class="holding-item">
-                <div class="holding-main" onclick="toggleHolding('bond1')">
+                <div class="holding-main">
                     <div class="holding-icon">채권</div>
                     <div class="holding-info">
                         <div class="holding-name">국고채 3년물</div>
@@ -626,7 +268,7 @@
                 </div>
             </div>
             <div class="holding-item">
-                <div class="holding-main" onclick="toggleHolding('bond2')">
+                <div class="holding-main">
                     <div class="holding-icon">채권</div>
                     <div class="holding-info">
                         <div class="holding-name">통안채 2년물</div>
@@ -677,7 +319,7 @@
         <!-- Holdings Section - 해외채권 -->
         <div class="holdings-section" data-category="foreign-bond" style="display: none;">
             <div class="holding-item">
-                <div class="holding-main" onclick="toggleHolding('fbond1')">
+                <div class="holding-main">
                     <div class="holding-icon">USD</div>
                     <div class="holding-info">
                         <div class="holding-name">미국채 10년물</div>
@@ -728,7 +370,7 @@
         <!-- Holdings Section - ELS -->
         <div class="holdings-section" data-category="els" style="display: none;">
             <div class="holding-item">
-                <div class="holding-main" onclick="toggleHolding('els1')">
+                <div class="holding-main">
                     <div class="holding-icon">ELS</div>
                     <div class="holding-info">
                         <div class="holding-name">KB증권 ELS 제1234호</div>
@@ -774,7 +416,7 @@
                 </div>
             </div>
             <div class="holding-item">
-                <div class="holding-main" onclick="toggleHolding('els2')">
+                <div class="holding-main">
                     <div class="holding-icon">ELS</div>
                     <div class="holding-info">
                         <div class="holding-name">신한투자 ELS 제5678호</div>
@@ -824,7 +466,7 @@
         <!-- Holdings Section - 펀드 -->
         <div class="holdings-section" data-category="fund" style="display: none;">
             <div class="holding-item">
-                <div class="holding-main" onclick="toggleHolding('fund1')">
+                <div class="holding-main">
                     <div class="holding-icon">펀드</div>
                     <div class="holding-info">
                         <div class="holding-name">삼성글로벌반도체펀드</div>
@@ -871,7 +513,7 @@
                 </div>
             </div>
             <div class="holding-item">
-                <div class="holding-main" onclick="toggleHolding('fund2')">
+                <div class="holding-main">
                     <div class="holding-icon">펀드</div>
                     <div class="holding-info">
                         <div class="holding-name">미래에셋인도중소형펀드</div>
@@ -922,7 +564,7 @@
         <!-- Holdings Section - RP -->
         <div class="holdings-section" data-category="rp" style="display: none;">
             <div class="holding-item">
-                <div class="holding-main" onclick="toggleHolding('rp1')">
+                <div class="holding-main">
                     <div class="holding-icon">RP</div>
                     <div class="holding-info">
                         <div class="holding-name">KB증권 RP (7일물)</div>
@@ -968,7 +610,7 @@
                 </div>
             </div>
             <div class="holding-item">
-                <div class="holding-main" onclick="toggleHolding('rp2')">
+                <div class="holding-main">
                     <div class="holding-icon">RP</div>
                     <div class="holding-info">
                         <div class="holding-name">KB증권 RP (30일물)</div>
@@ -1018,7 +660,7 @@
         <!-- Holdings Section - 발행어음 -->
         <div class="holdings-section" data-category="note" style="display: none;">
             <div class="holding-item">
-                <div class="holding-main" onclick="toggleHolding('note1')">
+                <div class="holding-main">
                     <div class="holding-icon">어음</div>
                     <div class="holding-info">
                         <div class="holding-name">KB증권 발행어음 (91일)</div>
@@ -1075,7 +717,7 @@
     </main>
 
     <!-- 카카오 반팝업 오버레이 -->
-    <div class="popup-overlay" id="kakaoPopupOverlay" onclick="closeKakaoPopup()"></div>
+    <div class="popup-overlay" id="kakaoPopupOverlay"></div>
 
     <!-- 카카오 반팝업 -->
     <div class="half-popup" id="kakaoHalfPopup">
@@ -1090,7 +732,7 @@
                     <span class="popup-stock-code">035720</span>
                 </div>
             </div>
-            <button class="popup-close-btn" onclick="closeKakaoPopup()">
+            <button class="popup-close-btn">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M18 6L6 18M6 6l12 12"></path>
                 </svg>
@@ -1171,7 +813,7 @@
 
     <!-- Bottom Tab Bar -->
     <nav class="bottom-tab-bar">
-        <div class="menu-tab" onclick="openSideMenu()">
+        <div class="menu-tab">
             <div class="menu-button-box">
                 <div class="hamburger-icon">
                     <div class="hamburger-line"></div>
@@ -1181,16 +823,16 @@
                 <span class="menu-label">메뉴</span>
             </div>
         </div>
-        <div class="tab-item" onclick="location.href='isa_home.html'">
+        <div class="tab-item">
             <span class="tab-label">ISA홈</span>
         </div>
         <div class="tab-item active">
             <span class="tab-label">ISA계좌</span>
         </div>
-        <div class="tab-item" onclick="switchTab('isa_join')">
+        <div class="tab-item">
             <span class="tab-label">ISA가입/이전</span>
         </div>
-        <div class="tab-item" onclick="switchTab('isa_task')">
+        <div class="tab-item">
             <span class="tab-label">ISA업무</span>
         </div>
     </nav>
@@ -1198,266 +840,6 @@
     <!-- 공통 JS -->
     <script src="js/isa-common.js"></script>
     <!-- 페이지 전용 JS -->
-    <script>
-        // ============================================
-        // ISA Balance 페이지 전용 JavaScript
-        // ============================================
-
-        // 카카오 반팝업 열기/닫기 (페이지 전용)
-        function openKakaoPopup() {
-            openHalfPopup('kakaoPopupOverlay', 'kakaoHalfPopup');
-        }
-
-        function closeKakaoPopup() {
-            closeHalfPopup('kakaoPopupOverlay', 'kakaoHalfPopup');
-        }
-
-        // ESC 키로 팝업 닫기
-        initEscKeyHandler(closeKakaoPopup);
-
-        // 스와이프로 팝업 닫기
-        initPopupSwipe('kakaoHalfPopup', closeKakaoPopup);
-
-        // Change chart period
-        function changePeriod(period, element) {
-            document.querySelectorAll('.period-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            element.classList.add('active');
-            drawChart(period);
-        }
-
-        // Draw profit chart
-        function drawChart(period = '1M') {
-            const canvas = document.getElementById('profitChart');
-            if (!canvas) return;
-            const ctx = canvas.getContext('2d');
-            
-            const dpr = window.devicePixelRatio || 1;
-            const rect = canvas.getBoundingClientRect();
-            canvas.width = rect.width * dpr;
-            canvas.height = 150 * dpr;
-            ctx.scale(dpr, dpr);
-            canvas.style.width = rect.width + 'px';
-            canvas.style.height = '150px';
-            
-            const data = {
-                '1M': [42.1, 43.2, 42.8, 44.5, 43.9, 44.2, 45.1, 44.8, 45.3, 45.7],
-                '3M': [38.5, 39.2, 40.1, 41.3, 40.8, 42.5, 43.1, 44.2, 44.8, 45.7],
-                '6M': [35.2, 36.8, 38.1, 37.5, 39.2, 41.0, 42.3, 43.5, 44.1, 45.7],
-                '1Y': [30.5, 32.1, 34.5, 36.2, 38.0, 39.5, 41.2, 43.0, 44.5, 45.7]
-            };
-            
-            const values = data[period] || data['1M'];
-            const width = rect.width;
-            const height = 150;
-            const padding = { top: 15, right: 15, bottom: 25, left: 45 };
-            
-            ctx.clearRect(0, 0, width, height);
-            
-            const minVal = Math.min(...values) * 0.95;
-            const maxVal = Math.max(...values) * 1.02;
-            const xStep = (width - padding.left - padding.right) / (values.length - 1);
-            const yScale = (height - padding.top - padding.bottom) / (maxVal - minVal);
-            
-            ctx.strokeStyle = '#e5e7eb';
-            ctx.lineWidth = 1;
-            for (let i = 0; i <= 4; i++) {
-                const y = padding.top + (height - padding.top - padding.bottom) * i / 4;
-                ctx.beginPath();
-                ctx.moveTo(padding.left, y);
-                ctx.lineTo(width - padding.right, y);
-                ctx.stroke();
-                
-                const val = maxVal - (maxVal - minVal) * i / 4;
-                ctx.fillStyle = '#9ca3af';
-                ctx.font = '10px Noto Sans KR';
-                ctx.textAlign = 'right';
-                ctx.fillText(val.toFixed(1) + '백만', padding.left - 6, y + 3);
-            }
-            
-            ctx.beginPath();
-            ctx.strokeStyle = '#1a73e8';
-            ctx.lineWidth = 2;
-            ctx.lineJoin = 'round';
-            ctx.lineCap = 'round';
-            
-            values.forEach((val, i) => {
-                const x = padding.left + i * xStep;
-                const y = padding.top + (maxVal - val) * yScale;
-                if (i === 0) ctx.moveTo(x, y);
-                else ctx.lineTo(x, y);
-            });
-            ctx.stroke();
-            
-            const gradient = ctx.createLinearGradient(0, padding.top, 0, height - padding.bottom);
-            gradient.addColorStop(0, 'rgba(26, 115, 232, 0.2)');
-            gradient.addColorStop(1, 'rgba(26, 115, 232, 0)');
-            
-            ctx.beginPath();
-            values.forEach((val, i) => {
-                const x = padding.left + i * xStep;
-                const y = padding.top + (maxVal - val) * yScale;
-                if (i === 0) ctx.moveTo(x, y);
-                else ctx.lineTo(x, y);
-            });
-            ctx.lineTo(padding.left + (values.length - 1) * xStep, height - padding.bottom);
-            ctx.lineTo(padding.left, height - padding.bottom);
-            ctx.closePath();
-            ctx.fillStyle = gradient;
-            ctx.fill();
-            
-            values.forEach((val, i) => {
-                const x = padding.left + i * xStep;
-                const y = padding.top + (maxVal - val) * yScale;
-                ctx.beginPath();
-                ctx.arc(x, y, 3, 0, Math.PI * 2);
-                ctx.fillStyle = '#1a73e8';
-                ctx.fill();
-                ctx.beginPath();
-                ctx.arc(x, y, 1.5, 0, Math.PI * 2);
-                ctx.fillStyle = 'white';
-                ctx.fill();
-            });
-        }
-
-        // 상품별 자산 데이터
-        const assetData = {
-            'all': {
-                value: '45,678,900원',
-                profit: '▲ 3,456,700원',
-                rate: '+8.18%',
-                isPositive: true,
-                purchase: '42,222,200원',
-                evaluation: '45,678,900원',
-                cash: '678,900원'
-            },
-            'stock': {
-                value: '23,550,000원',
-                profit: '▲ 1,567,500원',
-                rate: '+7.14%',
-                isPositive: true,
-                purchase: '21,982,500원',
-                evaluation: '23,550,000원',
-                cash: '0원'
-            },
-            'domestic-bond': {
-                value: '8,210,000원',
-                profit: '▲ 210,000원',
-                rate: '+2.63%',
-                isPositive: true,
-                purchase: '8,000,000원',
-                evaluation: '8,210,000원',
-                cash: '0원'
-            },
-            'foreign-bond': {
-                value: '4,280,000원',
-                profit: '▲ 280,000원',
-                rate: '+7.00%',
-                isPositive: true,
-                purchase: '4,000,000원',
-                evaluation: '4,280,000원',
-                cash: '0원'
-            },
-            'els': {
-                value: '3,170,000원',
-                profit: '▲ 170,000원',
-                rate: '+5.67%',
-                isPositive: true,
-                purchase: '3,000,000원',
-                evaluation: '3,170,000원',
-                cash: '0원'
-            },
-            'fund': {
-                value: '13,170,000원',
-                profit: '▲ 1,170,000원',
-                rate: '+9.75%',
-                isPositive: true,
-                purchase: '12,000,000원',
-                evaluation: '13,170,000원',
-                cash: '0원'
-            },
-            'rp': {
-                value: '8,015,500원',
-                profit: '▲ 15,500원',
-                rate: '+0.19%',
-                isPositive: true,
-                purchase: '8,000,000원',
-                evaluation: '8,015,500원',
-                cash: '0원'
-            },
-            'note': {
-                value: '10,075,000원',
-                profit: '▲ 75,000원',
-                rate: '+0.75%',
-                isPositive: true,
-                purchase: '10,000,000원',
-                evaluation: '10,075,000원',
-                cash: '0원'
-            }
-        };
-
-        // 탭 전환 및 자산 정보 업데이트 함수
-        function switchProductTab(category) {
-            // 모든 탭 비활성화
-            document.querySelectorAll('.product-tab').forEach(t => t.classList.remove('active'));
-            // 선택된 탭 활성화
-            document.querySelector(`.product-tab[data-category="${category}"]`).classList.add('active');
-
-            // 모든 holdings-section 숨기기
-            document.querySelectorAll('.holdings-section').forEach(section => {
-                section.style.display = 'none';
-            });
-
-            // 선택된 카테고리의 holdings-section 표시
-            if (category === 'all') {
-                // 전체 선택 시 모든 섹션 표시
-                document.querySelectorAll('.holdings-section').forEach(section => {
-                    section.style.display = 'block';
-                });
-            } else {
-                // 특정 카테고리만 표시
-                const targetSection = document.querySelector(`.holdings-section[data-category="${category}"]`);
-                if (targetSection) {
-                    targetSection.style.display = 'block';
-                }
-            }
-
-            // asset-card 금액 업데이트
-            const data = assetData[category];
-            if (data) {
-                document.querySelector('.asset-value').textContent = data.value;
-
-                const profitAmount = document.querySelector('.profit-amount');
-                profitAmount.textContent = data.profit;
-                profitAmount.className = 'profit-amount ' + (data.isPositive ? 'positive' : 'negative');
-
-                document.querySelector('.profit-rate').textContent = data.rate;
-
-                // 상세 정보 업데이트
-                const detailValues = document.querySelectorAll('.detail-value');
-                if (detailValues.length >= 3) {
-                    detailValues[0].textContent = data.purchase;
-                    detailValues[1].textContent = data.evaluation;
-                    detailValues[2].textContent = data.cash;
-                }
-            }
-        }
-
-        // Product tab click
-        document.querySelectorAll('.product-tab').forEach(tab => {
-            tab.addEventListener('click', function() {
-                const category = this.getAttribute('data-category');
-                switchProductTab(category);
-            });
-        });
-
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            setTimeout(() => drawChart('1M'), 100);
-            // 초기 상태: 전체 탭 선택
-            switchProductTab('all');
-        });
-    </script>
+    <script src="js/isa-balance.js"></script>
 </body>
 </html>
