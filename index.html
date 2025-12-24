@@ -351,7 +351,15 @@
                 const content = document.createElement('div');
                 content.className = 'section-content';
 
+                // B열(subMenu) 중복 제거: 같은 subMenu는 첫 번째(활성화 우선) 항목만 표시
+                const seenSubMenus = new Set();
                 categories[category].forEach(item => {
+                    // 이미 표시된 subMenu면 스킵
+                    if (seenSubMenus.has(item.subMenu)) {
+                        return;
+                    }
+                    seenSubMenus.add(item.subMenu);
+
                     const subItem = document.createElement('div');
                     subItem.className = 'sub-item';
                     subItem.textContent = item.itemName;
