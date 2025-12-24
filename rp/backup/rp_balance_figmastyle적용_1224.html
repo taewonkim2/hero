@@ -432,45 +432,6 @@
             display: block;
         }
 
-        /* Currency Filter Tabs */
-        .currency-filter {
-            display: flex;
-            gap: 8px;
-            padding: 12px 16px;
-            overflow-x: auto;
-            scrollbar-width: none;
-        }
-
-        .currency-filter::-webkit-scrollbar {
-            display: none;
-        }
-
-        .currency-tab {
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--secondary-color);
-            background: var(--bg-gray);
-            border: none;
-            cursor: pointer;
-            white-space: nowrap;
-            transition: all 0.2s;
-        }
-
-        .currency-tab.active {
-            background: var(--primary);
-            color: white;
-        }
-
-        .currency-tab:hover:not(.active) {
-            background: var(--border-color);
-        }
-
-        .holding-item-card.hidden {
-            display: none;
-        }
-
         /* Holding Item */
         .holding-item {
             border-bottom: 1px solid var(--border-color);
@@ -1257,17 +1218,7 @@
 
             <!-- Holdings Section - RP -->
             <div class="holdings-section active" data-category="rp">
-                <!-- Currency Filter -->
-                <div class="currency-filter">
-                    <button class="currency-tab active" data-currency="all">전체</button>
-                    <button class="currency-tab" data-currency="krw">원화</button>
-                    <button class="currency-tab" data-currency="usd">달러</button>
-                    <button class="currency-tab" data-currency="eur">유로</button>
-                    <button class="currency-tab" data-currency="jpy">엔화</button>
-                </div>
-
-                <!-- 원화 RP -->
-                <div class="holding-item-card" data-currency="krw">
+                <div class="holding-item-card">
                     <div class="holding-main">
                         <div class="holding-icon rp">₩</div>
                         <div class="holding-info">
@@ -1278,9 +1229,31 @@
                             <div class="holding-amount">5,003,500원</div>
                             <div class="holding-profit positive">+3,500원(+0.07%)</div>
                         </div>
+                        <!-- <span class="holding-toggle collapsed" data-target="details-rp1">▼</span> -->
                     </div>
+                    <div class="holding-details collapsed" id="details-rp1">
+                        <div class="holding-detail-grid">
+                            <div class="holding-detail-item">
+                                <div class="holding-detail-label">매입금액</div>
+                                <div class="holding-detail-value">5,000,000원</div>
+                            </div>
+                            <div class="holding-detail-item">
+                                <div class="holding-detail-label">약정이율</div>
+                                <div class="holding-detail-value">3.65%</div>
+                            </div>
+                            <div class="holding-detail-item">
+                                <div class="holding-detail-label">만기일</div>
+                                <div class="holding-detail-value">2025.12.25</div>
+                            </div>
+                        </div>
+                        <div class="holding-actions">
+                            <button class="action-btn sell">중도환매</button>
+                            <button class="action-btn price">상세정보</button>
+                        </div>
+                    </div>
+                    
                 </div>
-                <div class="holding-item-card" data-currency="krw">
+                <div class="holding-item-card">
                     <div class="holding-main" onclick="location.href='rp_balance_detail.html'">
                         <div class="holding-icon rp">₩</div>
                         <div class="holding-info">
@@ -1291,9 +1264,30 @@
                             <div class="holding-amount">3,012,000원</div>
                             <div class="holding-profit positive">+12,000원(+0.4%)</div>
                         </div>
+                        <!-- <span class="holding-toggle collapsed" data-target="details-rp2">▼</span> -->
+                    </div>
+                    <div class="holding-details collapsed" id="details-rp2">
+                        <div class="holding-detail-grid">
+                            <div class="holding-detail-item">
+                                <div class="holding-detail-label">매입금액</div>
+                                <div class="holding-detail-value">3,000,000원</div>
+                            </div>
+                            <div class="holding-detail-item">
+                                <div class="holding-detail-label">약정이율</div>
+                                <div class="holding-detail-value">3.85%</div>
+                            </div>
+                            <div class="holding-detail-item">
+                                <div class="holding-detail-label">만기일</div>
+                                <div class="holding-detail-value">2026.01.05</div>
+                            </div>
+                        </div>
+                        <div class="holding-actions">
+                            <button class="action-btn sell">중도환매</button>
+                            <button class="action-btn price">상세정보</button>
+                        </div>
                     </div>
                 </div>
-                <div class="holding-item-card" data-currency="krw">
+                <div class="holding-item-card">
                     <div class="holding-main">
                         <div class="holding-icon rp">₩</div>
                         <div class="holding-info">
@@ -1304,76 +1298,94 @@
                             <div class="holding-amount">3,012,000원</div>
                             <div class="holding-profit positive">+12,000원(+0.4%)</div>
                         </div>
+                        <!-- <span class="holding-toggle collapsed" data-target="details-rp2">▼</span> -->
                     </div>
-                </div>
-
-                <!-- 달러 RP -->
-                <div class="holding-item-card" data-currency="usd">
-                    <div class="holding-main">
-                        <div class="holding-icon rp" style="background: #dcfce7; color: #16a34a;">$</div>
-                        <div class="holding-info">
-                            <div class="holding-name">KB증권 USD RP (7일물)</div>
-                            <div class="holding-qty">1계약</div>
+                    <div class="holding-details collapsed" id="details-rp2">
+                        <div class="holding-detail-grid">
+                            <div class="holding-detail-item">
+                                <div class="holding-detail-label">매입금액</div>
+                                <div class="holding-detail-value">3,000,000원</div>
+                            </div>
+                            <div class="holding-detail-item">
+                                <div class="holding-detail-label">약정이율</div>
+                                <div class="holding-detail-value">3.85%</div>
+                            </div>
+                            <div class="holding-detail-item">
+                                <div class="holding-detail-label">만기일</div>
+                                <div class="holding-detail-value">2026.01.05</div>
+                            </div>
                         </div>
-                        <div class="holding-value">
-                            <div class="holding-amount">$5,012.50</div>
-                            <div class="holding-profit positive">+$12.50(+0.25%)</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="holding-item-card" data-currency="usd">
-                    <div class="holding-main">
-                        <div class="holding-icon rp" style="background: #dcfce7; color: #16a34a;">$</div>
-                        <div class="holding-info">
-                            <div class="holding-name">KB증권 USD RP (30일물)</div>
-                            <div class="holding-qty">1계약</div>
-                        </div>
-                        <div class="holding-value">
-                            <div class="holding-amount">$10,041.67</div>
-                            <div class="holding-profit positive">+$41.67(+0.42%)</div>
+                        <div class="holding-actions">
+                            <button class="action-btn sell">중도환매</button>
+                            <button class="action-btn price">상세정보</button>
                         </div>
                     </div>
                 </div>
-
-                <!-- 유로 RP -->
-                <div class="holding-item-card" data-currency="eur">
+                <div class="holding-item-card">
                     <div class="holding-main">
-                        <div class="holding-icon rp" style="background: #dbeafe; color: #2563eb;">€</div>
+                        <div class="holding-icon rp">₩</div>
                         <div class="holding-info">
-                            <div class="holding-name">KB증권 EUR RP (14일물)</div>
+                            <div class="holding-name">KB증권 RP (30일물)</div>
                             <div class="holding-qty">1계약</div>
                         </div>
                         <div class="holding-value">
-                            <div class="holding-amount">€3,008.22</div>
-                            <div class="holding-profit positive">+€8.22(+0.27%)</div>
+                            <div class="holding-amount">3,012,000원</div>
+                            <div class="holding-profit positive">+12,000원(+0.4%)</div>
+                        </div>
+                        <!-- <span class="holding-toggle collapsed" data-target="details-rp2">▼</span> -->
+                    </div>
+                    <div class="holding-details collapsed" id="details-rp2">
+                        <div class="holding-detail-grid">
+                            <div class="holding-detail-item">
+                                <div class="holding-detail-label">매입금액</div>
+                                <div class="holding-detail-value">3,000,000원</div>
+                            </div>
+                            <div class="holding-detail-item">
+                                <div class="holding-detail-label">약정이율</div>
+                                <div class="holding-detail-value">3.85%</div>
+                            </div>
+                            <div class="holding-detail-item">
+                                <div class="holding-detail-label">만기일</div>
+                                <div class="holding-detail-value">2026.01.05</div>
+                            </div>
+                        </div>
+                        <div class="holding-actions">
+                            <button class="action-btn sell">중도환매</button>
+                            <button class="action-btn price">상세정보</button>
                         </div>
                     </div>
                 </div>
-
-                <!-- 엔화 RP -->
-                <div class="holding-item-card" data-currency="jpy">
+                <div class="holding-item-card">
                     <div class="holding-main">
-                        <div class="holding-icon rp" style="background: #fef3c7; color: #d97706;">¥</div>
+                        <div class="holding-icon rp">₩</div>
                         <div class="holding-info">
-                            <div class="holding-name">KB증권 JPY RP (7일물)</div>
+                            <div class="holding-name">KB증권 RP (30일물)</div>
                             <div class="holding-qty">1계약</div>
                         </div>
                         <div class="holding-value">
-                            <div class="holding-amount">¥500,095</div>
-                            <div class="holding-profit positive">+¥95(+0.02%)</div>
+                            <div class="holding-amount">3,012,000원</div>
+                            <div class="holding-profit positive">+12,000원(+0.4%)</div>
                         </div>
+                        <!-- <span class="holding-toggle collapsed" data-target="details-rp2">▼</span> -->
                     </div>
-                </div>
-                <div class="holding-item-card" data-currency="jpy">
-                    <div class="holding-main">
-                        <div class="holding-icon rp" style="background: #fef3c7; color: #d97706;">¥</div>
-                        <div class="holding-info">
-                            <div class="holding-name">KB증권 JPY RP (30일물)</div>
-                            <div class="holding-qty">1계약</div>
+                    <div class="holding-details collapsed" id="details-rp2">
+                        <div class="holding-detail-grid">
+                            <div class="holding-detail-item">
+                                <div class="holding-detail-label">매입금액</div>
+                                <div class="holding-detail-value">3,000,000원</div>
+                            </div>
+                            <div class="holding-detail-item">
+                                <div class="holding-detail-label">약정이율</div>
+                                <div class="holding-detail-value">3.85%</div>
+                            </div>
+                            <div class="holding-detail-item">
+                                <div class="holding-detail-label">만기일</div>
+                                <div class="holding-detail-value">2026.01.05</div>
+                            </div>
                         </div>
-                        <div class="holding-value">
-                            <div class="holding-amount">¥1,000,411</div>
-                            <div class="holding-profit positive">+¥411(+0.04%)</div>
+                        <div class="holding-actions">
+                            <button class="action-btn sell">중도환매</button>
+                            <button class="action-btn price">상세정보</button>
                         </div>
                     </div>
                 </div>
@@ -1537,29 +1549,6 @@
             const x = e.pageX - quickActions.offsetLeft;
             const walk = (x - startX) * 2;
             quickActions.scrollLeft = scrollLeft - walk;
-        });
-
-        // 통화 필터 기능
-        document.querySelectorAll('.currency-tab').forEach(tab => {
-            tab.addEventListener('click', function() {
-                const currency = this.dataset.currency;
-                
-                // 탭 활성화
-                document.querySelectorAll('.currency-tab').forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
-                
-                // 종목 필터링
-                const rpSection = document.querySelector('.holdings-section[data-category="rp"]');
-                const items = rpSection.querySelectorAll('.holding-item-card[data-currency]');
-                
-                items.forEach(item => {
-                    if (currency === 'all' || item.dataset.currency === currency) {
-                        item.classList.remove('hidden');
-                    } else {
-                        item.classList.add('hidden');
-                    }
-                });
-            });
         });
     </script>
 </body>
