@@ -351,14 +351,14 @@
                 const content = document.createElement('div');
                 content.className = 'section-content';
 
-                // B열(subMenu) 중복 제거: 같은 subMenu는 첫 번째(활성화 우선) 항목만 표시
-                const seenSubMenus = new Set();
+                // C열(itemName) 중복 제거: 같은 메뉴명은 첫 번째(활성화 우선) 항목만 표시
+                const seenItemNames = new Set();
                 categories[category].forEach(item => {
-                    // 이미 표시된 subMenu면 스킵
-                    if (seenSubMenus.has(item.subMenu)) {
+                    // 이미 표시된 itemName이면 스킵
+                    if (seenItemNames.has(item.itemName)) {
                         return;
                     }
-                    seenSubMenus.add(item.subMenu);
+                    seenItemNames.add(item.itemName);
 
                     const subItem = document.createElement('div');
                     subItem.className = 'sub-item';
