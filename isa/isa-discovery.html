@@ -55,12 +55,21 @@
       margin-right: 8px;
     }
 
+    .header-tabs-wrapper {
+      flex: 1;
+      overflow: hidden;
+      position: relative;
+    }
+
     .header-tabs {
       display: flex;
       gap: 4px;
       overflow-x: auto;
-      flex: 1;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
       scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      padding: 4px 0;
     }
 
     .header-tabs::-webkit-scrollbar {
@@ -80,6 +89,8 @@
       transition: all 0.2s ease;
       text-align: center;
       line-height: 1.3;
+      scroll-snap-align: center;
+      flex-shrink: 0;
     }
 
     .header-tab.active {
@@ -580,12 +591,14 @@
 
     <!-- Header Navigation -->
     <div class="header-nav">
-      <button class="back-btn">←</button>
-      <div class="header-tabs">
-        <button class="header-tab active" data-tab="절세끝판왕해외펀드">절세끝판왕<br>해외펀드</button>
-        <button class="header-tab" data-tab="따박따박배당">따박따박<br>배당</button>
-        <button class="header-tab" data-tab="안정적인이자">안정적인<br>이자</button>
-        <button class="header-tab" data-tab="ISA고수의PICK">ISA고수의<br>PICK</button>
+      <button class="back-btn" onclick="history.back()"><</button>
+      <div class="header-tabs-wrapper">
+        <div class="header-tabs" id="headerTabs">
+          <button class="header-tab active" data-tab="절세끝판왕해외펀드" data-index="0">절세끝판왕 해외ETF</button>
+          <button class="header-tab" data-tab="따박따박배당" data-index="1">따박따박 배당</button>
+          <button class="header-tab" data-tab="안정적인이자" data-index="2">안정적인 이자</button>
+          <button class="header-tab" data-tab="ISA고수의PICK" data-index="3">ISA고수의 PICK</button>
+        </div>
       </div>
     </div>
 
@@ -1547,6 +1560,97 @@
 
     // 초기 렌더링
     render();
+
+    // Header Tabs 스와이프 기능
+    const headerTabs = document.getElementById('headerTabs');
+    const tabNames = ['절세끝판왕해외펀드', '따박따박배당', '안정적인이자', 'ISA고수의PICK'];
+    let currentTabIndex = 0;
+    let headerTouchStartX = 0;
+    let headerTouchEndX = 0;
+
+    // 터치 스와이프
+    headerTabs.addEventListener('touchstart', (e) => {
+      headerTouchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    headerTabs.addEventListener('touchend', (e) => {
+      headerTouchEndX = e.changedTouches[0].screenX;
+      handleHeaderSwipe();
+    }, { passive: true });
+
+    // 마우스 드래그 (데스크탑)
+    let headerIsDragging = false;
+    let headerStartX = 0;
+
+    headerTabs.addEventListener('mousedown', (e) => {
+      headerIsDragging = true;
+      headerStartX = e.clientX;
+      headerTabs.style.cursor = 'grabbing';
+    });
+
+    headerTabs.addEventListener('mousemove', (e) => {
+      if (!headerIsDragging) return;
+      e.preventDefault();
+    });
+
+    headerTabs.addEventListener('mouseup', (e) => {
+      if (!headerIsDragging) return;
+      headerIsDragging = false;
+      headerTabs.style.cursor = 'grab';
+      const diff = headerStartX - e.clientX;
+      if (Math.abs(diff) > 50) {
+        if (diff > 0 && currentTabIndex < tabNames.length - 1) {
+          currentTabIndex++;
+          switchHeaderTab(currentTabIndex);
+        } else if (diff < 0 && currentTabIndex > 0) {
+          currentTabIndex--;
+          switchHeaderTab(currentTabIndex);
+        }
+      }
+    });
+
+    headerTabs.addEventListener('mouseleave', () => {
+      headerIsDragging = false;
+      headerTabs.style.cursor = 'grab';
+    });
+
+    function handleHeaderSwipe() {
+      const diff = headerTouchStartX - headerTouchEndX;
+      if (Math.abs(diff) > 50) {
+        if (diff > 0 && currentTabIndex < tabNames.length - 1) {
+          currentTabIndex++;
+          switchHeaderTab(currentTabIndex);
+        } else if (diff < 0 && currentTabIndex > 0) {
+          currentTabIndex--;
+          switchHeaderTab(currentTabIndex);
+        }
+      }
+    }
+
+    function switchHeaderTab(index) {
+      const tabs = headerTabs.querySelectorAll('.header-tab');
+      tabs.forEach((tab, i) => {
+        tab.classList.toggle('active', i === index);
+      });
+
+      // 선택된 탭이 보이도록 스크롤
+      const activeTab = tabs[index];
+      activeTab.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+
+      // 상태 업데이트 및 렌더링
+      state.activeHeader = tabNames[index];
+      render();
+    }
+
+    // 클릭으로 탭 변경 시 currentTabIndex 동기화
+    headerTabs.addEventListener('click', (e) => {
+      if (e.target.classList.contains('header-tab')) {
+        currentTabIndex = parseInt(e.target.dataset.index);
+      }
+    });
+
+    // 초기 커서 스타일 설정
+    headerTabs.style.cursor = 'grab';
   </script>
 </body>
 </html>

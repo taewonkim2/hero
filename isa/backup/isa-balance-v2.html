@@ -1,0 +1,1631 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ISA 잔고</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1a73e8;
+            --primary-color: #1a1a1a;
+            --secondary-color: #666;
+            --text-muted: #9ca3af;
+            --border-color: #e5e5e5;
+            --bg-gray: #f5f5f5;
+            --bg-white: #ffffff;
+            --positive: #e53935;
+            --negative: #1e88e5;
+            --card-radius: 16px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-gray);
+            color: var(--primary-color);
+            max-width: 480px;
+            margin: 0 auto;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Top Navigation */
+        .top-nav {
+            position: sticky;
+            top: 0;
+            background: var(--bg-white);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            gap: 8px;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            flex-shrink: 0;
+        }
+
+        .top-nav-submenu {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            flex: 1;
+        }
+
+        .top-nav-submenu::-webkit-scrollbar {
+            display: none;
+        }
+
+        .top-nav-submenu-item {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--secondary-color);
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .top-nav-submenu-item.active {
+            background: var(--primary-color);
+            color: var(--bg-white);
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 16px;
+            padding-bottom: 100px;
+        }
+
+        /* Account Header Card */
+        .account-card {
+            background: var(--bg-white);
+            border-radius: var(--card-radius);
+            padding: 20px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .account-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            /* margin-bottom: 12px; */
+            gap:8px;
+        }
+
+        .account-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .account-number {
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            padding : 2px;
+            border-color: #9ca3af;
+            border-radius: 5%;
+        }
+
+        .account-type {
+            font-size: 12px;
+            padding: 3px 8px;
+            background: var(--bg-gray);
+            border-radius: 4px;
+            color: var(--secondary-color);
+        }
+
+        .more-menu-container {
+            position: relative;
+        }
+        .more-menu-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            padding: 6px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: white;
+            font-size: 13px;
+        }
+
+        .more-dots {
+            display: flex;
+            flex-direction: column;  /* 세로로 배치 */
+            gap: 2px;                /* 점 사이 간격 2px */
+            border-color: white;
+        }
+
+        .more-dot {
+            width: 4px;              /* 점 크기 4x4px */
+            height: 4px;
+            background: black;
+            border-radius: 50%;      /* 원형으로 만듦 */
+            border : none;
+        }
+
+        .more-dropdown {
+                display: none;           /* 기본: 숨김 */
+        }
+
+        .more-dropdown.show {
+            display: block;          /* .show 클래스 추가 시: 표시 */
+            animation: fadeIn 0.2s ease-out;
+        }
+
+        /* Asset Card */
+        .asset-card {
+            background: var(--bg-white);
+            border-radius: var(--card-radius);
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+
+        .asset-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .asset-label {
+            font-size: 13px;
+            color: var(--secondary-color);
+            margin-bottom: 4px;
+        }
+
+        .asset-value {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .asset-actions {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 8px;
+        }
+
+        .transfer-btn {
+            padding: 6px 14px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--primary);
+            background: var(--bg-white);
+            border: 1px solid var(--primary);
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .transfer-btn:hover {
+            background: var(--primary);
+            color: var(--bg-white);
+        }
+
+        .asset-profit {
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .profit-amount {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .profit-amount.positive { color: var(--positive); }
+        .profit-amount.negative { color: var(--negative); }
+
+        .profit-rate {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--positive);
+        }
+
+        .asset-toggle {
+            background: none;
+            border: none;
+            font-size: 12px;
+            color: var(--secondary-color);
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        /* Asset Details */
+        .asset-details {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .asset-details.collapsed {
+            display: none;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+        }
+
+        .detail-label {
+            font-size: 13px;
+            color: var(--secondary-color);
+        }
+
+        .detail-value {
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        /* Chart Section */
+        .chart-section {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .chart-title {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .chart-toggle {
+            font-size: 12px;
+            color: var(--secondary-color);
+        }
+
+        .chart-content {
+            margin-top: 16px;
+        }
+
+        .chart-content.collapsed {
+            display: none;
+        }
+
+        #profitChart {
+            width: 100%;
+            height: 150px;
+            margin-top: 10px;
+        }
+
+        .chart-period {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 10px;
+        }
+
+        .period-btn {
+            font-size: 11px;
+            color: var(--text-muted);
+            padding: 5px 12px;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: var(--bg-gray);
+        }
+
+        .period-btn:hover,
+        .period-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Holdings Card */
+        .holdings-card {
+            background: var(--bg-white);
+            border-radius: var(--card-radius);
+            overflow: hidden;
+        }
+
+        /* Holdings Tabs */
+        .holdings-tabs {
+            display: flex;
+            padding: 0 4px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .holdings-tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        .holdings-tab {
+            flex: 1;
+            padding: 16px 12px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-muted);
+            cursor: pointer;
+            white-space: nowrap;
+            text-align: center;
+            position: relative;
+            transition: color 0.2s;
+        }
+
+        .holdings-tab.active {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .holdings-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 12px;
+            right: 12px;
+            height: 3px;
+            background: var(--primary-color);
+            border-radius: 2px;
+        }
+
+        /* Tab Summary Box */
+        .tab-summary-box {
+            margin: 12px 16px;
+            padding: 16px;
+            background: #f0f4ff;
+            border-radius: 12px;
+        }
+
+        .tab-summary-row1 {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        .tab-summary-label {
+            font-size: 13px;
+            color: var(--secondary-color);
+        }
+
+        .tab-summary-main {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+        }
+
+        .tab-summary-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .tab-summary-change {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .tab-summary-change.positive { color: var(--positive); }
+        .tab-summary-change.negative { color: var(--negative); }
+
+        .tab-summary-row2 {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .tab-summary-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tab-summary-item-label {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .tab-summary-item-value {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        /* Holdings Section */
+        .holdings-section {
+            display: none;
+        }
+
+        .holdings-section.active {
+            display: block;
+        }
+
+        /* Holding Item */
+        .holding-item {
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .holding-item:last-child {
+            border-bottom: none;
+        }
+
+        .holding-main {
+            display: flex;
+            align-items: center;
+            padding: 16px 20px;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .holding-main:hover {
+            background: var(--bg-gray);
+        }
+
+        .holding-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--bg-gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+
+        .holding-icon.kakao {
+            background: #FEE500;
+            color: #3C1E1E;
+        }
+
+        .holding-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .holding-name {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .holding-qty {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .holding-value {
+            text-align: right;
+            margin-right: 8px;
+        }
+
+        .holding-amount {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .holding-profit {
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .holding-profit.positive { color: var(--positive); }
+        .holding-profit.negative { color: var(--negative); }
+
+        .holding-toggle {
+            font-size: 12px;
+            color: var(--secondary-color);
+            transition: transform 0.2s;
+            padding: 4px;
+        }
+
+        .holding-toggle.collapsed {
+            transform: rotate(0deg);
+        }
+
+        .holding-toggle:not(.collapsed) {
+            transform: rotate(180deg);
+        }
+
+        /* Holding Details */
+        .holding-details {
+            margin-top: 12px;
+            padding: 12px;
+            background: var(--bg-gray);
+            border-radius: 12px;
+        }
+
+        .holding-details.collapsed {
+            display: none;
+        }
+
+        .holding-detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .holding-detail-item {
+            text-align: center;
+        }
+
+        .holding-detail-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-bottom: 2px;
+        }
+
+        .holding-detail-value {
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .holding-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .action-btn:hover {
+            opacity: 0.9;
+        }
+
+        .action-btn.sell { 
+            background: var(--negative);
+            color: white;
+        }
+        
+        .action-btn.buy { 
+            background: var(--positive);
+            color: white;
+        }
+
+        .action-btn.price {
+            background: white;
+            color: var(--primary-color);
+            border: 1px solid var(--border-color);
+        }
+
+        /* Deposit Protection Notice */
+        .deposit-protection-notice {
+            background: var(--bg-gray);
+            border-radius: 12px;
+            padding: 16px;
+            margin: 16px;
+        }
+
+        .notice-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+        }
+
+        .notice-content {
+            font-size: 12px;
+            color: var(--secondary-color);
+            line-height: 1.6;
+        }
+
+        .notice-highlight {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* Bottom Tab Bar */
+        .bottom-tab-bar {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 480px;
+            display: flex;
+            background: var(--bg-white);
+            border-top: 1px solid var(--border-color);
+            padding: 8px 0 24px;
+        }
+
+        .menu-tab, .tab-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 8px;
+            cursor: pointer;
+        }
+
+        .tab-label {
+            font-size: 11px;
+            color: var(--secondary-color);
+        }
+
+        .tab-item.active .tab-label {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .hamburger-icon {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .hamburger-line {
+            width: 18px;
+            height: 2px;
+            background: var(--secondary-color);
+            border-radius: 1px;
+        }
+
+        .menu-label {
+            font-size: 11px;
+            color: var(--secondary-color);
+        }
+
+        /* Tax Savings Card */
+        .tax_card {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 16px;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            margin-top: 16px;
+        }
+
+        .tax_card::before {
+            content: '💰';
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 48px;
+            opacity: 0.3;
+        }
+
+        .tax_header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .tax_label {
+            font-size: 14px;
+            color: #92400e;
+            font-weight: 500;
+        }
+
+        .tax_detail-btn {
+            background: rgba(255,255,255,0.6);
+            border: none;
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            color: #92400e;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .tax_value {
+            font-size: 26px;
+            font-weight: 700;
+            color: #92400e;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <nav class="top-nav">
+        <button class="back-btn">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M15 18l-6-6 6-6"></path>
+            </svg>
+        </button>
+        <div class="top-nav-submenu">
+            <span class="top-nav-submenu-item active">ISA잔고</span>
+            <span class="top-nav-submenu-item">거래내역</span>
+            <span class="top-nav-submenu-item">절세현황/한도</span>
+            <span class="top-nav-submenu-item">계좌정보</span>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Account Header Card -->
+        <div class="account-card">
+            <div class="account-row">
+                <div class="account-number">6496-1234 [ 홍길동 ] </div>
+                <!-- <span class="account-type">홍길동</span> -->
+                <span class="account-type">중개형</span>
+                <span class="account-type">농어민</span>
+            </div>
+            <div class="more-menu-container">
+                <button class="more-menu-btn">
+                    <div class="more-dots">
+                        <div class="more-dot"></div>
+                        <div class="more-dot"></div>
+                        <div class="more-dot"></div>
+                    </div>
+                </button>
+                <div class="more-dropdown" id="moreDropdown">
+                    <div class="more-dropdown-item">계좌정보</div>
+                    <div class="more-dropdown-item">해지신청</div>
+                    <!-- <div class="more-dropdown-item">연금전환</div> -->
+                    <div class="more-dropdown-item">발급번호 재등록</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Asset Card -->
+        <div class="asset-card">
+            <div class="asset-header">
+                <div class="asset-main">
+                    <div class="asset-label">보유자산</div>
+                    <div class="asset-value">45,678,900원</div>
+                    <div class="asset-profit">
+                        <span class="profit-amount positive">▲ 3,456,700원</span>
+                        <span class="profit-rate">+8.18%</span>
+                    </div>
+                </div>
+                <div class="asset-actions">
+                    <button class="asset-toggle" id="assetToggle">▼</button>
+                    <button class="transfer-btn">이체</button>
+                </div>
+            </div>
+
+            <!-- Asset Details -->
+            <div class="asset-details" id="assetDetails">
+                <div class="detail-row">
+                    <span class="detail-label">총 매입금액</span>
+                    <span class="detail-value">40,000,000원</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">총 평가금액</span>
+                    <span class="detail-value">45,000,000원</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">예수금</span>
+                    <span class="detail-value">678,900원</span>
+                </div>
+            </div>
+
+            <!-- Chart Section -->
+            <div class="chart-section">
+                <div class="chart-header" id="chartHeader">
+                    <span class="chart-title">손익추이</span>
+                    <span class="chart-toggle" id="chartToggle">▼</span>
+                </div>
+                <div class="chart-content" id="chartContent">
+                    <canvas id="profitChart"></canvas>
+                    <div class="chart-period">
+                        <span class="period-btn active">1개월</span>
+                        <span class="period-btn">3개월</span>
+                        <span class="period-btn">6개월</span>
+                        <span class="period-btn">1년</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Holdings Card -->
+        <div class="holdings-card">
+            <!-- Holdings Tabs -->
+            <div class="holdings-tabs">
+                <div class="holdings-tab active" data-category="stock">주식</div>
+                <div class="holdings-tab" data-category="fund">펀드</div>
+                <div class="holdings-tab" data-category="els">ELS/ELB</div>
+                <div class="holdings-tab" data-category="bond">채권</div>
+                <div class="holdings-tab" data-category="rp">RP</div>
+            </div>
+
+            <!-- Tab Summary Box -->
+            <div class="tab-summary-box" id="tabSummaryBox">
+                <div class="tab-summary-row1">
+                    <span class="tab-summary-label">총자산</span>
+                    <div class="tab-summary-main">
+                        <span class="tab-summary-value" id="summaryAsset">23,550,000원</span>
+                        <span class="tab-summary-change positive" id="summaryChange">(▲1,567,500원/+7.13%)</span>
+                    </div>
+                </div>
+                <div class="tab-summary-row2">
+                    <div class="tab-summary-item">
+                        <span class="tab-summary-item-label">매입금</span>
+                        <span class="tab-summary-item-value" id="summaryPurchase">21,982,500원</span>
+                    </div>
+                    <div class="tab-summary-item">
+                        <span class="tab-summary-item-label">평가금</span>
+                        <span class="tab-summary-item-value" id="summaryEvaluation">23,550,000원</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Holdings Section - 주식 -->
+            <div class="holdings-section active" data-category="stock">
+                <div class="holding-item">
+                    <div class="holding-main">
+                        <div class="holding-icon">삼성</div>
+                        <div class="holding-info">
+                            <div class="holding-name">삼성전자</div>
+                            <div class="holding-qty">150주</div>
+                        </div>
+                        <div class="holding-value">
+                            <div class="holding-amount">12,450,000원</div>
+                            <div class="holding-profit positive">+1,234,500원(+11.0%)</div>
+                        </div>
+                        <span class="holding-toggle" data-target="details-samsung">▼</span>
+                    </div>
+                    <div class="holding-details collapsed" id="details-samsung">
+                        <div class="holding-detail-grid">
+                            <div class="holding-detail-item">
+                                <div class="holding-detail-label">매입가</div>
+                                <div class="holding-detail-value">74,770원</div>
+                            </div>
+                            <div class="holding-detail-item">
+                                <div class="holding-detail-label">현재가</div>
+                                <div class="holding-detail-value">83,000원</div>
+                            </div>
+                            <div class="holding-detail-item">
+                                <div class="holding-detail-label">가능수량</div>
+                                <div class="holding-detail-value">150주</div>
+                            </div>
+                            <div class="holding-detail-item">
+                                <div class="holding-detail-label">매입금액</div>
+                                <div class="holding-detail-value">11,215,500원</div>
+                            </div>
+                        </div>
+                        <div class="holding-actions">
+                            <button class="action-btn sell">매도</button>
+                            <button class="action-btn buy">매수</button>
+                            <button class="action-btn price">현재가</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="holding-item">
+                    <div class="holding-main">
+                        <div class="holding-icon">NV</div>
+                        <div class="holding-info">
+                            <div class="holding-name">NAVER</div>
+                            <div class="holding-qty">30주</div>
+                        </div>
+                        <div class="holding-value">
+                            <div class="holding-amount">6,780,000원</div>
+                            <div class="holding-profit positive">+567,000원(+9.1%)</div>
+                        </div>
+                        <span class="holding-toggle collapsed" data-target="details-naver">▼</span>
+                    </div>
+                    <div class="holding-details collapsed" id="details-naver">
+                        <div class="holding-detail-grid">
+                            <div class="holding-detail-item">
+                                <div class="holding-detail-label">매입가</div>
+                                <div class="holding-detail-value">207,100원</div>
+                            </div>
+                            <div class="holding-detail-item">
+                                <div class="holding-detail-label">현재가</div>
+                                <div class="holding-detail-value">226,000원</div>
+                            </div>
+                            <div class="holding-detail-item">
+                                <div class="holding-detail-label">가능수량</div>
+                                <div class="holding-detail-value">30주</div>
+                            </div>
+                            <div class="holding-detail-item">
+                                <div class="holding-detail-label">매입금액</div>
+                                <div class="holding-detail-value">6,213,000원</div>
+                            </div>
+                        </div>
+                        <div class="holding-actions">
+                            <button class="action-btn sell">매도</button>
+                            <button class="action-btn buy">매수</button>
+                            <button class="action-btn price">현재가</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="holding-item">
+                    <div class="holding-main">
+                        <div class="holding-icon kakao">카카오</div>
+                        <div class="holding-info">
+                            <div class="holding-name">카카오</div>
+                            <div class="holding-qty">80주</div>
+                        </div>
+                        <div class="holding-value">
+                            <div class="holding-amount">4,320,000원</div>
+                            <div class="holding-profit negative">-234,000원(-5.1%)</div>
+                        </div>
+                        <span class="holding-toggle collapsed" data-target="details-kakao">▼</span>
+                    </div>
+                    <div class="holding-details collapsed" id="details-kakao">
+                        <div class="holding-detail-grid">
+                            <div class="holding-detail-item">
+                                <div class="holding-detail-label">매입가</div>
+                                <div class="holding-detail-value">56,925원</div>
+                            </div>
+                            <div class="holding-detail-item">
+                                <div class="holding-detail-label">현재가</div>
+                                <div class="holding-detail-value">54,000원</div>
+                            </div>
+                            <div class="holding-detail-item">
+                                <div class="holding-detail-label">가능수량</div>
+                                <div class="holding-detail-value">80주</div>
+                            </div>
+                            <div class="holding-detail-item">
+                                <div class="holding-detail-label">매입금액</div>
+                                <div class="holding-detail-value">4,554,000원</div>
+                            </div>
+                        </div>
+                        <div class="holding-actions">
+                            <button class="action-btn sell">매도</button>
+                            <button class="action-btn buy">매수</button>
+                            <button class="action-btn price">현재가</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Holdings Section - 펀드 -->
+            <div class="holdings-section" data-category="fund">
+                <div class="holding-item">
+                    <div class="holding-main">
+                        <div class="holding-icon">펀드</div>
+                        <div class="holding-info">
+                            <div class="holding-name">삼성글로벌반도체펀드</div>
+                            <div class="holding-qty">1,200좌</div>
+                        </div>
+                        <div class="holding-value">
+                            <div class="holding-amount">8,650,000원</div>
+                            <div class="holding-profit positive">+650,000원(+8.1%)</div>
+                        </div>
+                        <span class="holding-toggle collapsed" data-target="details-fund1">▼</span>
+                    </div>
+                    <div class="holding-details collapsed" id="details-fund1">
+                        <div class="holding-detail-grid">
+                            <div class="holding-detail-item">
+                                <div class="holding-detail-label">매입기준가</div>
+                                <div class="holding-detail-value">6,667원</div>
+                            </div>
+                            <div class="holding-detail-item">
+                                <div class="holding-detail-label">현재기준가</div>
+                                <div class="holding-detail-value">7,208원</div>
+                            </div>
+                            <div class="holding-detail-item">
+                                <div class="holding-detail-label">투자기간</div>
+                                <div class="holding-detail-value">1년 3개월</div>
+                            </div>
+                            <div class="holding-detail-item">
+                                <div class="holding-detail-label">매입금액</div>
+                                <div class="holding-detail-value">8,000,000원</div>
+                            </div>
+                        </div>
+                        <div class="holding-actions">
+                            <button class="action-btn sell">환매</button>
+                            <button class="action-btn buy">추가매수</button>
+                            <button class="action-btn price">상세정보</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="holding-item">
+                    <div class="holding-main">
+                        <div class="holding-icon">펀드</div>
+                        <div class="holding-info">
+                            <div class="holding-name">미래에셋인도중소형펀드</div>
+                            <div class="holding-qty">800좌</div>
+                        </div>
+                        <div class="holding-value">
+                            <div class="holding-amount">4,520,000원</div>
+                            <div class="holding-profit positive">+520,000원(+13.0%)</div>
+                        </div>
+                        <span class="holding-toggle collapsed" data-target="details-fund2">▼</span>
+                    </div>
+                    <div class="holding-details collapsed" id="details-fund2">
+                        <div class="holding-detail-grid">
+                            <div class="holding-detail-item">
+                                <div class="holding-detail-label">매입기준가</div>
+                                <div class="holding-detail-value">5,000원</div>
+                            </div>
+                            <div class="holding-detail-item">
+                                <div class="holding-detail-label">현재기준가</div>
+                                <div class="holding-detail-value">5,650원</div>
+                            </div>
+                            <div class="holding-detail-item">
+                                <div class="holding-detail-label">투자기간</div>
+                                <div class="holding-detail-value">8개월</div>
+                            </div>
+                            <div class="holding-detail-item">
+                                <div class="holding-detail-label">매입금액</div>
+                                <div class="holding-detail-value">4,000,000원</div>
+                            </div>
+                        </div>
+                        <div class="holding-actions">
+                            <button class="action-btn sell">환매</button>
+                            <button class="action-btn buy">추가매수</button>
+                            <button class="action-btn price">상세정보</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Holdings Section - ELS/ELB -->
+            <div class="holdings-section" data-category="els">
+                <div class="holding-item">
+                    <div class="holding-main">
+                        <div class="holding-icon">ELS</div>
+                        <div class="holding-info">
+                            <div class="holding-name">KB증권 ELS 제1234호</div>
+                            <div class="holding-qty">2좌</div>
+                        </div>
+                        <div class="holding-value">
+                            <div class="holding-amount">2,120,000원</div>
+                            <div class="holding-profit positive">+120,000원(+6.0%)</div>
+                        </div>
+                        <span class="holding-toggle collapsed" data-target="details-els1">▼</span>
+                    </div>
+                    <div class="holding-details collapsed" id="details-els1">
+                        <div class="holding-detail-grid">
+                            <div class="holding-detail-item">
+                                <div class="holding-detail-label">기초자산</div>
+                                <div class="holding-detail-value">KOSPI200</div>
+                            </div>
+                            <div class="holding-detail-item">
+                                <div class="holding-detail-label">조기상환</div>
+                                <div class="holding-detail-value">6개월마다</div>
+                            </div>
+                            <div class="holding-detail-item">
+                                <div class="holding-detail-label">만기일</div>
+                                <div class="holding-detail-value">2026.06.15</div>
+                            </div>
+                            <div class="holding-detail-item">
+                                <div class="holding-detail-label">매입금액</div>
+                                <div class="holding-detail-value">2,000,000원</div>
+                            </div>
+                        </div>
+                        <div class="holding-actions">
+                            <button class="action-btn sell">매도</button>
+                            <button class="action-btn price">상세정보</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="holding-item">
+                    <div class="holding-main">
+                        <div class="holding-icon">ELS</div>
+                        <div class="holding-info">
+                            <div class="holding-name">신한투자 ELS 제5678호</div>
+                            <div class="holding-qty">1좌</div>
+                        </div>
+                        <div class="holding-value">
+                            <div class="holding-amount">1,050,000원</div>
+                            <div class="holding-profit positive">+50,000원(+5.0%)</div>
+                        </div>
+                        <span class="holding-toggle collapsed" data-target="details-els2">▼</span>
+                    </div>
+                    <div class="holding-details collapsed" id="details-els2">
+                        <div class="holding-detail-grid">
+                            <div class="holding-detail-item">
+                                <div class="holding-detail-label">기초자산</div>
+                                <div class="holding-detail-value">S&P500</div>
+                            </div>
+                            <div class="holding-detail-item">
+                                <div class="holding-detail-label">조기상환</div>
+                                <div class="holding-detail-value">3개월마다</div>
+                            </div>
+                            <div class="holding-detail-item">
+                                <div class="holding-detail-label">만기일</div>
+                                <div class="holding-detail-value">2026.09.20</div>
+                            </div>
+                            <div class="holding-detail-item">
+                                <div class="holding-detail-label">매입금액</div>
+                                <div class="holding-detail-value">1,000,000원</div>
+                            </div>
+                        </div>
+                        <div class="holding-actions">
+                            <button class="action-btn sell">매도</button>
+                            <button class="action-btn price">상세정보</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Holdings Section - 채권 -->
+            <div class="holdings-section" data-category="bond">
+                <div class="holding-item">
+                    <div class="holding-main">
+                        <div class="holding-icon">채권</div>
+                        <div class="holding-info">
+                            <div class="holding-name">국고채 3년물</div>
+                            <div class="holding-qty">50좌</div>
+                        </div>
+                        <div class="holding-value">
+                            <div class="holding-amount">5,150,000원</div>
+                            <div class="holding-profit positive">+150,000원(+3.0%)</div>
+                        </div>
+                        <span class="holding-toggle collapsed" data-target="details-bond1">▼</span>
+                    </div>
+                    <div class="holding-details collapsed" id="details-bond1">
+                        <div class="holding-detail-grid">
+                            <div class="holding-detail-item">
+                                <div class="holding-detail-label">매입단가</div>
+                                <div class="holding-detail-value">100,000원</div>
+                            </div>
+                            <div class="holding-detail-item">
+                                <div class="holding-detail-label">현재단가</div>
+                                <div class="holding-detail-value">103,000원</div>
+                            </div>
+                            <div class="holding-detail-item">
+                                <div class="holding-detail-label">만기일</div>
+                                <div class="holding-detail-value">2027.06.10</div>
+                            </div>
+                            <div class="holding-detail-item">
+                                <div class="holding-detail-label">표면이율</div>
+                                <div class="holding-detail-value">3.5%</div>
+                            </div>
+                        </div>
+                        <div class="holding-actions">
+                            <button class="action-btn sell">매도</button>
+                            <button class="action-btn buy">매수</button>
+                            <button class="action-btn price">현재가</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="holding-item">
+                    <div class="holding-main">
+                        <div class="holding-icon">채권</div>
+                        <div class="holding-info">
+                            <div class="holding-name">통안채 2년물</div>
+                            <div class="holding-qty">30좌</div>
+                        </div>
+                        <div class="holding-value">
+                            <div class="holding-amount">3,060,000원</div>
+                            <div class="holding-profit positive">+60,000원(+2.0%)</div>
+                        </div>
+                        <span class="holding-toggle collapsed" data-target="details-bond2">▼</span>
+                    </div>
+                    <div class="holding-details collapsed" id="details-bond2">
+                        <div class="holding-detail-grid">
+                            <div class="holding-detail-item">
+                                <div class="holding-detail-label">매입단가</div>
+                                <div class="holding-detail-value">100,000원</div>
+                            </div>
+                            <div class="holding-detail-item">
+                                <div class="holding-detail-label">현재단가</div>
+                                <div class="holding-detail-value">102,000원</div>
+                            </div>
+                            <div class="holding-detail-item">
+                                <div class="holding-detail-label">만기일</div>
+                                <div class="holding-detail-value">2026.12.15</div>
+                            </div>
+                            <div class="holding-detail-item">
+                                <div class="holding-detail-label">표면이율</div>
+                                <div class="holding-detail-value">3.2%</div>
+                            </div>
+                        </div>
+                        <div class="holding-actions">
+                            <button class="action-btn sell">매도</button>
+                            <button class="action-btn buy">매수</button>
+                            <button class="action-btn price">현재가</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Holdings Section - RP -->
+            <div class="holdings-section" data-category="rp">
+                <div class="holding-item">
+                    <div class="holding-main">
+                        <div class="holding-icon">RP</div>
+                        <div class="holding-info">
+                            <div class="holding-name">KB증권 RP (7일물)</div>
+                            <div class="holding-qty">1계약</div>
+                        </div>
+                        <div class="holding-value">
+                            <div class="holding-amount">5,003,500원</div>
+                            <div class="holding-profit positive">+3,500원(+0.07%)</div>
+                        </div>
+                        <span class="holding-toggle collapsed" data-target="details-rp1">▼</span>
+                    </div>
+                    <div class="holding-details collapsed" id="details-rp1">
+                        <div class="holding-detail-grid">
+                            <div class="holding-detail-item">
+                                <div class="holding-detail-label">매입금액</div>
+                                <div class="holding-detail-value">5,000,000원</div>
+                            </div>
+                            <div class="holding-detail-item">
+                                <div class="holding-detail-label">약정이율</div>
+                                <div class="holding-detail-value">3.65%</div>
+                            </div>
+                            <div class="holding-detail-item">
+                                <div class="holding-detail-label">만기일</div>
+                                <div class="holding-detail-value">2025.12.25</div>
+                            </div>
+                            <div class="holding-detail-item">
+                                <div class="holding-detail-label">예상이자</div>
+                                <div class="holding-detail-value">3,500원</div>
+                            </div>
+                        </div>
+                        <div class="holding-actions">
+                            <button class="action-btn sell">중도환매</button>
+                            <button class="action-btn price">상세정보</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="holding-item">
+                    <div class="holding-main">
+                        <div class="holding-icon">RP</div>
+                        <div class="holding-info">
+                            <div class="holding-name">KB증권 RP (30일물)</div>
+                            <div class="holding-qty">1계약</div>
+                        </div>
+                        <div class="holding-value">
+                            <div class="holding-amount">3,012,000원</div>
+                            <div class="holding-profit positive">+12,000원(+0.4%)</div>
+                        </div>
+                        <span class="holding-toggle collapsed" data-target="details-rp2">▼</span>
+                    </div>
+                    <div class="holding-details collapsed" id="details-rp2">
+                        <div class="holding-detail-grid">
+                            <div class="holding-detail-item">
+                                <div class="holding-detail-label">매입금액</div>
+                                <div class="holding-detail-value">3,000,000원</div>
+                            </div>
+                            <div class="holding-detail-item">
+                                <div class="holding-detail-label">약정이율</div>
+                                <div class="holding-detail-value">3.85%</div>
+                            </div>
+                            <div class="holding-detail-item">
+                                <div class="holding-detail-label">만기일</div>
+                                <div class="holding-detail-value">2026.01.05</div>
+                            </div>
+                            <div class="holding-detail-item">
+                                <div class="holding-detail-label">예상이자</div>
+                                <div class="holding-detail-value">9,500원</div>
+                            </div>
+                        </div>
+                        <div class="holding-actions">
+                            <button class="action-btn sell">중도환매</button>
+                            <button class="action-btn price">상세정보</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <section class="tax_card animate-in delay-1">
+            <div class="tax_header">
+                <span class="tax_label">올해 절세금액</span>
+                <span class="tax_detail-btn">상세보기 →</span>
+            </div>
+            <div class="tax_value">287,450원</div>
+        </section>
+
+        <!-- 예금자 보호안내 -->
+        <div class="deposit-protection-notice">
+            <div class="notice-title">예금자 보호안내</div>
+            <div class="notice-content">
+                이 금융상품은 예금자보호법에 따라 보호되지 않습니다. 다만, 이 예탁금 중 증권매수 미사용 현금잔액은 예금자보호법에 따라 원금과 소정의 이자를 합하여 1인당 <span class="notice-highlight">"1억원"</span>까지(본 금융회사의 여타 보호상품과 합산) 보호됩니다.
+            </div>
+        </div>
+    </main>
+
+    <!-- Bottom Tab Bar -->
+    <nav class="bottom-tab-bar">
+        <div class="menu-tab">
+            <div class="hamburger-icon">
+                <div class="hamburger-line"></div>
+                <div class="hamburger-line"></div>
+                <div class="hamburger-line"></div>
+            </div>
+            <span class="menu-label">메뉴</span>
+        </div>
+        <div class="tab-item">
+            <span class="tab-label">ISA홈</span>
+        </div>
+        <div class="tab-item active">
+            <span class="tab-label">ISA계좌</span>
+        </div>
+        <div class="tab-item">
+            <span class="tab-label">ISA가입/이전</span>
+        </div>
+        <div class="tab-item">
+            <span class="tab-label">ISA업무</span>
+        </div>
+    </nav>
+
+    <script>
+        // 탭별 요약 데이터
+        const tabSummaryData = {
+            stock: { 
+                asset: '23,550,000원', 
+                profit: '1,567,500원', 
+                rate: '+7.13%', 
+                isPositive: true,
+                purchase: '21,982,500원',
+                evaluation: '23,550,000원'
+            },
+            fund: { 
+                asset: '13,170,000원', 
+                profit: '1,170,000원', 
+                rate: '+9.75%', 
+                isPositive: true,
+                purchase: '12,000,000원',
+                evaluation: '13,170,000원'
+            },
+            els: { 
+                asset: '3,170,000원', 
+                profit: '170,000원', 
+                rate: '+5.67%', 
+                isPositive: true,
+                purchase: '3,000,000원',
+                evaluation: '3,170,000원'
+            },
+            bond: { 
+                asset: '8,210,000원', 
+                profit: '210,000원', 
+                rate: '+2.63%', 
+                isPositive: true,
+                purchase: '8,000,000원',
+                evaluation: '8,210,000원'
+            },
+            rp: { 
+                asset: '8,015,500원', 
+                profit: '15,500원', 
+                rate: '+0.19%', 
+                isPositive: true,
+                purchase: '8,000,000원',
+                evaluation: '8,015,500원'
+            }
+        };
+
+        //  이벤트 바인딩 (46-52줄):
+        var moreMenuBtn = document.querySelector('.more-menu-btn');
+        moreMenuBtn.addEventListener('click', function(event) {
+            toggleMoreMenu(event);
+        });
+
+        //  토글 함수 (195-201줄):
+        function toggleMoreMenu(event) {
+            event.stopPropagation();
+            var dropdown = document.getElementById('moreDropdown');
+            var overlay = document.getElementById('overlay');
+            dropdown.classList.toggle('show');   // show 클래스 토글
+            overlay.classList.toggle('show');
+        }
+
+        // 닫기 함수 (203-208줄):
+        function closeMoreMenu() {
+            dropdown.classList.remove('show');   // show 클래스 제거
+            overlay.classList.remove('show');
+        }
+
+        // 탭 전환
+        document.querySelectorAll('.holdings-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                const category = tab.dataset.category;
+
+                // 탭 활성화
+                document.querySelectorAll('.holdings-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+
+                // 섹션 표시
+                document.querySelectorAll('.holdings-section').forEach(s => s.classList.remove('active'));
+                document.querySelector(`.holdings-section[data-category="${category}"]`).classList.add('active');
+
+                // 요약 정보 업데이트
+                const data = tabSummaryData[category];
+                document.getElementById('summaryAsset').textContent = data.asset;
+                
+                const changeEl = document.getElementById('summaryChange');
+                const arrow = data.isPositive ? '▲' : '▼';
+                changeEl.textContent = `(${arrow}${data.profit}/${data.rate})`;
+                changeEl.className = 'tab-summary-change ' + (data.isPositive ? 'positive' : 'negative');
+                
+                document.getElementById('summaryPurchase').textContent = data.purchase;
+                document.getElementById('summaryEvaluation').textContent = data.evaluation;
+            });
+        });
+
+        // 자산 상세 토글
+        document.getElementById('assetToggle').addEventListener('click', function() {
+            const details = document.getElementById('assetDetails');
+            details.classList.toggle('collapsed');
+            this.textContent = details.classList.contains('collapsed') ? '▼' : '▲';
+        });
+
+        // 차트 토글
+        document.getElementById('chartHeader').addEventListener('click', function() {
+            const content = document.getElementById('chartContent');
+            const toggle = document.getElementById('chartToggle');
+            content.classList.toggle('collapsed');
+            toggle.textContent = content.classList.contains('collapsed') ? '▼' : '▲';
+        });
+
+        // 보유종목 상세 토글
+        document.querySelectorAll('.holding-toggle').forEach(toggle => {
+            toggle.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const targetId = this.dataset.target;
+                const details = document.getElementById(targetId);
+                
+                if (details) {
+                    details.classList.toggle('collapsed');
+                    this.classList.toggle('collapsed');
+                }
+            });
+        });
+
+        // 상단 서브메뉴 전환
+        document.querySelectorAll('.top-nav-submenu-item').forEach(item => {
+            item.addEventListener('click', () => {
+                document.querySelectorAll('.top-nav-submenu-item').forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+            });
+        });
+
+        // 차트 기간 버튼
+        document.querySelectorAll('.period-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                const period = this.textContent;
+                const periodMap = {
+                    '1개월': '1M',
+                    '3개월': '3M',
+                    '6개월': '6M',
+                    '1년': '1Y'
+                };
+                drawChart(periodMap[period] || '1M');
+            });
+        });
+
+        // 차트 초기화
+        setTimeout(function() {
+            drawChart('1M');
+        }, 100);
+
+        // Canvas API로 차트 그리기 (원본과 동일)
+        function drawChart(period) {
+            period = period || '1M';
+            var canvas = document.getElementById('profitChart');
+            if (!canvas) return;
+            var ctx = canvas.getContext('2d');
+
+            var dpr = window.devicePixelRatio || 1;
+            var rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width * dpr;
+            canvas.height = 150 * dpr;
+            ctx.scale(dpr, dpr);
+            canvas.style.width = rect.width + 'px';
+            canvas.style.height = '150px';
+
+            var data = {
+                '1M': [42.1, 43.2, 42.8, 44.5, 43.9, 44.2, 45.1, 44.8, 45.3, 45.7],
+                '3M': [38.5, 39.2, 40.1, 41.3, 40.8, 42.5, 43.1, 44.2, 44.8, 45.7],
+                '6M': [35.2, 36.8, 38.1, 37.5, 39.2, 41.0, 42.3, 43.5, 44.1, 45.7],
+                '1Y': [30.5, 32.1, 34.5, 36.2, 38.0, 39.5, 41.2, 43.0, 44.5, 45.7]
+            };
+
+            var values = data[period] || data['1M'];
+            var width = rect.width;
+            var height = 150;
+            var padding = { top: 15, right: 15, bottom: 25, left: 45 };
+
+            ctx.clearRect(0, 0, width, height);
+
+            var minVal = Math.min.apply(null, values) * 0.95;
+            var maxVal = Math.max.apply(null, values) * 1.02;
+            var xStep = (width - padding.left - padding.right) / (values.length - 1);
+            var yScale = (height - padding.top - padding.bottom) / (maxVal - minVal);
+
+            // 격자선 그리기
+            ctx.strokeStyle = '#e5e7eb';
+            ctx.lineWidth = 1;
+            for (var i = 0; i <= 4; i++) {
+                var y = padding.top + (height - padding.top - padding.bottom) * i / 4;
+                ctx.beginPath();
+                ctx.moveTo(padding.left, y);
+                ctx.lineTo(width - padding.right, y);
+                ctx.stroke();
+
+                var val = maxVal - (maxVal - minVal) * i / 4;
+                ctx.fillStyle = '#9ca3af';
+                ctx.font = '10px Noto Sans KR';
+                ctx.textAlign = 'right';
+                ctx.fillText(val.toFixed(1) + '백만', padding.left - 6, y + 3);
+            }
+
+            // 라인 그리기
+            ctx.beginPath();
+            ctx.strokeStyle = '#1a73e8';
+            ctx.lineWidth = 2;
+            ctx.lineJoin = 'round';
+            ctx.lineCap = 'round';
+
+            values.forEach(function(val, idx) {
+                var x = padding.left + idx * xStep;
+                var chartY = padding.top + (maxVal - val) * yScale;
+                if (idx === 0) {
+                    ctx.moveTo(x, chartY);
+                } else {
+                    ctx.lineTo(x, chartY);
+                }
+            });
+            ctx.stroke();
+
+            // 그라데이션 영역 채우기
+            var gradient = ctx.createLinearGradient(0, padding.top, 0, height - padding.bottom);
+            gradient.addColorStop(0, 'rgba(26, 115, 232, 0.2)');
+            gradient.addColorStop(1, 'rgba(26, 115, 232, 0)');
+
+            ctx.beginPath();
+            values.forEach(function(val, idx) {
+                var x = padding.left + idx * xStep;
+                var chartY = padding.top + (maxVal - val) * yScale;
+                if (idx === 0) {
+                    ctx.moveTo(x, chartY);
+                } else {
+                    ctx.lineTo(x, chartY);
+                }
+            });
+            ctx.lineTo(padding.left + (values.length - 1) * xStep, height - padding.bottom);
+            ctx.lineTo(padding.left, height - padding.bottom);
+            ctx.closePath();
+            ctx.fillStyle = gradient;
+            ctx.fill();
+
+            // 포인트 마커 그리기
+            values.forEach(function(val, idx) {
+                var x = padding.left + idx * xStep;
+                var chartY = padding.top + (maxVal - val) * yScale;
+                ctx.beginPath();
+                ctx.arc(x, chartY, 3, 0, Math.PI * 2);
+                ctx.fillStyle = '#1a73e8';
+                ctx.fill();
+                ctx.beginPath();
+                ctx.arc(x, chartY, 1.5, 0, Math.PI * 2);
+                ctx.fillStyle = 'white';
+                ctx.fill();
+            });
+        }
+    </script>
+</body>
+</html>
