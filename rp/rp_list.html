@@ -6,7 +6,7 @@
     <title>RP 구매가능 종목</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet"> -->
     <style>
         :root {
             --primary: #1a73e8;
@@ -34,6 +34,18 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+        }
+
+        @font-face {
+            font-family: 'Daki';
+            src: url('../font/DAKIL.TTF') format('truetype');
+            font-weight: 300;  /* Light */
+        }
+        
+        @font-face {
+            font-family: 'Daki';
+            src: url('../font/DAKIM.TTF') format('truetype');
+            font-weight: 500;  /* Medium */
         }
 
         body {
@@ -342,7 +354,7 @@
             border-bottom: none;
         }
 
-        .rp-icon {
+        /* .rp-icon {
             width: 48px;
             height: 48px;
             border-radius: 50%;
@@ -373,7 +385,7 @@
         .rp-icon.eur {
             background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
             color: var(--eur-color);
-        }
+        } */
 
         .rp-info {
             flex: 1;
@@ -490,6 +502,31 @@
         .empty-state-text {
             font-size: 14px;
         }
+        /* .exchange {
+            background:var(--bg-card);
+            border-radius:20px;
+            padding:20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 16px;
+            text-align:center;
+            cursor:pointer;
+            color:var(--text-secondary);
+            font-size:14px;
+            line-height:1.6;
+            transition:all 0.2s;
+        } */
+        .exchange-banner:active {
+            transform: scale(0.98);
+            background: var(--bg-primary);
+        }
+
+        .exchange {
+            background: var(--bg-gray);
+            border-radius: 12px;
+            padding: 16px;
+            margin: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
     </style>
 </head>
 <body>
@@ -501,7 +538,7 @@
                     <path d="M15 18l-6-6 6-6"></path>
                 </svg>
             </button>
-            <span class="page-title">RP매수</span>
+            <span class="page-title" onclick="..">RP검색</span>
         </div>
     </nav>
 
@@ -541,11 +578,11 @@
             <div class="available-list" id="availableList">
                 <!-- 원화 상품들 -->
                 <div class="available-rp-item" data-type="krw" data-owned="false" onclick="handleItemClick(this, 'krw-1y')">
-                    <div class="rp-icon krw">₩</div>
+                    <!-- <div class="rp-icon krw">₩</div> -->
                     <div class="rp-info">
                         <div class="risk-badge very-low">매우낮은위험</div>
-                        <div class="rp-name">퍼스트 발행어음 특판</div>
-                        <div class="available-rp-rate">연 3.40% <span class="available-rp-period">1년</span></div>
+                        <div class="rp-name">일반RP</div>
+                        <div class="available-rp-rate">연 3.40% <span class="available-rp-period">(30일)</span></div>
                         <div class="rate-details">
                             <div class="rate-item">중도해지 <span>연 1.50%</span></div>
                             <div class="rate-item">만기후 <span>연 0.10%</span></div>
@@ -557,11 +594,11 @@
                 </div>
 
                 <div class="available-rp-item" data-type="krw" data-owned="false" onclick="handleItemClick(this, 'krw-6m')">
-                    <div class="rp-icon krw">₩</div>
+                    <!-- <div class="rp-icon krw">₩</div> -->
                     <div class="rp-info">
                         <div class="risk-badge very-low">매우낮은위험</div>
-                        <div class="rp-name">퍼스트 발행어음 특판</div>
-                        <div class="available-rp-rate">연 3.30% <span class="available-rp-period">6개월</span></div>
+                        <div class="rp-name">일반RP</div>
+                        <div class="available-rp-rate">연 3.30% <span class="available-rp-period">60일</span></div>
                         <div class="rate-details">
                             <div class="rate-item">중도해지 <span>연 1.40%</span></div>
                             <div class="rate-item">만기후 <span>연 0.10%</span></div>
@@ -573,11 +610,11 @@
                 </div>
 
                 <div class="available-rp-item" data-type="krw" data-owned="true" onclick="handleItemClick(this, 'krw-31')">
-                    <div class="rp-icon krw">₩</div>
+                    <!-- <div class="rp-icon krw">₩</div> -->
                     <div class="rp-info">
                         <div class="risk-badge very-low">매우낮은위험</div>
-                        <div class="rp-name">원화 RP</div>
-                        <div class="available-rp-rate">연 2.40% <span class="available-rp-period">31일</span></div>
+                        <div class="rp-name">일반RP</div>
+                        <div class="available-rp-rate">연 2.40% <span class="available-rp-period">90일</span></div>
                         <div class="rate-details">
                             <div class="rate-item">중도해지 <span>연 1.20%</span></div>
                             <div class="rate-item">만기후 <span>연 0.10%</span></div>
@@ -589,11 +626,11 @@
                 </div>
 
                 <div class="available-rp-item" data-type="krw" data-owned="true" onclick="handleItemClick(this, 'krw-flex')">
-                    <div class="rp-icon krw">₩</div>
+                    <!-- <div class="rp-icon krw">₩</div> -->
                     <div class="rp-info">
                         <div class="risk-badge very-low">매우낮은위험</div>
-                        <div class="rp-name">원화 RP</div>
-                        <div class="available-rp-rate">연 2.35% <span class="available-rp-period">수시</span></div>
+                        <div class="rp-name">일반RP</div>
+                        <div class="available-rp-rate">연 2.35% <span class="available-rp-period">15일</span></div>
                         <div class="rate-details">
                             <div class="rate-item">중도해지 <span>연 2.35%</span></div>
                             <div class="rate-item">만기후 <span>연 0.10%</span></div>
@@ -606,11 +643,11 @@
 
                 <!-- 달러 상품들 -->
                 <div class="available-rp-item" data-type="usd" data-owned="false" onclick="handleItemClick(this, 'usd-31')">
-                    <div class="rp-icon usd">$</div>
+                    <!-- <div class="rp-icon usd">$</div> -->
                     <div class="rp-info">
                         <div class="risk-badge very-low">매우낮은위험</div>
-                        <div class="rp-name">외화 RP (USD)</div>
-                        <div class="available-rp-rate">연 3.85% <span class="available-rp-period">31일</span></div>
+                        <div class="rp-name">USD 일반RP</div>
+                        <div class="available-rp-rate">연 3.85% <span class="available-rp-period">120일</span></div>
                         <div class="rate-details">
                             <div class="rate-item">중도해지 <span>연 1.80%</span></div>
                             <div class="rate-item">만기후 <span>연 0.10%</span></div>
@@ -622,10 +659,10 @@
                 </div>
 
                 <div class="available-rp-item" data-type="usd" data-owned="true" onclick="handleItemClick(this, 'usd-flex')">
-                    <div class="rp-icon usd">$</div>
+                    <!-- <div class="rp-icon usd">$</div> -->
                     <div class="rp-info">
                         <div class="risk-badge very-low">매우낮은위험</div>
-                        <div class="rp-name">외화 RP (USD)</div>
+                        <div class="rp-name">USD 일반RP</div>
                         <div class="available-rp-rate">연 3.65% <span class="available-rp-period">수시</span></div>
                         <div class="rate-details">
                             <div class="rate-item">중도해지 <span>연 3.65%</span></div>
@@ -639,11 +676,11 @@
 
                 <!-- 엔화 상품들 -->
                 <div class="available-rp-item" data-type="jpy" data-owned="false" onclick="handleItemClick(this, 'jpy-31')">
-                    <div class="rp-icon jpy">¥</div>
+                    <!-- <div class="rp-icon jpy">¥</div> -->
                     <div class="rp-info">
                         <div class="risk-badge very-low">매우낮은위험</div>
                         <div class="rp-name">외화 RP (JPY)</div>
-                        <div class="available-rp-rate">연 0.85% <span class="available-rp-period">31일</span></div>
+                        <div class="available-rp-rate">연 0.85% <span class="available-rp-period">30일</span></div>
                         <div class="rate-details">
                             <div class="rate-item">중도해지 <span>연 0.30%</span></div>
                             <div class="rate-item">만기후 <span>연 0.05%</span></div>
@@ -655,7 +692,7 @@
                 </div>
 
                 <div class="available-rp-item" data-type="jpy" data-owned="false" onclick="handleItemClick(this, 'jpy-flex')">
-                    <div class="rp-icon jpy">¥</div>
+                    <!-- <div class="rp-icon jpy">¥</div> -->
                     <div class="rp-info">
                         <div class="risk-badge very-low">매우낮은위험</div>
                         <div class="rp-name">외화 RP (JPY)</div>
@@ -672,11 +709,11 @@
 
                 <!-- 유로 상품들 -->
                 <div class="available-rp-item" data-type="eur" data-owned="false" onclick="handleItemClick(this, 'eur-31')">
-                    <div class="rp-icon eur">€</div>
+                    <!-- <div class="rp-icon eur">€</div> -->
                     <div class="rp-info">
                         <div class="risk-badge very-low">매우낮은위험</div>
                         <div class="rp-name">외화 RP (EUR)</div>
-                        <div class="available-rp-rate">연 2.50% <span class="available-rp-period">31일</span></div>
+                        <div class="available-rp-rate">연 2.50% <span class="available-rp-period">30일</span></div>
                         <div class="rate-details">
                             <div class="rate-item">중도해지 <span>연 1.20%</span></div>
                             <div class="rate-item">만기후 <span>연 0.10%</span></div>
@@ -688,7 +725,7 @@
                 </div>
 
                 <div class="available-rp-item" data-type="eur" data-owned="false" onclick="handleItemClick(this, 'eur-flex')">
-                    <div class="rp-icon eur">€</div>
+                    <!-- <div class="rp-icon eur">€</div> -->
                     <div class="rp-info">
                         <div class="risk-badge very-low">매우낮은위험</div>
                         <div class="rp-name">외화 RP (EUR)</div>
@@ -703,7 +740,9 @@
                     </div>
                 </div>
             </div>
+            
         </section>
+        <div class = "exchange" onclick = "goToExchange()" >이 상품은 외화 자산이 필요합니다.<br/>외화가 없다면, 새로워진 환전 서비스를 이용해보세요 > </div>
     </main>
 
     <!-- Bottom Tab Bar -->
@@ -719,14 +758,15 @@
             </div>
         </div>
         <div class="tab-item" onclick="switchTab('rp-home', this)">
-            <span class="tab-label">RP홈</span>
+            <span class="tab-label">RP검색</span>
         </div>
         <div class="tab-item" onclick="switchTab('rp-balance', this)">
-            <span class="tab-label">RP보유/거래내역</span>
+            <span class="tab-label">RP잔고</span>
         </div>
-        <div class="tab-item active" onclick="switchTab('rp-buy', this)">
+        <!-- <div class="tab-item active" onclick="switchTab('rp-buy', this)">
             <span class="tab-label">RP매수</span>
-        </div>
+        </div> -->
+
     </nav>
 
     <script>
@@ -804,6 +844,11 @@
             toggle.classList.toggle('on');
             // 토글 기능 (미기획)
             console.log('Rate view toggled:', toggle.classList.contains('on'));
+        }
+
+        // Toggle rate view
+        function goToExchange() {
+            alert('환전 화면으로 이동합니다')
         }
 
         // Animate elements on load

@@ -483,9 +483,12 @@
         /* Holding Item Card (개별 카드 스타일) */
         .holding-item-card {
             background: var(--bg-white);
+            border-color:var(--border-color);
+            border-width: 1px;
+            border-style: solid;
             border-radius: var(--card-radius);
             margin: 12px 16px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            /* box-shadow: 0 2px 8px rgba(0,0,0,0.08); */
             overflow: hidden;
         }
 
@@ -774,7 +777,7 @@
                     <path d="M15 18l-6-6 6-6"></path>
                 </svg>
             </button>
-            <span class="page-title">잔고</span>
+            <span class="page-title">RP잔고</span>
         </div>
         <div class="top-nav-right">
             <button class="nav-icon-btn">
@@ -833,9 +836,9 @@
         <!-- Quick Action Buttons -->
         <div class="quick-actions-container">
             <div class="quick-actions">
-                <button class="quick-action-btn" onclick="location.href='rp_history.html'">거래내역</button>
+                <button class="quick-action-btn" onclick="location.href='rp_history_order.html'">당일 내역</button>
                 <!-- <button class="quick-action-btn">계좌정보<span class="badge">(D-20)</span></button> -->
-                <button class="quick-action-btn">계좌정보</button>
+                <button class="quick-action-btn" onclick="location.href='rp_history_trade.html'">거래내역</button>
                 <!-- <button class="quick-action-btn">해지신청</button>
                 <button class="quick-action-btn">계좌정보</button>
                 <button class="quick-action-btn">발급번호 재등록</button> -->
@@ -1101,7 +1104,7 @@
                             </svg>
                         </div>
                         <div class="holding-info">
-                            <div class="holding-name">KB증권 ELS 제1234호</div>
+                            <div class="holding-name">KB증권 RP</div>
                             <div class="holding-qty">2좌</div>
                         </div>
                         <div class="holding-value">
@@ -1269,7 +1272,7 @@
                 <!-- 원화 RP -->
                 <div class="holding-item-card" data-currency="krw">
                     <div class="holding-main">
-                        <div class="holding-icon rp">₩</div>
+                        <!-- <div class="holding-icon rp">₩</div> -->
                         <div class="holding-info">
                             <div class="holding-name">KB증권 RP (7일물)</div>
                             <div class="holding-qty">1계약</div>
@@ -1282,7 +1285,7 @@
                 </div>
                 <div class="holding-item-card" data-currency="krw">
                     <div class="holding-main" onclick="location.href='rp_balance_detail.html'">
-                        <div class="holding-icon rp">₩</div>
+                        <!-- <div class="holding-icon rp">₩</div> -->
                         <div class="holding-info">
                             <div class="holding-name">KB증권 RP (31일물)</div>
                             <div class="holding-qty">1계약</div>
@@ -1295,7 +1298,7 @@
                 </div>
                 <div class="holding-item-card" data-currency="krw">
                     <div class="holding-main">
-                        <div class="holding-icon rp">₩</div>
+                        <!-- <div class="holding-icon rp">₩</div> -->
                         <div class="holding-info">
                             <div class="holding-name">KB증권 RP (30일물)</div>
                             <div class="holding-qty">1계약</div>
@@ -1310,7 +1313,7 @@
                 <!-- 달러 RP -->
                 <div class="holding-item-card" data-currency="usd">
                     <div class="holding-main">
-                        <div class="holding-icon rp" style="background: #dcfce7; color: #16a34a;">$</div>
+                        <!-- <div class="holding-icon rp" style="background: #dcfce7; color: #16a34a;">$</div> -->
                         <div class="holding-info">
                             <div class="holding-name">KB증권 USD RP (7일물)</div>
                             <div class="holding-qty">1계약</div>
@@ -1323,7 +1326,7 @@
                 </div>
                 <div class="holding-item-card" data-currency="usd">
                     <div class="holding-main">
-                        <div class="holding-icon rp" style="background: #dcfce7; color: #16a34a;">$</div>
+                        <!-- <div class="holding-icon rp" style="background: #dcfce7; color: #16a34a;">$</div> -->
                         <div class="holding-info">
                             <div class="holding-name">KB증권 USD RP (30일물)</div>
                             <div class="holding-qty">1계약</div>
@@ -1338,7 +1341,7 @@
                 <!-- 유로 RP -->
                 <div class="holding-item-card" data-currency="eur">
                     <div class="holding-main">
-                        <div class="holding-icon rp" style="background: #dbeafe; color: #2563eb;">€</div>
+                        <!-- <div class="holding-icon rp" style="background: #dbeafe; color: #2563eb;">€</div> -->
                         <div class="holding-info">
                             <div class="holding-name">KB증권 EUR RP (14일물)</div>
                             <div class="holding-qty">1계약</div>
@@ -1353,7 +1356,7 @@
                 <!-- 엔화 RP -->
                 <div class="holding-item-card" data-currency="jpy">
                     <div class="holding-main">
-                        <div class="holding-icon rp" style="background: #fef3c7; color: #d97706;">¥</div>
+                        <!-- <div class="holding-icon rp" style="background: #fef3c7; color: #d97706;">¥</div> -->
                         <div class="holding-info">
                             <div class="holding-name">KB증권 JPY RP (7일물)</div>
                             <div class="holding-qty">1계약</div>
@@ -1366,7 +1369,7 @@
                 </div>
                 <div class="holding-item-card" data-currency="jpy">
                     <div class="holding-main">
-                        <div class="holding-icon rp" style="background: #fef3c7; color: #d97706;">¥</div>
+                        <!-- <div class="holding-icon rp" style="background: #fef3c7; color: #d97706;">¥</div> -->
                         <div class="holding-info">
                             <div class="holding-name">KB증권 JPY RP (30일물)</div>
                             <div class="holding-qty">1계약</div>
@@ -1400,17 +1403,17 @@
             <span class="menu-label">메뉴</span>
         </div>
         <div class="tab-item">
-            <span class="tab-label">ISA홈</span>
+            <span class="tab-label" onclick = "location.href='rp_list.html'" >RP검색</span>
         </div>
         <div class="tab-item active">
-            <span class="tab-label">ISA계좌</span>
-        </div>
+            <span class="tab-label">RP잔고</span>
+        <!-- </div>
         <div class="tab-item">
             <span class="tab-label">ISA가입/이전</span>
         </div>
         <div class="tab-item">
             <span class="tab-label">ISA업무</span>
-        </div>
+        </div> -->
     </nav>
 
     <script>

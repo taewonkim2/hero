@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RP 주문내역</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1a73e8;
+            --primary-light: #e8f0fe;
+            --accent: #ff6b35;
+            --positive: #e53935;
+            --negative: #1976d2;
+            --menu-red: #d32f2f;
+            --bg-primary: #f5f6f8;
+            --bg-card: #ffffff;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --text-muted: #9ca3af;
+            --border: #e5e7eb;
+            --shadow: 0 2px 8px rgba(0,0,0,0.06);
+            --shadow-lg: 0 4px 16px rgba(0,0,0,0.1);
+            --krw-color: #1a73e8;
+            --usd-color: #10b981;
+            --jpy-color: #f59e0b;
+            --eur-color: #8b5cf6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            max-width: 480px;
+            margin: 0 auto;
+            min-height: 100vh;
+            padding-top: 55px;
+            padding-bottom: 70px;
+        }
+
+        /* Top Navigation Bar */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 480px;
+            background: white;
+            z-index: 1000;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .top-nav-header {
+            height: 56px;
+            display: flex;
+            align-items: center;
+            padding: 0 0px;
+            justify-content: space-between;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            padding: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.7;
+        }
+
+        .sub-nav-item {
+            flex: 1;
+            padding: 14px 0;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .sub-nav-item.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* Bottom Tab Bar */
+        .bottom-tab-bar {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 480px;
+            height: 70px;
+            background: white;
+            display: flex;
+            align-items: stretch;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .tab-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: color 0.2s;
+            padding: 8px 4px;
+        }
+
+        .tab-item.active {
+            color: var(--primary);
+        }
+
+        .tab-label {
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .menu-tab {
+            flex: 0.8;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        .menu-button-box {
+            background: var(--menu-red);
+            border-radius: 10px;
+            padding: 8px 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hamburger-icon {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            margin-bottom: 3px;
+        }
+
+        .hamburger-line {
+            width: 18px;
+            height: 2px;
+            background: white;
+            border-radius: 1px;
+        }
+
+        .menu-label {
+            font-size: 10px;
+            font-weight: 600;
+            color: white;
+        }
+
+        /* Account Header */
+        .account-header {
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .account-number {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .account-type-badge {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .account-icons {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: auto;
+        }
+
+        .account-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+
+        .account-icon.lock-icon {
+            margin-left: 4px;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 16px;
+        }
+
+        /* Section Card */
+        .section-card {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 16px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .section-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-toggle {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s;
+        }
+
+        .section-toggle.collapsed {
+            transform: rotate(-90deg);
+        }
+
+        .section-content {
+            max-height: 2000px;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+            opacity: 1;
+        }
+
+        .section-content.collapsed {
+            max-height: 0;
+            opacity: 0;
+        }
+
+        /* Filter Chips */
+        .filter-chips {
+            display: flex;
+            gap: 8px;
+            margin: 16px 0;
+            flex-wrap: wrap;
+        }
+
+        .filter-chip {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: var(--bg-primary);
+            color: var(--text-secondary);
+            border: 1px solid transparent;
+        }
+
+        .filter-chip.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Order Item - Card Style */
+        .order-item {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            margin-bottom: 12px;
+        }
+
+        .order-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .rp-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 700;
+            margin-right: 14px;
+            flex-shrink: 0;
+        }
+
+        .rp-icon.krw {
+            background: linear-gradient(135deg, #e8f0fe 0%, #c2d9ff 100%);
+            color: var(--krw-color);
+        }
+
+        .rp-icon.usd {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            color: var(--usd-color);
+        }
+
+        .rp-icon.jpy {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            color: var(--jpy-color);
+        }
+
+        .rp-icon.eur {
+            background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
+            color: var(--eur-color);
+        }
+
+        .rp-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .rp-name {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .order-time {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .rp-value {
+            text-align: right;
+            margin-right: 12px;
+        }
+
+        .rp-amount {
+            font-size: 15px;
+            font-weight: 400;
+            margin-bottom: 4px;
+        }
+
+        .gubun-buy {
+            font-size: 12px;
+            margin-left: 8px;
+            padding: 2px 8px;
+            color: white;
+            background: #e53935;
+            border-radius: 10px;
+        }
+
+        .gubun-sell {
+            font-size: 12px;
+            margin-left: 8px;
+            padding: 2px 8px;
+            color: white;
+            background: #1976d2;
+            border-radius: 10px;
+        }
+
+        .btn-action {
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+
+        .btn-cancel {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        /* Half Popup (Cancel Confirm) */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0);
+            z-index: 2000;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            visibility: hidden;
+            transition: background 0.4s ease-out, visibility 0.4s;
+        }
+
+        .popup-overlay.show {
+            visibility: visible;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .half-popup {
+            width: 100%;
+            max-width: 480px;
+            background: white;
+            border-radius: 20px 20px 0 0;
+            padding: 24px;
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .popup-overlay.show .half-popup {
+            transform: translateY(0);
+        }
+
+        .popup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .popup-title {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .popup-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-muted);
+        }
+
+        .popup-content {
+            margin-bottom: 24px;
+        }
+
+        .popup-item-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .popup-item-row:last-child {
+            border-bottom: none;
+        }
+
+        .popup-item-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .popup-item-value {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .popup-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .popup-btn {
+            flex: 1;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+
+        .popup-btn.cancel {
+            background: var(--bg-primary);
+            color: var(--text-secondary);
+        }
+
+        .popup-btn.confirm {
+            background: var(--primary);
+            color: white;
+        }
+        .close-btn {
+            background: none;
+            border: none;
+            padding: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.7;
+            margin-left: auto;  /* 오른쪽 끝으로 밀기 */
+        }
+
+        .close-btn:active {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation Bar with Sub Nav -->
+    <!-- <nav class="top-nav">
+        <div class="top-nav-header">
+            <button class="back-btn" onclick="goBack()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M15 18l-6-6 6-6"></path>
+                </svg>
+            </button>
+            <div class="sub-nav-item active" onclick="switchSubNav('orders', this)">RP주문내역</div>
+            <div class="sub-nav-item" onclick="switchSubNav('history', this)">RP거래내역</div>
+        </div>
+    </nav> -->
+    <nav class="top-nav">
+        <div class="top-nav-header">
+            <div class="sub-nav-item active" onclick="switchSubNav('orders', this)">RP주문내역</div>
+            <div class="sub-nav-item" onclick="switchSubNav('history', this)">RP거래내역</div>
+            <button class="close-btn" onclick="location.href = 'rp_balance.html'">
+            <!-- <button class="close-btn" onclick="goBack()"> -->
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 6L6 18"></path>
+                    <path d="M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+    </nav>
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Account Header -->
+        <div class="account-header">
+            <span class="account-number">6496-1234 [ 홍길동 ] ▼ </span>
+            <div class="account-icon lock-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+            </div>
+            <div class="account-icons">
+                <div class="account-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- 당일 주문내역 Section -->
+        <section class="section-card">
+            <div class="section-header" onclick="toggleSection('orderSection')">
+            </div>
+
+            <div class="section-content" id="orderSectionContent">
+                <!-- Filter Chips -->
+                <div class="filter-chips">
+                    <div class="filter-chip active" onclick="filterOrders('all', this)">전체</div>
+                    <div class="filter-chip" onclick="filterOrders('krw', this)">원화</div>
+                    <div class="filter-chip" onclick="filterOrders('usd', this)">달러</div>
+                    <div class="filter-chip" onclick="filterOrders('jpy', this)">엔화</div>
+                    <div class="filter-chip" onclick="filterOrders('eur', this)">유로</div>
+                </div>
+
+                <!-- Order List -->
+                <div class="order-list" id="orderList">
+                    <div class="order-item" data-type="krw">
+                        <!-- <div class="rp-icon krw">₩</div> -->
+                        <div class="rp-info">
+                            <div class="rp-name">원화RP(31일형)</div>
+                            <div class="order-time">09:15:32 <span class="gubun-buy">매수</span></div>
+                        </div>
+                        <div class="rp-value">
+                            <div class="rp-amount">1,000,000원</div>
+                        </div>
+                        <button class="btn-action btn-cancel" onclick="openCancelPopup('order1', '원화RP(31일형)', '매수', '1,000,000원', '09:15:32')">취소</button>
+                    </div>
+
+                    <div class="order-item" data-type="usd">
+                        <!-- <div class="rp-icon usd">$</div> -->
+                        <div class="rp-info">
+                            <div class="rp-name">외화RP(USD)(31일형)</div>
+                            <div class="order-time">10:23:45 <span class="gubun-sell">매도</span></div>
+                        </div>
+                        <div class="rp-value">
+                            <div class="rp-amount">$500.00</div>
+                        </div>
+                        <button class="btn-action btn-cancel" onclick="openCancelPopup('order2', '외화RP(USD)(31일형)', '매도', '$500.00', '10:23:45')">취소</button>
+                    </div>
+
+                    <div class="order-item" data-type="krw">
+                        <!-- <div class="rp-icon krw">₩</div> -->
+                        <div class="rp-info">
+                            <div class="rp-name">퍼스트 발행어음 특판</div>
+                            <div class="order-time">14:05:18 <span class="gubun-buy">매수</span></div>
+                        </div>
+                        <div class="rp-value">
+                            <div class="rp-amount">2,000,000원</div>
+                        </div>
+                        <button class="btn-action btn-cancel" onclick="openCancelPopup('order3', '퍼스트 발행어음 특판', '매수', '2,000,000원', '14:05:18')">취소</button>
+                    </div>
+
+                    <div class="order-item" data-type="jpy">
+                        <!-- <div class="rp-icon jpy">¥</div> -->
+                        <div class="rp-info">
+                            <div class="rp-name">외화RP(JPY)(수시)</div>
+                            <div class="order-time">11:30:22 <span class="gubun-buy">매수</span></div>
+                        </div>
+                        <div class="rp-value">
+                            <div class="rp-amount">¥100,000</div>
+                        </div>
+                        <button class="btn-action btn-cancel" onclick="openCancelPopup('order4', '외화RP(JPY)(수시)', '매수', '¥100,000', '11:30:22')">취소</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Bottom Tab Bar -->
+    <!-- <nav class="bottom-tab-bar">
+        <div class="menu-tab" onclick="openSideMenu()">
+            <div class="menu-button-box">
+                <div class="hamburger-icon">
+                    <div class="hamburger-line"></div>
+                    <div class="hamburger-line"></div>
+                    <div class="hamburger-line"></div>
+                </div>
+                <span class="menu-label">메뉴</span>
+            </div>
+        </div>
+        <div class="tab-item" onclick="location.href ='rp_list.html'">
+            <span class="tab-label">RP검색</span>
+        </div>
+        <div class="tab-item active" onclick="switchTab('rp-balance', this)">
+            <span class="tab-label">RP보유/거래내역</span>
+        </div>
+    </nav> -->
+
+    <!-- Half Popup (Cancel Confirmation) -->
+    <div class="popup-overlay" id="cancelPopup">
+        <div class="half-popup">
+            <div class="popup-header">
+                <span class="popup-title">주문 취소 확인</span>
+                <button class="popup-close" onclick="closeCancelPopup()">×</button>
+            </div>
+            <div class="popup-content">
+                <div class="popup-item-row">
+                    <span class="popup-item-label">종목명</span>
+                    <span class="popup-item-value" id="cancelItemName">-</span>
+                </div>
+                <div class="popup-item-row">
+                    <span class="popup-item-label">주문구분</span>
+                    <span class="popup-item-value" id="cancelOrderType">-</span>
+                </div>
+                <div class="popup-item-row">
+                    <span class="popup-item-label">주문금액</span>
+                    <span class="popup-item-value" id="cancelAmount">-</span>
+                </div>
+                <div class="popup-item-row">
+                    <span class="popup-item-label">주문시간</span>
+                    <span class="popup-item-value" id="cancelTime">-</span>
+                </div>
+            </div>
+            <div class="popup-buttons">
+                <button class="popup-btn cancel" onclick="closeCancelPopup()">취소</button>
+                <button class="popup-btn confirm" onclick="confirmCancel()">확인</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Section Toggle (접기/펼치기)
+        function toggleSection(sectionId) {
+            const content = document.getElementById(sectionId + 'Content');
+            const toggle = document.getElementById(sectionId + 'Toggle');
+
+            content.classList.toggle('collapsed');
+            if (toggle) toggle.classList.toggle('collapsed');
+        }
+
+        // Filter orders
+        function filterOrders(type, element) {
+            const chips = element.parentElement.querySelectorAll('.filter-chip');
+            chips.forEach(chip => chip.classList.remove('active'));
+            element.classList.add('active');
+
+            const items = document.querySelectorAll('#orderList .order-item');
+            items.forEach(item => {
+                if (type === 'all' || item.dataset.type === type) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        // Cancel Popup
+        let currentCancelOrderId = null;
+
+        function openCancelPopup(orderId, itemName, orderType, amount, time) {
+            currentCancelOrderId = orderId;
+            document.getElementById('cancelItemName').textContent = itemName;
+            document.getElementById('cancelOrderType').textContent = orderType;
+            document.getElementById('cancelAmount').textContent = amount;
+            document.getElementById('cancelTime').textContent = time;
+            document.getElementById('cancelPopup').classList.add('show');
+        }
+
+        function closeCancelPopup() {
+            document.getElementById('cancelPopup').classList.remove('show');
+            currentCancelOrderId = null;
+        }
+
+        function confirmCancel() {
+            if (currentCancelOrderId) {
+                alert(`주문번호 ${currentCancelOrderId}가 취소되었습니다.`);
+                closeCancelPopup();
+            }
+        }
+
+        // Sub navigation
+        function switchSubNav(page, element) {
+            document.querySelectorAll('.sub-nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            element.classList.add('active');
+
+            if (page === 'orders') {
+                // 현재 페이지
+            } else if (page === 'history') {
+                window.location.href = 'rp_history_trade.html';
+            }
+        }
+
+        // Navigation
+        function goBack() {
+            window.location.href = 'rp_balance.html';
+        }
+
+        function openSideMenu() {
+            alert('메뉴가 열립니다.');
+        }
+
+        function switchTab(tabName, element) {
+            document.querySelectorAll('.tab-item').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            element.classList.add('active');
+
+            if (tabName === 'rp-home') {
+                window.location.href = 'rp_home.html';
+            } else if (tabName === 'rp-buy') {
+                window.location.href = 'rp_list.html';
+            }
+        }
+
+        // Close popup when clicking outside
+        document.getElementById('cancelPopup').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeCancelPopup();
+            }
+        });
+
+    </script>
+</body>
+</html>

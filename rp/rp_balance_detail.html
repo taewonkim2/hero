@@ -359,7 +359,7 @@
         <section class="section-card">
             <div class="info-row">
                 <span class="info-label">매수일</span>
-                <span class="info-value" id="purchaseDate" style="color:black;">2025.12.08 <span class="dday">D-20</span></span>
+                <span class="info-value" id="purchaseDate" style="color:black;">2025.12.08 </span>
                 <!-- <span class="info-value" id="maturityDate">2026.01.08 <span class = "dday">D-20</span></span> -->
             </div>
             <div class="info-row">
@@ -573,7 +573,7 @@
             document.getElementById('investAmount').textContent = data.investAmount;
             document.getElementById('profitLoss').textContent = data.profitLoss;
             document.getElementById('interestRate').textContent = data.interestRate;
-            document.getElementById('purchaseDate').innerHTML = data.purchaseDate + ' <span class="dday">D-20</span>';
+            // document.getElementById('purchaseDate').innerHTML = data.purchaseDate + ' <span class="dday">D-20</span>';
             document.getElementById('maturityDate').innerHTML = data.maturityDate + ' <span class="dday">D-30</span>';
             document.getElementById('expectedAmount').textContent = data.expectedAmount;
             document.getElementById('terminationAmount').textContent = data.terminationAmount;

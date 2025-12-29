@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RP 주문/거래내역</title>
+    <title>RP 거래내역</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -176,7 +176,6 @@
 
         /* Account Header */
         .account-header {
-            /* background: var(--bg-card); */
             padding: 16px;
             display: flex;
             align-items: center;
@@ -218,92 +217,6 @@
         /* Main Content */
         .main-content {
             padding: 16px;
-        }
-
-        /* Account Selector */
-        .account-selector {
-            background: var(--bg-card);
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 16px;
-            box-shadow: var(--shadow);
-        }
-
-        .account-switch-row {
-            display: flex;
-            align-items: center;
-            gap : 12px;
-        }
-
-        .switch-container {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            cursor: pointer;
-            padding: 10px 14px;
-            background: var(--bg-primary);
-            border-radius: 10px;
-            border: 1px solid var(--border);
-        }
-
-        .switch-text {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        .switch-dots {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .switch-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #d1d5db;
-            transition: background 0.2s;
-        }
-
-        .switch-dot.active {
-            background: #ef4444;
-        }
-
-        .account-dropdown {
-            flex: 1;
-            padding: 10px 14px;
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            font-size: 13px;
-            font-family: inherit;
-            background: white;
-            cursor: pointer;
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 12px center;
-        }
-
-        .account-dropdown:disabled {
-            background-color: #f3f4f6;
-            color: #9ca3af;
-            cursor: not-allowed;
-        }
-
-        .password-input {
-            padding: 10px 14px;
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            font-size: 13px;
-            font-family: inherit;
-            width: 80px;
-        }
-
-        .password-input:disabled {
-            background-color: #f3f4f6;
-            color: #9ca3af;
-            cursor: not-allowed;
         }
 
         /* Section Card */
@@ -381,18 +294,6 @@
             color: white;
         }
 
-        /* Order Item */
-        .order-item {
-            display: flex;
-            align-items: center;
-            padding: 16px 0;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .order-item:last-child {
-            border-bottom: none;
-        }
-
         .rp-icon {
             width: 48px;
             height: 48px;
@@ -429,7 +330,6 @@
         .rp-info {
             flex: 1;
             min-width: 0;
-            /* border-bottom: none; */
         }
 
         .rp-name {
@@ -476,21 +376,6 @@
             border-radius: 10px;
         }
 
-        .btn-action {
-            padding: 10px 16px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            border: none;
-            transition: all 0.2s;
-        }
-
-        .btn-cancel {
-            background: #fef3c7;
-            color: #d97706;
-        }
-
         /* Period Selector */
         .period-selector {
             display: flex;
@@ -521,7 +406,6 @@
             align-items: center;
             gap: 8px;
             margin-bottom: 16px;
-            /* margin-top:16px; */
         }
 
         .date-input {
@@ -615,138 +499,34 @@
             color: var(--text-primary);
             padding: 12px 0 8px;
             margin-bottom: 8px;
-            border-bottom: 1px solid var(--border);
+            /* border-bottom: 1px solid var(--border); */
         }
 
         .history-date:first-child {
             padding-top: 0;
         }
 
-        /* History Item */
+        /* History Item - Card Style */
         .history-item {
             display: flex;
             align-items: flex-start;
-            padding: 14px 0;
+            padding: 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            margin-bottom: 12px;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: all 0.2s;
         }
 
         .history-item:hover {
-            background: var(--bg-primary);
-            margin: 0 -16px;
-            padding: 14px 16px;
+            border-color: var(--primary);
         }
 
         /* 날짜 그룹 간격 */
         .history-item + .history-date {
             margin-top: 8px;
             padding-top: 16px;
-        }
-
-        /* Half Popup (Cancel Confirm) */
-        .popup-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0);
-            z-index: 2000;
-            display: flex;
-            justify-content: center;
-            align-items: flex-end;
-            visibility: hidden;
-            transition: background 0.4s ease-out, visibility 0.4s;
-        }
-
-        .popup-overlay.show {
-            visibility: visible;
-            background: rgba(0, 0, 0, 0.5);
-        }
-
-        .half-popup {
-            width: 100%;
-            max-width: 480px;
-            background: white;
-            border-radius: 20px 20px 0 0;
-            padding: 24px;
-            transform: translateY(100%);
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .popup-overlay.show .half-popup {
-            transform: translateY(0);
-        }
-
-        .popup-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .popup-title {
-            font-size: 18px;
-            font-weight: 700;
-        }
-
-        .popup-close {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: var(--text-muted);
-        }
-
-        .popup-content {
-            margin-bottom: 24px;
-        }
-
-        .popup-item-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .popup-item-row:last-child {
-            border-bottom: none;
-        }
-
-        .popup-item-label {
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
-
-        .popup-item-value {
-            font-size: 14px;
-            font-weight: 600;
-        }
-
-        .popup-buttons {
-            display: flex;
-            gap: 12px;
-        }
-
-        .popup-btn {
-            flex: 1;
-            padding: 16px;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            border: none;
-            transition: all 0.2s;
-        }
-
-        .popup-btn.cancel {
-            background: var(--bg-primary);
-            color: var(--text-secondary);
-        }
-
-        .popup-btn.confirm {
-            background: var(--primary);
-            color: white;
         }
 
         /* Full Popup (Trade Detail) */
@@ -825,21 +605,48 @@
             font-weight: 600;
             text-align: right;
         }
+        .close-btn {
+            background: none;
+            border: none;
+            padding: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.7;
+            margin-left: auto;  /* 오른쪽 끝으로 밀기 */
+        }
+
+        .close-btn:active {
+            opacity: 1;
+        }
 
     </style>
 </head>
 <body>
     <!-- Top Navigation Bar with Sub Nav -->
-    <nav class="top-nav">
+    <!-- <nav class="top-nav">
         <div class="top-nav-header">
             <button class="back-btn" onclick="goBack()">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M15 18l-6-6 6-6"></path>
                 </svg>
             </button>
-            <div class="sub-nav-item active" onclick="switchSubNav('orders', this)">RP주문내역</div>
-            <!-- <div class="sub-nav-item active" onclick="switchSubNav('orders', this)">RP주문내역</div> -->
-            <div class="sub-nav-item" onclick="switchSubNav('history', this)">RP거래내역</div>
+            <div class="sub-nav-item" onclick="switchSubNav('orders', this)">RP주문내역</div>
+            <div class="sub-nav-item active" onclick="switchSubNav('history', this)">RP거래내역</div>
+        </div>
+    </nav> -->
+    <nav class="top-nav">
+        <div class="top-nav-header">
+            <div class="sub-nav-item" onclick="switchSubNav('orders', this)">RP주문내역</div>
+            <div class="sub-nav-item active" onclick="switchSubNav('history', this)">RP거래내역</div>
+            <button class="close-btn" onclick="location.href = 'rp_balance.html'">
+            <!-- <button class="close-btn" onclick="goBack()"> -->
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 6L6 18"></path>
+                    <path d="M6 6l12 12"></path>
+                </svg>
+            </button>
         </div>
     </nav>
 
@@ -864,103 +671,6 @@
             </div>
         </div>
 
-        <!-- Account Selector -->
-        <!-- <div class="account-selector">
-            <div class="account-switch-row">
-                <div class="switch-container" onclick="toggleAccountMode()">
-                    <span class="switch-text" id="switchText">전체</span>
-                    <div class="switch-dots">
-                        <div class="switch-dot active" id="dotTop"></div>
-                        <div class="switch-dot" id="dotBottom"></div>
-                    </div>
-                </div>
-                <select class="account-dropdown" id="accountSelect" disabled>
-                    <option value="all">전체 계좌</option>
-                    <option value="acc1">123-456-789012 (종합계좌)</option>
-                    <option value="acc2">987-654-321098 (ISA계좌)</option>
-                    <option value="acc3">456-789-123456 (연금저축)</option>
-                </select>
-                <input type="password" class="password-input" id="passwordInput" placeholder="비밀번호" disabled>
-            </div>
-        </div> -->
-
-        <!-- 당일 주문내역 Section -->
-        <section class="section-card">
-            <div class="section-header" onclick="toggleSection('orderSection')">
-                <!-- <span class="section-title">
-                    당일 주문내역
-                    <span style="font-size: 13px; color: var(--text-muted); font-weight: 400;">2025.12.11</span>
-                </span> -->
-                <!-- <div class="section-toggle" id="orderSectionToggle">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M6 9l6 6 6-6"></path>
-                    </svg>
-                </div> -->
-            </div>
-
-            <div class="section-content" id="orderSectionContent">
-                <!-- Filter Chips -->
-                <div class="filter-chips">
-                    <div class="filter-chip active" onclick="filterOrders('all', this)">전체</div>
-                    <div class="filter-chip" onclick="filterOrders('krw', this)">원화</div>
-                    <div class="filter-chip" onclick="filterOrders('usd', this)">달러</div>
-                    <div class="filter-chip" onclick="filterOrders('jpy', this)">엔화</div>
-                    <div class="filter-chip" onclick="filterOrders('eur', this)">유로</div>
-                </div>
-
-                <!-- Order List -->
-                <div class="order-list" id="orderList">
-                    <div class="order-item" data-type="krw">
-                        <div class="rp-icon krw">₩</div>
-                        <div class="rp-info">
-                            <div class="rp-name">원화RP(31일형)</div>
-                            <div class="order-time">09:15:32 <span class="gubun-buy">매수</span></div>
-                        </div>
-                        <div class="rp-value">
-                            <div class="rp-amount">1,000,000원</div>
-                        </div>
-                        <button class="btn-action btn-cancel" onclick="openCancelPopup('order1', '원화RP(31일형)', '매수', '1,000,000원', '09:15:32')">취소</button>
-                    </div>
-
-                    <div class="order-item" data-type="usd">
-                        <div class="rp-icon usd">$</div>
-                        <div class="rp-info">
-                            <div class="rp-name">외화RP(USD)(31일형)</div>
-                            <div class="order-time">10:23:45 <span class="gubun-sell">매도</span></div>
-                        </div>
-                        <div class="rp-value">
-                            <div class="rp-amount">$500.00</div>
-                        </div>
-                        <button class="btn-action btn-cancel" onclick="openCancelPopup('order2', '외화RP(USD)(31일형)', '매도', '$500.00', '10:23:45')">취소</button>
-                    </div>
-
-                    <div class="order-item" data-type="krw">
-                        <div class="rp-icon krw">₩</div>
-                        <div class="rp-info">
-                            <div class="rp-name">퍼스트 발행어음 특판</div>
-                            <div class="order-time">14:05:18 <span class="gubun-buy">매수</span></div>
-                        </div>
-                        <div class="rp-value">
-                            <div class="rp-amount">2,000,000원</div>
-                        </div>
-                        <button class="btn-action btn-cancel" onclick="openCancelPopup('order3', '퍼스트 발행어음 특판', '매수', '2,000,000원', '14:05:18')">취소</button>
-                    </div>
-
-                    <div class="order-item" data-type="jpy">
-                        <div class="rp-icon jpy">¥</div>
-                        <div class="rp-info">
-                            <div class="rp-name">외화RP(JPY)(수시)</div>
-                            <div class="order-time">11:30:22 <span class="gubun-buy">매수</span></div>
-                        </div>
-                        <div class="rp-value">
-                            <div class="rp-amount">¥100,000</div>
-                        </div>
-                        <button class="btn-action btn-cancel" onclick="openCancelPopup('order4', '외화RP(JPY)(수시)', '매수', '¥100,000', '11:30:22')">취소</button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
         <!-- 기간별 거래내역 Section -->
         <section class="section-card">
             <div class="section-header" onclick="toggleSection('historySection')">
@@ -980,21 +690,11 @@
                 </div>
 
             <div class="section-content" id="historySectionContent">
-                <!-- Period Selector -->
-                <!-- <div class="period-selector">
-                    <button class="period-btn" onclick="selectPeriod('1w', this)">1주일</button>
-                    <button class="period-btn" onclick="selectPeriod('1m', this)">1개월</button>
-                    <button class="period-btn active" onclick="selectPeriod('3m', this)">3개월</button>
-                    <button class="period-btn" onclick="selectPeriod('6m', this)">6개월</button>
-                    <button class="period-btn" onclick="selectPeriod('1y', this)">1년</button>
-                </div> -->
-
                 <!-- Date Range -->
                 <div class="date-range-container">
                     <input type="date" class="date-input" id="startDate" value="2025-09-11">
                     <span>~</span>
                     <input type="date" class="date-input" id="endDate" value="2025-12-11">
-                    <!-- <button class="period-btn" onclick="searchByDate()" style="margin-left: 8px;">조회</button> -->
                 </div>
 
                 <!-- Summary Box -->
@@ -1020,59 +720,32 @@
                 </div>
 
                 <!-- Chart -->
-                <!-- <div class="chart-container">
+                <div class="chart-container" id="chartContainer">
                     <div class="chart-bar-wrapper">
                         <div class="chart-bar" style="height: 60px;"></div>
-                        <span class="chart-label">09월</span>
+                        <span class="chart-label">09/02</span>
                     </div>
                     <div class="chart-bar-wrapper">
                         <div class="chart-bar" style="height: 85px;"></div>
-                        <span class="chart-label">10월</span>
+                        <span class="chart-label">10/03</span>
                     </div>
                     <div class="chart-bar-wrapper">
                         <div class="chart-bar highlight" style="height: 70px;"></div>
-                        <span class="chart-label">11월</span>
+                        <span class="chart-label">10/25</span>
+                    </div>
+                    <div class="chart-bar-wrapper">
+                        <div class="chart-bar" style="height: 45px;"></div>
+                        <span class="chart-label">11/20</span>
+                    </div>
+                    <div class="chart-bar-wrapper">
+                        <div class="chart-bar" style="height: 55px;"></div>
+                        <span class="chart-label">11/02</span>
                     </div>
                     <div class="chart-bar-wrapper">
                         <div class="chart-bar" style="height: 90px;"></div>
-                        <span class="chart-label">12월</span>
+                        <span class="chart-label">12/02</span>
                     </div>
-                </div> -->
-                            <div class="chart-container" id="chartContainer">
-                <div class="chart-bar-wrapper">
-                    <div class="chart-bar" style="height: 60px;"></div>
-                    <span class="chart-label">09/02</span>
                 </div>
-                <div class="chart-bar-wrapper">
-                    <div class="chart-bar" style="height: 85px;"></div>
-                    <span class="chart-label">10/03</span>
-                </div>
-                <div class="chart-bar-wrapper">
-                    <div class="chart-bar highlight" style="height: 70px;"></div>
-                    <span class="chart-label">10/25</span>
-                </div>
-                <div class="chart-bar-wrapper">
-                    <div class="chart-bar" style="height: 45px;"></div>
-                    <span class="chart-label">11/20</span>
-                </div>
-                <div class="chart-bar-wrapper">
-                    <div class="chart-bar" style="height: 55px;"></div>
-                    <span class="chart-label">11/02</span>
-                </div>
-                <div class="chart-bar-wrapper">
-                    <div class="chart-bar" style="height: 90px;"></div>
-                    <span class="chart-label">12/02</span>
-                </div>
-            </div>
-
-                <!-- Filter Chips for History -->
-                <!-- <div class="filter-chips">
-                    <div class="filter-chip active" onclick="filterHistory('all', this)">전체</div>
-                    <div class="filter-chip" onclick="filterHistory('krw', this)">원화</div>
-                    <div class="filter-chip" onclick="filterHistory('usd', this)">달러</div>
-                    <div class="filter-chip" onclick="filterHistory('jpy', this)">엔화</div>
-                    <div class="filter-chip" onclick="filterHistory('eur', this)">유로</div>
-                </div> -->
 
                 <!-- History List -->
                 <div class="history-list" id="historyList">
@@ -1080,7 +753,7 @@
                     <div class="history-date">2025.12.10</div>
 
                     <div class="history-item" data-type="krw" onclick="openTradeDetail('T20251210001', '123-456-789012', '2025.12.10', 'T20251210001', '매수', '3,000,000원', '0원', '0원', '모바일')">
-                        <div class="rp-icon krw">₩</div>
+                        <!-- <div class="rp-icon krw">₩</div> -->
                         <div class="rp-info">
                             <div class="rp-name">원화RP(31일형)</div>
                             <div class="order-time">09:30:15 <span class="gubun-buy">매수</span></div>
@@ -1091,7 +764,7 @@
                     </div>
 
                     <div class="history-item" data-type="usd" onclick="openTradeDetail('T20251210002', '123-456-789012', '2025.12.10', 'T20251210002', '매도', '$1,500.00', '$22.50', '$3.47', 'HTS')">
-                        <div class="rp-icon usd">$</div>
+                        <!-- <div class="rp-icon usd">$</div> -->
                         <div class="rp-info">
                             <div class="rp-name">외화RP(USD)(수시)</div>
                             <div class="order-time">11:20:33 <span class="gubun-sell">매도</span></div>
@@ -1105,9 +778,9 @@
                     <div class="history-date">2025.12.05</div>
 
                     <div class="history-item" data-type="krw" onclick="openTradeDetail('T20251205001', '987-654-321098', '2025.12.05', 'T20251205001', '매도', '5,000,000원', '62,500원', '9,625원', '모바일')">
-                        <div class="rp-icon krw">₩</div>
+                        <!-- <div class="rp-icon krw">₩</div> -->
                         <div class="rp-info">
-                            <div class="rp-name">퍼스트 발행어음 특판(1년)</div>
+                            <div class="rp-name">원화RP(1년)</div>
                             <div class="order-time">14:45:20 <span class="gubun-sell">매도</span></div>
                         </div>
                         <div class="rp-value">
@@ -1119,7 +792,7 @@
                     <div class="history-date">2025.11.28</div>
 
                     <div class="history-item" data-type="jpy" onclick="openTradeDetail('T20251128001', '123-456-789012', '2025.11.28', 'T20251128001', '매수', '¥500,000', '0円', '0円', 'HTS')">
-                        <div class="rp-icon jpy">¥</div>
+                        <!-- <div class="rp-icon jpy">¥</div> -->
                         <div class="rp-info">
                             <div class="rp-name">외화RP(JPY)(31일형)</div>
                             <div class="order-time">10:15:45 <span class="gubun-buy">매수</span></div>
@@ -1130,7 +803,7 @@
                     </div>
 
                     <div class="history-item" data-type="eur" onclick="openTradeDetail('T20251128002', '123-456-789012', '2025.11.28', 'T20251128002', '매수', '€2,000.00', '0€', '0€', '모바일')">
-                        <div class="rp-icon eur">€</div>
+                        <!-- <div class="rp-icon eur">€</div> -->
                         <div class="rp-info">
                             <div class="rp-name">외화RP(EUR)(수시)</div>
                             <div class="order-time">15:30:10 <span class="gubun-buy">매수</span></div>
@@ -1144,7 +817,7 @@
                     <div class="history-date">2025.11.15</div>
 
                     <div class="history-item" data-type="krw" onclick="openTradeDetail('T20251115001', '456-789-123456', '2025.11.15', 'T20251115001', '매수', '2,000,000원', '0원', '0원', '영업점')">
-                        <div class="rp-icon krw">₩</div>
+                        <!-- <div class="rp-icon krw">₩</div> -->
                         <div class="rp-info">
                             <div class="rp-name">원화RP(수시)</div>
                             <div class="order-time">09:05:30 <span class="gubun-buy">매수</span></div>
@@ -1155,7 +828,7 @@
                     </div>
 
                     <div class="history-item" data-type="usd" onclick="openTradeDetail('T20251115002', '123-456-789012', '2025.11.15', 'T20251115002', '매도', '$2,000.00', '$45.00', '$6.93', 'MTS')">
-                        <div class="rp-icon usd">$</div>
+                        <!-- <div class="rp-icon usd">$</div> -->
                         <div class="rp-info">
                             <div class="rp-name">외화RP(USD)(31일형)</div>
                             <div class="order-time">13:40:55 <span class="gubun-sell">매도</span></div>
@@ -1169,7 +842,7 @@
                     <div class="history-date">2025.10.20</div>
 
                     <div class="history-item" data-type="krw" onclick="openTradeDetail('T20251020001', '123-456-789012', '2025.10.20', 'T20251020001', '매수', '5,200,000원', '0원', '0원', '모바일')">
-                        <div class="rp-icon krw">₩</div>
+                        <!-- <div class="rp-icon krw">₩</div> -->
                         <div class="rp-info">
                             <div class="rp-name">원화RP(31일형)</div>
                             <div class="order-time">10:00:00 <span class="gubun-buy">매수</span></div>
@@ -1188,7 +861,7 @@
     </main>
 
     <!-- Bottom Tab Bar -->
-    <nav class="bottom-tab-bar">
+    <!-- <nav class="bottom-tab-bar">
         <div class="menu-tab" onclick="openSideMenu()">
             <div class="menu-button-box">
                 <div class="hamburger-icon">
@@ -1205,42 +878,7 @@
         <div class="tab-item active" onclick="switchTab('rp-balance', this)">
             <span class="tab-label">RP보유/거래내역</span>
         </div>
-        <!-- <div class="tab-item" onclick="switchTab('rp-buy', this)">
-            <span class="tab-label">RP매수</span>
-        </div> -->
-    </nav>
-
-    <!-- Half Popup (Cancel Confirmation) -->
-    <div class="popup-overlay" id="cancelPopup">
-        <div class="half-popup">
-            <div class="popup-header">
-                <span class="popup-title">주문 취소 확인</span>
-                <button class="popup-close" onclick="closeCancelPopup()">×</button>
-            </div>
-            <div class="popup-content">
-                <div class="popup-item-row">
-                    <span class="popup-item-label">종목명</span>
-                    <span class="popup-item-value" id="cancelItemName">-</span>
-                </div>
-                <div class="popup-item-row">
-                    <span class="popup-item-label">주문구분</span>
-                    <span class="popup-item-value" id="cancelOrderType">-</span>
-                </div>
-                <div class="popup-item-row">
-                    <span class="popup-item-label">주문금액</span>
-                    <span class="popup-item-value" id="cancelAmount">-</span>
-                </div>
-                <div class="popup-item-row">
-                    <span class="popup-item-label">주문시간</span>
-                    <span class="popup-item-value" id="cancelTime">-</span>
-                </div>
-            </div>
-            <div class="popup-buttons">
-                <button class="popup-btn cancel" onclick="closeCancelPopup()">취소</button>
-                <button class="popup-btn confirm" onclick="confirmCancel()">확인</button>
-            </div>
-        </div>
-    </div>
+    </nav> -->
 
     <!-- Full Popup (Trade Detail) -->
     <div class="full-popup" id="tradeDetailPopup">
@@ -1292,58 +930,13 @@
     </div>
 
     <script>
-        // Account mode toggle
-        let isAccountMode = false;
-
-        function toggleAccountMode() {
-            const switchText = document.getElementById('switchText');
-            const dotTop = document.getElementById('dotTop');
-            const dotBottom = document.getElementById('dotBottom');
-            const accountSelect = document.getElementById('accountSelect');
-            const passwordInput = document.getElementById('passwordInput');
-
-            isAccountMode = !isAccountMode;
-
-            if (isAccountMode) {
-                switchText.textContent = '계좌';
-                dotTop.classList.remove('active');
-                dotBottom.classList.add('active');
-                accountSelect.disabled = false;
-                passwordInput.disabled = false;
-                accountSelect.selectedIndex = 1;
-            } else {
-                switchText.textContent = '전체';
-                dotTop.classList.add('active');
-                dotBottom.classList.remove('active');
-                accountSelect.disabled = true;
-                passwordInput.disabled = true;
-                accountSelect.selectedIndex = 0;
-            }
-        }
-
         // Section Toggle (접기/펼치기)
         function toggleSection(sectionId) {
             const content = document.getElementById(sectionId + 'Content');
             const toggle = document.getElementById(sectionId + 'Toggle');
 
             content.classList.toggle('collapsed');
-            toggle.classList.toggle('collapsed');
-        }
-
-        // Filter orders
-        function filterOrders(type, element) {
-            const chips = element.parentElement.querySelectorAll('.filter-chip');
-            chips.forEach(chip => chip.classList.remove('active'));
-            element.classList.add('active');
-
-            const items = document.querySelectorAll('#orderList .order-item');
-            items.forEach(item => {
-                if (type === 'all' || item.dataset.type === type) {
-                    item.style.display = 'flex';
-                } else {
-                    item.style.display = 'none';
-                }
-            });
+            if (toggle) toggle.classList.toggle('collapsed');
         }
 
         // Filter history
@@ -1407,30 +1000,6 @@
             alert(`${startDate} ~ ${endDate} 기간의 거래내역을 조회합니다.`);
         }
 
-        // Cancel Popup
-        let currentCancelOrderId = null;
-
-        function openCancelPopup(orderId, itemName, orderType, amount, time) {
-            currentCancelOrderId = orderId;
-            document.getElementById('cancelItemName').textContent = itemName;
-            document.getElementById('cancelOrderType').textContent = orderType;
-            document.getElementById('cancelAmount').textContent = amount;
-            document.getElementById('cancelTime').textContent = time;
-            document.getElementById('cancelPopup').classList.add('show');
-        }
-
-        function closeCancelPopup() {
-            document.getElementById('cancelPopup').classList.remove('show');
-            currentCancelOrderId = null;
-        }
-
-        function confirmCancel() {
-            if (currentCancelOrderId) {
-                alert(`주문번호 ${currentCancelOrderId}가 취소되었습니다.`);
-                closeCancelPopup();
-            }
-        }
-
         // Trade Detail Popup
         function openTradeDetail(txId, account, date, txNo, type, amount, interest, tax, channel) {
             document.getElementById('detailAccount').textContent = account;
@@ -1455,16 +1024,16 @@
             });
             element.classList.add('active');
 
-            if (page === 'balance') {
-                window.location.href = 'rp_balance.html';
+            if (page === 'orders') {
+                window.location.href = 'rp_history_order.html';
             } else if (page === 'history') {
-                // 현재 페이지 - 이미 활성화됨
+                // 현재 페이지
             }
         }
 
         // Navigation
         function goBack() {
-            window.location.href = 'rp_home.html';
+            window.location.href = 'rp_balance.html';
         }
 
         function openSideMenu() {
@@ -1483,21 +1052,6 @@
                 window.location.href = 'rp_list.html';
             }
         }
-
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            const accountSelect = document.getElementById('accountSelect');
-            const passwordInput = document.getElementById('passwordInput');
-            accountSelect.disabled = true;
-            passwordInput.disabled = true;
-        });
-
-        // Close popup when clicking outside
-        document.getElementById('cancelPopup').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeCancelPopup();
-            }
-        });
 
     </script>
 </body>
