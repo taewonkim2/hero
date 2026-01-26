@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ISA 입금 - 확인</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background: #FAFAFA;
+            color: #1A1C1E;
+            max-width: 420px;
+            margin: 0 auto;
+            padding-bottom: 80px;
+        }
+
+        .top-nav {
+            background: white;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #E0E0E0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .back-btn {
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-title {
+            flex: 1;
+            font-size: 18px;
+            font-weight: 600;
+            color: #1A1C1E;
+            text-align: center;
+            margin-right: 36px;
+        }
+
+        .progress-bar-container {
+            background: white;
+            padding: 16px 16px 12px;
+            border-bottom: 1px solid #E0E0E0;
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .progress-step {
+            flex: 1;
+            height: 3px;
+            background: #E0E0E0;
+            margin: 0 2px;
+            border-radius: 2px;
+        }
+
+        .progress-step.active {
+            background: #333;
+        }
+
+        .progress-text {
+            font-size: 12px;
+            color: #999;
+            text-align: center;
+        }
+
+        .content {
+            padding: 20px 16px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1A1C1E;
+            margin-bottom: 8px;
+        }
+
+        .section-subtitle {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+
+        .confirm-card {
+            background: white;
+            border: 1px solid #E0E0E0;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        }
+
+        .confirm-amount {
+            text-align: center;
+            padding: 24px 0;
+            border-bottom: 1px solid #E0E0E0;
+            margin-bottom: 24px;
+        }
+
+        .confirm-amount-label {
+            font-size: 13px;
+            color: #999;
+            margin-bottom: 8px;
+        }
+
+        .confirm-amount-value {
+            font-size: 40px;
+            font-weight: 700;
+            color: #1A1C1E;
+        }
+
+        .confirm-flow {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .confirm-account {
+            flex: 1;
+            text-align: center;
+        }
+
+        .confirm-label {
+            font-size: 11px;
+            color: #999;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .confirm-number {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1A1C1E;
+            margin-bottom: 4px;
+        }
+
+        .confirm-type {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .confirm-arrow {
+            font-size: 20px;
+            color: #CCC;
+        }
+
+        .confirm-details {
+            border-top: 1px solid #E0E0E0;
+            padding-top: 20px;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+        }
+
+        .detail-label {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .detail-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1A1C1E;
+        }
+
+        .bottom-button-container {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 420px;
+            padding: 12px 16px;
+            background: white;
+            border-top: 1px solid #E0E0E0;
+            z-index: 90;
+        }
+
+        .main-button {
+            width: 100%;
+            padding: 16px;
+            background: #333;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <button class="back-btn" onclick="history.back()">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M15 18l-6-6 6-6"></path>
+            </svg>
+        </button>
+        <div class="nav-title">ISA 입금</div>
+    </nav>
+
+    <div class="progress-bar-container">
+        <div class="progress-steps">
+            <div class="progress-step active"></div>
+            <div class="progress-step active"></div>
+            <div class="progress-step active"></div>
+            <div class="progress-step active"></div>
+            <div class="progress-step"></div>
+        </div>
+        <div class="progress-text">4/5 단계</div>
+    </div>
+
+    <div class="content">
+        <div class="section-title">입금 내용을 확인하세요</div>
+        <div class="section-subtitle">아래 내용이 맞는지 확인 후 입금을 실행해주세요</div>
+
+        <div class="confirm-card">
+            <div class="confirm-amount">
+                <div class="confirm-amount-label">입금 금액</div>
+                <div class="confirm-amount-value" id="confirm-amount"></div>
+            </div>
+
+            <div class="confirm-flow">
+                <div class="confirm-account">
+                    <div class="confirm-label">출금</div>
+                    <div class="confirm-number" id="confirm-from-account"></div>
+                    <div class="confirm-type" id="confirm-from-type"></div>
+                </div>
+                <div class="confirm-arrow">→</div>
+                <div class="confirm-account">
+                    <div class="confirm-label">입금</div>
+                    <div class="confirm-number">102-01-999888</div>
+                    <div class="confirm-type">ISA</div>
+                </div>
+            </div>
+
+            <div class="confirm-details">
+                <div class="detail-row">
+                    <span class="detail-label">처리 시간</span>
+                    <span class="detail-value">즉시</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">수수료</span>
+                    <span class="detail-value">무료</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-button-container">
+        <button class="main-button" onclick="executeTransfer()">입금 실행</button>
+    </div>
+
+    <script>
+        window.onload = function() {
+            const accountData = JSON.parse(sessionStorage.getItem('isaDepositAccount'));
+            const amount = sessionStorage.getItem('isaDepositAmount');
+            
+            if (!accountData || !amount) {
+                alert('입금 정보가 없습니다. 처음부터 다시 진행해주세요.');
+                window.location.href = 'isa-deposit-step1.html';
+                return;
+            }
+            
+            document.getElementById('confirm-amount').textContent = amount + '원';
+            document.getElementById('confirm-from-account').textContent = accountData.number;
+            document.getElementById('confirm-from-type').textContent = accountData.type;
+        };
+
+        function executeTransfer() {
+            // Save timestamp for completion
+            const now = new Date();
+            const timeStr = now.getFullYear() + '.' + 
+                          String(now.getMonth() + 1).padStart(2, '0') + '.' + 
+                          String(now.getDate()).padStart(2, '0') + ' ' +
+                          String(now.getHours()).padStart(2, '0') + ':' +
+                          String(now.getMinutes()).padStart(2, '0');
+            sessionStorage.setItem('isaDepositTime', timeStr);
+            
+            window.location.href = 'isa-deposit-step5.html';
+        }
+    </script>
+</body>
+</html>

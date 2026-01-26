@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ISA 입금 - 계좌선택</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background: #FAFAFA;
+            color: #1A1C1E;
+            max-width: 420px;
+            margin: 0 auto;
+            padding-bottom: 80px;
+        }
+
+        .top-nav {
+            background: white;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #E0E0E0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .back-btn {
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-title {
+            flex: 1;
+            font-size: 18px;
+            font-weight: 600;
+            color: #1A1C1E;
+            text-align: center;
+            margin-right: 36px;
+        }
+
+        .progress-bar-container {
+            background: white;
+            padding: 16px 16px 12px;
+            border-bottom: 1px solid #E0E0E0;
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .progress-step {
+            flex: 1;
+            height: 3px;
+            background: #E0E0E0;
+            margin: 0 2px;
+            border-radius: 2px;
+        }
+
+        .progress-step.active {
+            background: #333;
+        }
+
+        .progress-text {
+            font-size: 12px;
+            color: #999;
+            text-align: center;
+        }
+
+        .content {
+            padding: 20px 16px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1A1C1E;
+            margin-bottom: 8px;
+        }
+
+        .section-subtitle {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+
+        .account-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .account-card {
+            background: white;
+            border: 1px solid #E0E0E0;
+            border-radius: 12px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        }
+
+        .account-card:hover {
+            border-color: #333;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        }
+
+        .account-card.selected {
+            border-color: #333;
+            border-width: 2px;
+            padding: 15px;
+        }
+
+        .account-number {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1A1C1E;
+        }
+
+        .account-name {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 12px;
+        }
+
+        .account-balance-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 12px;
+            border-top: 1px solid #F0F0F0;
+        }
+
+        .balance-label {
+            font-size: 13px;
+            color: #999;
+        }
+
+        .balance-amount {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1A1C1E;
+        }
+
+        .password-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .password-modal.active {
+            display: flex;
+        }
+
+        .password-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            width: 90%;
+            max-width: 320px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.16);
+        }
+
+        .password-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1A1C1E;
+            margin-bottom: 8px;
+        }
+
+        .password-subtitle {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .password-input {
+            width: 100%;
+            padding: 16px;
+            border: 1px solid #E0E0E0;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            text-align: center;
+            letter-spacing: 8px;
+            margin-bottom: 16px;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+
+        .password-input:focus {
+            outline: none;
+            border-color: #333;
+        }
+
+        .password-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-cancel {
+            flex: 1;
+            padding: 14px;
+            background: #F5F5F5;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            color: #666;
+            cursor: pointer;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+
+        .btn-confirm {
+            flex: 1;
+            padding: 14px;
+            background: #333;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+
+        .bottom-button-container {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 420px;
+            padding: 12px 16px;
+            background: white;
+            border-top: 1px solid #E0E0E0;
+            z-index: 90;
+        }
+
+        .main-button {
+            width: 100%;
+            padding: 16px;
+            background: #333;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+
+        .main-button:disabled {
+            background: #CCC;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <button class="back-btn" onclick="history.back()">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M15 18l-6-6 6-6"></path>
+            </svg>
+        </button>
+        <div class="nav-title">ISA 입금</div>
+    </nav>
+
+    <div class="progress-bar-container">
+        <div class="progress-steps">
+            <div class="progress-step active"></div>
+            <div class="progress-step"></div>
+            <div class="progress-step"></div>
+            <div class="progress-step"></div>
+            <div class="progress-step"></div>
+        </div>
+        <div class="progress-text">1/5 단계</div>
+    </div>
+
+    <div class="content">
+        <div class="section-title">출금할 계좌를 선택하세요</div>
+        <div class="section-subtitle">ISA로 입금할 금액을 출금할 계좌를 선택해주세요</div>
+
+        <div class="account-list">
+            <div class="account-card" onclick="selectAccount(this, '102-01-715863', '홍길동', '위탁계좌', '1,234,567,890')">
+                <div class="account-number">102-01-715863</div>
+                <div class="account-name">홍길동 · 위탁계좌</div>
+                <div class="account-balance-row">
+                    <span class="balance-label">출금가능</span>
+                    <span class="balance-amount">1,234,567,890원</span>
+                </div>
+            </div>
+
+            <div class="account-card" onclick="selectAccount(this, '102-01-888777', '홍길동', '위탁계좌', '987,654,321')">
+                <div class="account-number">102-01-888777</div>
+                <div class="account-name">홍길동 · 위탁계좌</div>
+                <div class="account-balance-row">
+                    <span class="balance-label">출금가능</span>
+                    <span class="balance-amount">987,654,321원</span>
+                </div>
+            </div>
+
+            <div class="account-card" onclick="selectAccount(this, '102-01-555444', '홍길동', '위탁계좌', '456,789,012')">
+                <div class="account-number">102-01-555444</div>
+                <div class="account-name">홍길동 · 위탁계좌</div>
+                <div class="account-balance-row">
+                    <span class="balance-label">출금가능</span>
+                    <span class="balance-amount">456,789,012원</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="password-modal" id="passwordModal">
+        <div class="password-card">
+            <div class="password-title">계좌 비밀번호</div>
+            <div class="password-subtitle">출금 계좌의 비밀번호를 입력해주세요</div>
+            <input type="password" class="password-input" id="passwordInput" maxlength="4" placeholder="••••">
+            <div class="password-buttons">
+                <button class="btn-cancel" onclick="closePasswordModal()">취소</button>
+                <button class="btn-confirm" onclick="confirmPassword()">확인</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-button-container">
+        <button class="main-button" id="mainButton" onclick="showPasswordModal()" disabled>다음</button>
+    </div>
+
+    <script>
+        let selectedAccountData = {};
+
+        function selectAccount(element, number, name, type, balance) {
+            document.querySelectorAll('.account-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            element.classList.add('selected');
+            
+            selectedAccountData = {
+                number: number,
+                name: name,
+                type: type,
+                balance: balance
+            };
+            
+            // Save to sessionStorage
+            sessionStorage.setItem('isaDepositAccount', JSON.stringify(selectedAccountData));
+            
+            document.getElementById('mainButton').disabled = false;
+        }
+
+        function showPasswordModal() {
+            document.getElementById('passwordModal').classList.add('active');
+            document.getElementById('passwordInput').value = '';
+            document.getElementById('passwordInput').focus();
+        }
+
+        function closePasswordModal() {
+            document.getElementById('passwordModal').classList.remove('active');
+        }
+
+        function confirmPassword() {
+            const password = document.getElementById('passwordInput').value;
+            if (password.length === 4) {
+                // 다음 단계로 이동
+                window.location.href = 'isa-deposit-step2.html';
+            } else {
+                alert('4자리 비밀번호를 입력해주세요');
+            }
+        }
+
+        document.getElementById('passwordInput').addEventListener('input', function(e) {
+            if (e.target.value.length === 4) {
+                setTimeout(() => {
+                    confirmPassword();
+                }, 200);
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1454 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>원화RP 휴일투자 - 최적화 플로우</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+            background: #f8f9fa;
+            max-width: 420px;
+            margin: 0 auto;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        /* 공통 컨테이너 */
+        .screen {
+            display: none;
+            min-height: 100vh;
+            background: white;
+            padding-bottom: 80px;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        /* 헤더 */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px;
+            border-bottom: 1px solid #f0f0f0;
+            background: white;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .back-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #333;
+        }
+
+        .header-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .header-action {
+            padding: 6px 12px;
+            background: #f0f0f0;
+            border: none;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #666;
+            cursor: pointer;
+        }
+
+        /* 프로그레스 바 */
+        .progress-container {
+            padding: 20px 16px;
+            background: white;
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: #e9ecef;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #4CAF50;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            margin-top: 8px;
+            font-size: 13px;
+            color: #666;
+            text-align: right;
+        }
+
+        /* 컨텐츠 영역 */
+        .content {
+            padding: 24px 20px;
+        }
+
+        .section-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+
+        .section-subtitle {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 24px;
+        }
+
+        /* 상품 일러스트 */
+        .product-hero {
+            text-align: center;
+            padding: 32px 20px;
+            background: linear-gradient(180deg, #e8f5e9 0%, #ffffff 100%);
+            border-radius: 20px;
+            margin-bottom: 24px;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #4CAF50;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(76,175,80,0.1);
+        }
+
+        .hero-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .hero-title .highlight {
+            color: #4CAF50;
+        }
+
+        .hero-illustration {
+            font-size: 80px;
+            margin: 20px 0;
+        }
+
+        .rate-box {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin: 20px 0;
+        }
+
+        .rate-label {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+
+        .rate-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #d32f2f;
+        }
+
+        .rate-detail {
+            font-size: 12px;
+            color: #999;
+            margin-top: 4px;
+        }
+
+        /* 타임라인 */
+        .timeline {
+            background: #f8f9fa;
+            border-radius: 16px;
+            padding: 24px;
+            margin: 24px 0;
+        }
+
+        .timeline-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .timeline-item {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .timeline-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .timeline-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            left: 19px;
+            top: 40px;
+            bottom: -20px;
+            width: 2px;
+            background: #e0e0e0;
+        }
+
+        .timeline-dot {
+            width: 40px;
+            height: 40px;
+            background: white;
+            border: 3px solid #4CAF50;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #4CAF50;
+            flex-shrink: 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .timeline-content {
+            flex: 1;
+            padding-top: 8px;
+        }
+
+        .timeline-step {
+            font-size: 15px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .timeline-desc {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        /* 계좌 선택 */
+        .account-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .account-item {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .account-item:hover {
+            border-color: #4CAF50;
+            background: #f1f8f4;
+        }
+
+        .account-item.selected {
+            border-color: #4CAF50;
+            background: #e8f5e9;
+        }
+
+        .account-radio {
+            width: 22px;
+            height: 22px;
+            border: 2px solid #ddd;
+            border-radius: 50%;
+            margin-right: 12px;
+            position: relative;
+        }
+
+        .account-item.selected .account-radio {
+            border-color: #4CAF50;
+        }
+
+        .account-item.selected .account-radio::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 12px;
+            height: 12px;
+            background: #4CAF50;
+            border-radius: 50%;
+        }
+
+        .account-info {
+            flex: 1;
+        }
+
+        .account-number {
+            font-size: 15px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .account-name {
+            font-size: 13px;
+            color: #666;
+        }
+
+        /* 약관 동의 */
+        .warning-banner {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 12px;
+        }
+
+        .warning-icon {
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .warning-content {
+            flex: 1;
+        }
+
+        .warning-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #856404;
+            margin-bottom: 4px;
+        }
+
+        .warning-text {
+            font-size: 13px;
+            color: #856404;
+            line-height: 1.5;
+        }
+
+        .info-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+        }
+
+        .info-tab {
+            flex: 1;
+            min-width: 100px;
+            padding: 12px 16px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .info-tab.active {
+            background: #e3f2fd;
+            border: 2px solid #2196F3;
+        }
+
+        .tab-icon {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+
+        .tab-label {
+            font-size: 11px;
+            color: #666;
+            font-weight: 600;
+        }
+
+        .tab-content {
+            display: none;
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .tab-content h4 {
+            font-size: 15px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 12px;
+        }
+
+        .tab-content ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .tab-content li {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.8;
+            padding-left: 16px;
+            position: relative;
+        }
+
+        .tab-content li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #4CAF50;
+        }
+
+        .terms-section {
+            margin-bottom: 24px;
+        }
+
+        .terms-group {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+
+        .terms-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 12px 0;
+        }
+
+        .terms-item:not(:last-child) {
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .checkbox {
+            width: 22px;
+            height: 22px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            margin-right: 12px;
+            margin-top: 2px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .checkbox.checked {
+            background: #4CAF50;
+            border-color: #4CAF50;
+        }
+
+        .checkbox.checked::after {
+            content: '✓';
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .terms-text {
+            flex: 1;
+            font-size: 14px;
+            color: #333;
+            line-height: 1.5;
+        }
+
+        .terms-text.highlight {
+            color: #d32f2f;
+            font-weight: 600;
+        }
+
+        .terms-link {
+            padding: 6px 12px;
+            border: 1px solid #e0e0e0;
+            background: white;
+            border-radius: 6px;
+            font-size: 12px;
+            color: #666;
+            cursor: pointer;
+            text-decoration: none;
+            margin-left: 8px;
+            flex-shrink: 0;
+        }
+
+        .terms-link:hover {
+            background: #f8f9fa;
+        }
+
+        .terms-detail {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .terms-detail.expanded {
+            max-height: 600px;
+        }
+
+        .terms-content {
+            margin-top: 12px;
+            padding: 16px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* 확인 페이지 */
+        .confirm-header {
+            text-align: center;
+            padding: 24px 0;
+            border-bottom: 1px solid #e9ecef;
+            margin-bottom: 24px;
+        }
+
+        .confirm-icon {
+            width: 60px;
+            height: 60px;
+            background: #e8f5e9;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px;
+            font-size: 28px;
+        }
+
+        .confirm-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .confirm-rate {
+            font-size: 28px;
+            font-weight: 700;
+            color: #d32f2f;
+        }
+
+        .confirm-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .confirm-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .confirm-row:last-child {
+            border-bottom: none;
+        }
+
+        .confirm-label {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .confirm-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            text-align: right;
+        }
+
+        .highlight-value {
+            color: #4CAF50;
+            font-size: 16px;
+        }
+
+        /* 완료 페이지 */
+        .complete-container {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .complete-icon {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            font-size: 50px;
+        }
+
+        .complete-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .complete-subtitle {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 32px;
+        }
+
+        /* 바텀 버튼 */
+        .bottom-bar {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 420px;
+            background: white;
+            padding: 12px 16px;
+            border-top: 1px solid #e9ecef;
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #666;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .btn-primary {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #45a049;
+        }
+
+        .btn-primary:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* 바텀시트 */
+        .bottom-sheet {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 20px 20px 0 0;
+            padding: 24px;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .bottom-sheet.active {
+            transform: translateY(0);
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            z-index: 999;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        .sheet-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .sheet-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .close-btn {
+            width: 28px;
+            height: 28px;
+            border: none;
+            background: #f0f0f0;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            color: #666;
+        }
+
+        .risk-gauge {
+            width: 200px;
+            height: 120px;
+            margin: 20px auto;
+            position: relative;
+        }
+
+        .risk-description {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.6;
+            padding: 16px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        /* 특징 박스 */
+        .feature-boxes {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .feature-box {
+            text-align: center;
+            padding: 16px 12px;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e9ecef;
+        }
+
+        .feature-box-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .feature-box-label {
+            font-size: 12px;
+            color: #666;
+            font-weight: 600;
+        }
+
+        .benefit-list {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .benefit-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .benefit-icon {
+            width: 36px;
+            height: 36px;
+            background: #4CAF50;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .benefit-content h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .benefit-content p {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <!-- 1단계: 상품 소개 -->
+    <div class="screen active" id="screen1">
+        <div class="header">
+            <button class="back-btn" onclick="history.back()">←</button>
+            <div class="header-title">원화RP 휴일투자</div>
+            <button class="header-action">가족공유</button>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 20%"></div>
+            </div>
+            <div class="progress-text">1/5 단계</div>
+        </div>
+
+        <div class="content">
+            <div class="product-hero">
+                <div class="hero-badge">금리 RP 휴일 이자받기</div>
+                <div class="hero-title">
+                    휴일이 되면<br>
+                    <span class="highlight">자동으로 이자가 생겨요</span>
+                </div>
+                <div class="hero-illustration">🍱💰</div>
+                
+                <div class="rate-box">
+                    <div class="rate-label">휴일만 맡겨도</div>
+                    <div class="rate-value">연 2.25%</div>
+                    <div class="rate-detail">토요일 저녁 신청 시 (3일 기준)</div>
+                </div>
+            </div>
+
+            <div class="section-title">예상 수익</div>
+            <div class="section-subtitle">예수금 1천만원을 1개월 돈만 두면</div>
+            
+            <div style="background: #fff3e0; border-radius: 12px; padding: 20px; text-align: center; margin-bottom: 24px;">
+                <div style="font-size: 14px; color: #e65100; margin-bottom: 8px;">한 달 후 받는 금액</div>
+                <div style="font-size: 32px; font-weight: 700; color: #e65100;">총 10,007,397원</div>
+                <div style="font-size: 13px; color: #e65100; margin-top: 4px;">이자 +7,397원</div>
+            </div>
+
+            <div class="section-title">이렇게 쉬워요 😊</div>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-dot">1</div>
+                    <div class="timeline-content">
+                        <div class="timeline-step">RP 신청할 계좌를 선택하고</div>
+                        <div class="timeline-desc">해외주식 거래가 신청되어 있어야 해요</div>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot">2</div>
+                    <div class="timeline-content">
+                        <div class="timeline-step">거래 신청하면</div>
+                        <div class="timeline-desc">영업일 오후 3시 이후 자동으로 RP 매수</div>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot">3</div>
+                    <div class="timeline-content">
+                        <div class="timeline-step">신청완료!</div>
+                        <div class="timeline-desc">휴일이 끝나면 자동 매도, 이자 입금</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="benefit-list">
+                <div style="font-size: 16px; font-weight: 600; color: #333; margin-bottom: 16px;">
+                    휴일 예수금을 정해진 시간에<br>알아서 넣어주고 뺴 줘요 😊
+                </div>
+                
+                <div class="benefit-item">
+                    <div class="benefit-icon">📅</div>
+                    <div class="benefit-content">
+                        <h4>자동으로 매매해요</h4>
+                        <p>휴일 전날 오후 3시 이후 자동 매수하고<br>휴일 이후 10시에 자동 매도</p>
+                    </div>
+                </div>
+
+                <div class="benefit-item">
+                    <div class="benefit-icon">💰</div>
+                    <div class="benefit-content">
+                        <h4>이자가 생겨요</h4>
+                        <p>예수금이 자동으로 RP로 바뀌면서<br>매일 이자가 발생해요</p>
+                    </div>
+                </div>
+
+                <div class="benefit-item">
+                    <div class="benefit-icon">🛡️</div>
+                    <div class="benefit-content">
+                        <h4>안전해요</h4>
+                        <p>금융감독원이 정한 절차로 안전하게<br>운용되는 상품이에요</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-title" style="margin-top: 32px;">유의사항</div>
+            <div class="warning-banner">
+                <div class="warning-icon">⚠️</div>
+                <div class="warning-content">
+                    <div class="warning-title">예금자보호법에 따라 보호되지 않습니다</div>
+                    <div class="warning-text">신용위험, 시장위험 등이 있으며 원금 손실이 가능합니다</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bottom-bar">
+            <button class="btn btn-primary" onclick="nextScreen(2)">휴일투자 이자받기</button>
+        </div>
+    </div>
+
+    <!-- 2단계: 계좌 선택 -->
+    <div class="screen" id="screen2">
+        <div class="header">
+            <button class="back-btn" onclick="prevScreen(1)">←</button>
+            <div class="header-title">계좌 선택</div>
+            <div style="width: 80px;"></div>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 40%"></div>
+            </div>
+            <div class="progress-text">2/5 단계</div>
+        </div>
+
+        <div class="content">
+            <div class="section-title">계좌 선택</div>
+            <div class="section-subtitle">상품을 가입할 계좌번호를 선택해주세요</div>
+
+            <div class="account-list">
+                <div class="account-item selected" onclick="selectAccount(this)">
+                    <div class="account-radio"></div>
+                    <div class="account-info">
+                        <div class="account-number">47241352-01 위탁</div>
+                        <div class="account-name">김태원</div>
+                    </div>
+                </div>
+                <div class="account-item" onclick="selectAccount(this)">
+                    <div class="account-radio"></div>
+                    <div class="account-info">
+                        <div class="account-number">64202030-01 위탁</div>
+                        <div class="account-name">김태원</div>
+                    </div>
+                </div>
+                <div class="account-item" onclick="selectAccount(this)">
+                    <div class="account-radio"></div>
+                    <div class="account-info">
+                        <div class="account-number">66650134-01 위탁</div>
+                        <div class="account-name">김태원</div>
+                    </div>
+                </div>
+                <div class="account-item" onclick="selectAccount(this)">
+                    <div class="account-radio"></div>
+                    <div class="account-info">
+                        <div class="account-number">70383214-01 위탁</div>
+                        <div class="account-name">김태원</div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 24px; text-align: center;">
+                <a href="#" style="color: #666; font-size: 14px; text-decoration: none;">
+                    새로운 계좌 개설하기 →
+                </a>
+            </div>
+        </div>
+
+        <div class="bottom-bar">
+            <button class="btn btn-secondary" onclick="prevScreen(1)">이전</button>
+            <button class="btn btn-primary" onclick="showRiskProfile()">다음</button>
+        </div>
+    </div>
+
+    <!-- 3단계: 약관 동의 (통합) -->
+    <div class="screen" id="screen3">
+        <div class="header">
+            <button class="back-btn" onclick="prevScreen(2)">←</button>
+            <div class="header-title">투자 주요내용</div>
+            <button class="header-action" style="font-size: 18px;">☎️</button>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 60%"></div>
+            </div>
+            <div class="progress-text">3/5 단계</div>
+        </div>
+
+        <div class="content">
+            <div class="section-title">상품의 주요내용을</div>
+            <div class="section-subtitle">설명서를 확인해 주세요</div>
+
+            <!-- 중요 정보 탭 -->
+            <div class="info-tabs">
+                <div class="info-tab active" onclick="switchTab(0)">
+                    <div class="tab-icon">🛡️</div>
+                    <div class="tab-label">예금자비보호</div>
+                </div>
+                <div class="info-tab" onclick="switchTab(1)">
+                    <div class="tab-icon">📊</div>
+                    <div class="tab-label">원금손실가능</div>
+                </div>
+                <div class="info-tab" onclick="switchTab(2)">
+                    <div class="tab-icon">📋</div>
+                    <div class="tab-label">자기책임원칙</div>
+                </div>
+            </div>
+
+            <div class="tab-content active" id="tab0">
+                <h4>⚠️ 이 금융상품은 예금자보호법에 따라 보호되지 않습니다</h4>
+                <ul>
+                    <li>신용위험, 시장위험 등이 있으며 원금 손실이 가능합니다</li>
+                    <li>예금자보호 대상이 아니므로 발행사 부도 시 손실 위험이 있습니다</li>
+                </ul>
+            </div>
+
+            <div class="tab-content" id="tab1">
+                <h4>📊 원금 손실이 발생할 가능성이 있습니다</h4>
+                <ul>
+                    <li>기준금리 변동 시 회사가 고시한 수익률에 따라 수익률 변동 가능</li>
+                    <li>이자 및 세금은 출금 또는 재투자 시점에 정산</li>
+                    <li>회사가 원하는 항목(수익률, 재투자 기간)을 변경 가능</li>
+                </ul>
+            </div>
+
+            <div class="tab-content" id="tab2">
+                <h4>📋 자기책임원칙</h4>
+                <ul>
+                    <li>투자 결정은 고객님의 판단과 책임 하에 이루어집니다</li>
+                    <li>투자 전 상품설명서 등을 반드시 읽어보시기 바랍니다</li>
+                    <li>금융소비자 권리: 자료열람요구권, 위법계약해지권 등</li>
+                </ul>
+            </div>
+
+            <!-- 투자위험 및 불이익 (통합) -->
+            <div style="background: #fff3e0; border-radius: 12px; padding: 20px; margin: 20px 0;">
+                <div style="font-size: 15px; font-weight: 600; color: #e65100; margin-bottom: 12px;">
+                    💡 투자위험 및 불이익
+                </div>
+                <div style="font-size: 13px; color: #e65100; line-height: 1.8;">
+                    <strong>• 이자지급 및 재투자</strong><br>
+                    - 수시형: 재투자 기간(30일) 경과 후 재매수 시 전일 고시 금리로 재매수<br>
+                    - 약정형: 만기 전 중도 매도 시 약정금리의 1/2로 적용한 이자<br><br>
+                    
+                    <strong>• 만기 이후 보유분</strong><br>
+                    - 만기 후 매도 시 만기 이후 기간 보유분은 만기 후 금리(약정금리의 1/2)로 적용한 이자
+                </div>
+            </div>
+
+            <!-- 필수 체크 항목 -->
+            <div class="terms-section">
+                <div class="terms-group">
+                    <div class="terms-item">
+                        <div class="checkbox" id="check-all" onclick="toggleCheckAll()"></div>
+                        <div class="terms-text" style="font-weight: 600;">전체 동의</div>
+                    </div>
+                </div>
+
+                <div class="terms-group">
+                    <div class="terms-item">
+                        <div class="checkbox terms-check" onclick="toggleCheck(this)"></div>
+                        <div class="terms-text">
+                            <strong>상품내용 및 투자대상</strong> 확인
+                        </div>
+                        <button class="terms-link" onclick="toggleDetail('detail1')">보기</button>
+                    </div>
+                    <div class="terms-detail" id="detail1">
+                        <div class="terms-content">
+                            <strong>원화RP 휴일 자동매매 상품설명</strong><br><br>
+                            
+                            • 상품명: 원화RP 휴일 자동매매<br>
+                            • 약정이율: 연 2.25% (시장 상황에 따라 변동)<br>
+                            • 투자기간: 수시 (휴일 동안 자동 운용)<br>
+                            • 최소금액: 100,000원<br>
+                            • 최대금액: 10,000,000,000원<br><br>
+                            
+                            <strong>운용 방식</strong><br>
+                            - 영업일 오후 3시 이후 자동 매수<br>
+                            - 휴일 동안 보유하며 이자 발생<br>
+                            - 휴일 종료 후 영업일 오전 10시 자동 매도
+                        </div>
+                    </div>
+                </div>
+
+                <div class="terms-group">
+                    <div class="terms-item">
+                        <div class="checkbox terms-check" onclick="toggleCheck(this)"></div>
+                        <div class="terms-text highlight">
+                            본 상품의 <strong>원금손실 가능성</strong>을 충분히 이해했습니다
+                        </div>
+                    </div>
+                </div>
+
+                <div class="terms-group">
+                    <div class="terms-item">
+                        <div class="checkbox terms-check" onclick="toggleCheck(this)"></div>
+                        <div class="terms-text highlight">
+                            <strong>예금자보호법에 따라 보호되지 않음</strong>을 충분히 확인했습니다
+                        </div>
+                    </div>
+                </div>
+
+                <div class="terms-group">
+                    <div class="terms-item">
+                        <div class="checkbox terms-check" onclick="toggleCheck(this)"></div>
+                        <div class="terms-text">
+                            상품 주요내용, 핵심 투자위험, 최대손실가능성을 충분히 이해했습니다
+                        </div>
+                    </div>
+                </div>
+
+                <div class="terms-group">
+                    <div class="terms-item">
+                        <div class="checkbox terms-check" onclick="toggleCheck(this)"></div>
+                        <div class="terms-text">
+                            전자문서로 약관 및 설명서를 교부받음에 동의하며, 제공받았음을 확인합니다
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 상세 약관 (선택) -->
+            <details style="opacity: 0.7; margin-top: 20px;">
+                <summary style="cursor: pointer; font-size: 14px; color: #666; padding: 12px 0;">
+                    📄 상세 약관 및 설명서 보기 (선택)
+                </summary>
+                <div style="padding: 12px 0;">
+                    <div style="padding: 8px 0;">
+                        <a href="#" class="terms-link" style="display: inline-block; margin-bottom: 8px;">
+                            📋 상품설명서 (PDF)
+                        </a>
+                    </div>
+                    <div style="padding: 8px 0;">
+                        <a href="#" class="terms-link" style="display: inline-block; margin-bottom: 8px;">
+                            📘 대고객 환매조건부 약관 (PDF)
+                        </a>
+                    </div>
+                    <div style="padding: 8px 0;">
+                        <a href="#" class="terms-link" style="display: inline-block;">
+                            📗 투자자 확인사항 (PDF)
+                        </a>
+                    </div>
+                </div>
+            </details>
+        </div>
+
+        <div class="bottom-bar">
+            <button class="btn btn-secondary" onclick="prevScreen(2)">이전</button>
+            <button class="btn btn-primary" id="terms-next-btn" onclick="nextScreen(4)" disabled>주요내용 확인</button>
+        </div>
+    </div>
+
+    <!-- 4단계: 신청 확인 -->
+    <div class="screen" id="screen4">
+        <div class="header">
+            <button class="back-btn" onclick="prevScreen(3)">←</button>
+            <div class="header-title">신청 정보 확인</div>
+            <button class="header-action" style="font-size: 18px;">☎️</button>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 80%"></div>
+            </div>
+            <div class="progress-text">4/5 단계</div>
+        </div>
+
+        <div class="content">
+            <div class="section-title">아래 가입 정보 확인 후,</div>
+            <div class="section-subtitle">신청을 누르면 주문 접수됩니다</div>
+
+            <div class="confirm-header">
+                <div class="confirm-icon">🍱</div>
+                <div class="confirm-title">원화RP 휴일 자동매매</div>
+                <div class="confirm-rate">연 2.250%</div>
+            </div>
+
+            <div class="confirm-card">
+                <div class="confirm-row">
+                    <div class="confirm-label">상품명</div>
+                    <div class="confirm-value">원화RP 휴일 자동매매</div>
+                </div>
+                <div class="confirm-row">
+                    <div class="confirm-label">계좌번호</div>
+                    <div class="confirm-value">47241352-01 위탁</div>
+                </div>
+                <div class="confirm-row">
+                    <div class="confirm-label">기간</div>
+                    <div class="confirm-value">수시</div>
+                </div>
+                <div class="confirm-row">
+                    <div class="confirm-label">약정이율</div>
+                    <div class="confirm-value highlight-value">연 2.250%</div>
+                </div>
+                <div class="confirm-row">
+                    <div class="confirm-label">자동매수 최소금액</div>
+                    <div class="confirm-value">100,000원</div>
+                </div>
+                <div class="confirm-row">
+                    <div class="confirm-label">자동매수 최대금액</div>
+                    <div class="confirm-value">10,000,000,000원</div>
+                </div>
+            </div>
+
+            <div class="warning-banner">
+                <div class="warning-icon">ℹ️</div>
+                <div class="warning-content">
+                    <div class="warning-title">자동 운용 시간</div>
+                    <div class="warning-text">
+                        • 매수: 영업일 오후 3시 이후<br>
+                        • 매도: 휴일 종료 후 영업일 오전 10시<br>
+                        • 휴일 동안 자동으로 이자가 발생합니다
+                    </div>
+                </div>
+            </div>
+
+            <div class="terms-item" style="margin-top: 24px; padding: 16px; background: #f8f9fa; border-radius: 8px;">
+                <div class="checkbox" id="final-confirm" onclick="toggleCheck(this)"></div>
+                <div class="terms-text">신청 내역을 확인했습니다</div>
+            </div>
+        </div>
+
+        <div class="bottom-bar">
+            <button class="btn btn-secondary" onclick="prevScreen(3)">이전</button>
+            <button class="btn btn-primary" id="confirm-btn" onclick="nextScreen(5)" disabled>신청하기</button>
+        </div>
+    </div>
+
+    <!-- 5단계: 완료 -->
+    <div class="screen" id="screen5">
+        <div class="header">
+            <div style="width: 32px;"></div>
+            <div class="header-title">신청 완료</div>
+            <button class="close-btn" onclick="location.reload()">✕</button>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 100%"></div>
+            </div>
+            <div class="progress-text">완료</div>
+        </div>
+
+        <div class="complete-container">
+            <div class="complete-icon">✓</div>
+            <div class="complete-title">원화RP 휴일 자동매매<br>신청이 완료되었습니다</div>
+            <div class="complete-subtitle">47241352-01 위탁계좌</div>
+
+            <div class="confirm-card" style="text-align: left; max-width: 340px; margin: 0 auto;">
+                <div class="confirm-row">
+                    <div class="confirm-label">상품명</div>
+                    <div class="confirm-value">원화RP 휴일 자동매매</div>
+                </div>
+                <div class="confirm-row">
+                    <div class="confirm-label">약정이율</div>
+                    <div class="confirm-value" style="color: #d32f2f;">연 2.250%</div>
+                </div>
+                <div class="confirm-row">
+                    <div class="confirm-label">신청일시</div>
+                    <div class="confirm-value">2025.01.06 17:10</div>
+                </div>
+            </div>
+
+            <div class="benefit-list" style="max-width: 340px; margin: 32px auto 0;">
+                <div style="font-size: 15px; font-weight: 600; color: #333; margin-bottom: 12px;">
+                    💡 이제 휴일마다 자동으로 이자가 생겨요
+                </div>
+                <div style="font-size: 13px; color: #666; line-height: 1.6;">
+                    • 영업일 오후 3시 이후 자동 매수<br>
+                    • 휴일 동안 이자 발생<br>
+                    • 휴일 종료 후 오전 10시 자동 매도<br>
+                    • 언제든 해지 가능
+                </div>
+            </div>
+        </div>
+
+        <div class="bottom-bar">
+            <button class="btn btn-primary" onclick="location.reload()">확인</button>
+        </div>
+    </div>
+
+    <!-- 투자성향 바텀시트 -->
+    <div class="overlay" id="overlay" onclick="closeBottomSheet()"></div>
+    <div class="bottom-sheet" id="risk-sheet">
+        <div class="sheet-header">
+            <div class="sheet-title">고객님의 투자성향과<br>상품의 위험 등급을 확인해 주세요</div>
+            <button class="close-btn" onclick="closeBottomSheet()">✕</button>
+        </div>
+
+        <div style="background: #fff3cd; padding: 16px; border-radius: 8px; margin-bottom: 20px;">
+            <div style="font-size: 14px; font-weight: 600; color: #856404; margin-bottom: 8px;">
+                김태원님의 투자성향
+            </div>
+            <div style="font-size: 13px; color: #856404;">
+                고객님의 투자성향은 <strong>투자권유 희망, 공격투자형</strong>입니다.
+            </div>
+        </div>
+
+        <div class="risk-gauge">
+            <svg viewBox="0 0 200 120" class="gauge-bg">
+                <!-- 게이지 배경 -->
+                <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#e9ecef" stroke-width="20"/>
+                <!-- 위험 등급 (빨강) -->
+                <path d="M 20 100 A 80 80 0 0 1 60 40" fill="none" stroke="#dc3545" stroke-width="20"/>
+                <!-- 중립 (노랑) -->
+                <path d="M 60 40 A 80 80 0 0 1 100 20" fill="none" stroke="#ffc107" stroke-width="20"/>
+                <!-- 안전 (초록) -->
+                <path d="M 100 20 A 80 80 0 0 1 180 100" fill="none" stroke="#28a745" stroke-width="20"/>
+                <!-- 바늘 -->
+                <line x1="100" y1="100" x2="150" y2="40" stroke="#333" stroke-width="3"/>
+                <circle cx="100" cy="100" r="8" fill="#333"/>
+            </svg>
+        </div>
+
+        <div style="text-align: center; margin-bottom: 20px;">
+            <div style="display: inline-block; padding: 8px 20px; background: #dc3545; color: white; border-radius: 20px; font-weight: 600;">
+                공격투자형
+            </div>
+        </div>
+
+        <div class="risk-description">
+            <strong style="color: #dc3545;">매우낮은위험</strong> 상품입니다.<br><br>
+            
+            원화RP는 안정적인 단기 투자상품이지만 예금자보호법 적용 대상이 아니므로 원금 손실 가능성이 있습니다. 시장평균 수익률을 추구하시는 고객님께 적합한 상품입니다.
+        </div>
+
+        <div style="margin-top: 24px; display: flex; gap: 8px;">
+            <button class="btn btn-secondary" style="flex: 0.4;" onclick="closeBottomSheet()">
+                투자성향 재진단 →
+            </button>
+            <button class="btn btn-primary" style="flex: 1;" onclick="closeBottomSheet(); nextScreen(3);">
+                매수 시작
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let currentTab = 0;
+
+        function nextScreen(num) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById('screen' + num).classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        function prevScreen(num) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById('screen' + num).classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        function selectAccount(item) {
+            document.querySelectorAll('.account-item').forEach(i => i.classList.remove('selected'));
+            item.classList.add('selected');
+        }
+
+        function showRiskProfile() {
+            document.getElementById('overlay').classList.add('active');
+            document.getElementById('risk-sheet').classList.add('active');
+        }
+
+        function closeBottomSheet() {
+            document.getElementById('overlay').classList.remove('active');
+            document.getElementById('risk-sheet').classList.remove('active');
+        }
+
+        function switchTab(index) {
+            // Remove active from all tabs and contents
+            document.querySelectorAll('.info-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            
+            // Add active to selected
+            document.querySelectorAll('.info-tab')[index].classList.add('active');
+            document.getElementById('tab' + index).classList.add('active');
+            currentTab = index;
+        }
+
+        function toggleCheck(checkbox) {
+            checkbox.classList.toggle('checked');
+            checkAllTerms();
+        }
+
+        function toggleCheckAll() {
+            const checkAll = document.getElementById('check-all');
+            const isChecked = checkAll.classList.contains('checked');
+            
+            document.querySelectorAll('.terms-check').forEach(check => {
+                if (isChecked) {
+                    check.classList.remove('checked');
+                } else {
+                    check.classList.add('checked');
+                }
+            });
+            
+            checkAll.classList.toggle('checked');
+            checkAllTerms();
+        }
+
+        function checkAllTerms() {
+            const allChecks = document.querySelectorAll('.terms-check');
+            const checkedCount = document.querySelectorAll('.terms-check.checked').length;
+            const nextBtn = document.getElementById('terms-next-btn');
+            
+            if (checkedCount === allChecks.length) {
+                nextBtn.disabled = false;
+                document.getElementById('check-all')?.classList.add('checked');
+            } else {
+                nextBtn.disabled = true;
+                document.getElementById('check-all')?.classList.remove('checked');
+            }
+        }
+
+        function toggleDetail(id) {
+            const detail = document.getElementById(id);
+            detail.classList.toggle('expanded');
+        }
+
+        // 최종 확인 체크
+        document.getElementById('final-confirm')?.addEventListener('click', function() {
+            const confirmBtn = document.getElementById('confirm-btn');
+            if (this.classList.contains('checked')) {
+                confirmBtn.disabled = false;
+            } else {
+                confirmBtn.disabled = true;
+            }
+        });
+    </script>
+</body>
+</html>

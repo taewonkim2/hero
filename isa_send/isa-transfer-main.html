@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ISA 입출금</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background: #F8F9FA;
+            color: #1A1C1E;
+            max-width: 420px;
+            margin: 0 auto;
+            padding-bottom: 80px;
+        }
+
+        .top-nav {
+            background: white;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .back-btn {
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .back-btn svg {
+            stroke: #1A1C1E;
+        }
+
+        .nav-title {
+            flex: 1;
+            font-size: 18px;
+            font-weight: 600;
+            color: #1A1C1E;
+            text-align: center;
+            margin-right: 36px;
+        }
+
+        .tabs {
+            display: flex;
+            background: white;
+            padding: 0 16px;
+            border-bottom: 2px solid #F0F0F0;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 16px 0;
+            text-align: center;
+            font-size: 15px;
+            font-weight: 500;
+            color: #999;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+
+        .tab.active {
+            color: #1A1C1E;
+            font-weight: 600;
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #1A1C1E;
+        }
+
+        .content {
+            padding: 16px;
+        }
+
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .info-banner {
+            background: #FFF9E6;
+            border-left: 3px solid #FFB800;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .info-icon {
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .info-text {
+            font-size: 13px;
+            color: #5C4D00;
+            line-height: 1.6;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        .card-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 12px;
+        }
+
+        .account-item {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            background: #F8F9FA;
+            border: 2px solid transparent;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 8px;
+        }
+
+        .account-item:hover {
+            background: #F0F5FF;
+            border-color: #4A90E2;
+        }
+
+        .account-item.selected {
+            background: #F0F5FF;
+            border-color: #4A90E2;
+        }
+
+        .account-item-info {
+            flex: 1;
+        }
+
+        .account-number {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1A1C1E;
+            margin-bottom: 4px;
+        }
+
+        .account-type {
+            font-size: 13px;
+            color: #999;
+        }
+
+        .account-balance {
+            text-align: right;
+        }
+
+        .balance-label {
+            font-size: 11px;
+            color: #999;
+            margin-bottom: 4px;
+        }
+
+        .balance-amount {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1A1C1E;
+        }
+
+        .isa-card {
+            background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+            color: white;
+        }
+
+        .isa-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255,255,255,0.2);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .isa-info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .isa-number {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .isa-type {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        .isa-balance-label {
+            font-size: 11px;
+            opacity: 0.8;
+            margin-bottom: 4px;
+        }
+
+        .isa-balance-amount {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .direction-indicator {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .direction-circle {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+        }
+
+        .direction-from {
+            font-size: 12px;
+            font-weight: 500;
+            opacity: 0.9;
+        }
+
+        .direction-arrow {
+            font-size: 24px;
+            margin: 4px 0;
+        }
+
+        .direction-to {
+            font-size: 12px;
+            font-weight: 500;
+            opacity: 0.9;
+        }
+
+        .amount-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        .amount-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 12px;
+        }
+
+        .amount-input-wrapper {
+            position: relative;
+            margin-bottom: 16px;
+        }
+
+        .amount-input {
+            width: 100%;
+            padding: 16px 16px 16px 0;
+            font-size: 32px;
+            font-weight: 700;
+            text-align: right;
+            border: none;
+            border-bottom: 2px solid #E0E0E0;
+            background: transparent;
+            color: #1A1C1E;
+            outline: none;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+
+        .amount-input:focus {
+            border-bottom-color: #4A90E2;
+        }
+
+        .amount-input::placeholder {
+            color: #CCC;
+        }
+
+        .amount-unit {
+            position: absolute;
+            right: 0;
+            bottom: 16px;
+            font-size: 18px;
+            font-weight: 600;
+            color: #666;
+        }
+
+        .quick-amounts {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .quick-btn {
+            padding: 12px;
+            background: #F8F9FA;
+            border: 1px solid #E0E0E0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+
+        .quick-btn:hover {
+            background: #F0F5FF;
+            border-color: #4A90E2;
+            color: #4A90E2;
+        }
+
+        .quick-btn.all {
+            background: #4A90E2;
+            color: white;
+            border-color: #4A90E2;
+        }
+
+        .quick-btn.all:hover {
+            background: #357ABD;
+        }
+
+        .bottom-button-container {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 420px;
+            padding: 12px 16px;
+            background: white;
+            border-top: 1px solid #E0E0E0;
+            z-index: 90;
+        }
+
+        .main-button {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+            transition: all 0.2s;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+
+        .main-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(74, 144, 226, 0.4);
+        }
+
+        .main-button:active {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <button class="back-btn">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M15 18l-6-6 6-6"></path>
+            </svg>
+        </button>
+        <div class="nav-title">ISA 입출금</div>
+    </nav>
+
+    <div class="tabs">
+        <button class="tab active" onclick="switchTab('deposit')">ISA 입금</button>
+        <button class="tab" onclick="switchTab('withdraw')">ISA 출금</button>
+    </div>
+
+    <div class="content">
+        <!-- 입금 화면 -->
+        <div class="screen active" id="deposit-screen">
+            <div class="info-banner">
+                <span class="info-icon">💡</span>
+                <div class="info-text">같은 증권사 내 계좌에서 ISA로 입금합니다. 별도 보안인증이 필요없어요.</div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">어느 계좌에서 가져올까요?</div>
+                <div class="account-item selected">
+                    <div class="account-item-info">
+                        <div class="account-number">102-01-715863 홍길동</div>
+                        <div class="account-type">위탁계좌</div>
+                    </div>
+                    <div class="account-balance">
+                        <div class="balance-label">출금가능</div>
+                        <div class="balance-amount">1,234,567,890</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="direction-indicator">
+                <div class="direction-circle">
+                    <div class="direction-from">위탁계좌</div>
+                    <div class="direction-arrow">↓</div>
+                    <div class="direction-to">ISA</div>
+                </div>
+            </div>
+
+            <div class="card-title" style="margin-bottom: 12px;">받는 계좌</div>
+            <div class="isa-card">
+                <div class="isa-badge">
+                    <span>🏦</span>
+                    <span>ISA</span>
+                </div>
+                <div class="isa-info-row">
+                    <div>
+                        <div class="isa-number">102-01-999888 홍길동</div>
+                        <div class="isa-type">중개형 ISA</div>
+                    </div>
+                    <div class="account-balance">
+                        <div class="isa-balance-label">잔액</div>
+                        <div class="isa-balance-amount">5,678,900</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="amount-card">
+                <div class="amount-label">입금 금액</div>
+                <div class="amount-input-wrapper">
+                    <input type="text" class="amount-input" placeholder="0" id="deposit-amount">
+                    <span class="amount-unit">원</span>
+                </div>
+                <div class="quick-amounts">
+                    <button class="quick-btn" onclick="addAmount(10000, 'deposit')">+ 1만</button>
+                    <button class="quick-btn" onclick="addAmount(50000, 'deposit')">+ 5만</button>
+                    <button class="quick-btn" onclick="addAmount(100000, 'deposit')">+ 10만</button>
+                    <button class="quick-btn" onclick="addAmount(500000, 'deposit')">+ 50만</button>
+                    <button class="quick-btn" onclick="addAmount(1000000, 'deposit')">+ 100만</button>
+                    <button class="quick-btn all" onclick="setMaxAmount('deposit')">전액</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 출금 화면 -->
+        <div class="screen" id="withdraw-screen">
+            <div class="info-banner">
+                <span class="info-icon">💡</span>
+                <div class="info-text">ISA에서 같은 증권사 내 계좌로 출금합니다. 별도 보안인증이 필요없어요.</div>
+            </div>
+
+            <div class="card-title" style="margin-bottom: 12px;">출금할 계좌</div>
+            <div class="isa-card">
+                <div class="isa-badge">
+                    <span>🏦</span>
+                    <span>ISA</span>
+                </div>
+                <div class="isa-info-row">
+                    <div>
+                        <div class="isa-number">102-01-999888 홍길동</div>
+                        <div class="isa-type">중개형 ISA</div>
+                    </div>
+                    <div class="account-balance">
+                        <div class="isa-balance-label">출금가능</div>
+                        <div class="isa-balance-amount">5,678,900</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="direction-indicator">
+                <div class="direction-circle">
+                    <div class="direction-from">ISA</div>
+                    <div class="direction-arrow">↓</div>
+                    <div class="direction-to">위탁계좌</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">어느 계좌로 받을까요?</div>
+                <div class="account-item selected">
+                    <div class="account-item-info">
+                        <div class="account-number">102-01-715863 홍길동</div>
+                        <div class="account-type">위탁계좌</div>
+                    </div>
+                    <div class="account-balance">
+                        <div class="balance-label">잔액</div>
+                        <div class="balance-amount">1,234,567,890</div>
+                    </div>
+                </div>
+                <div class="account-item">
+                    <div class="account-item-info">
+                        <div class="account-number">102-01-888777 홍길동</div>
+                        <div class="account-type">위탁계좌</div>
+                    </div>
+                    <div class="account-balance">
+                        <div class="balance-label">잔액</div>
+                        <div class="balance-amount">987,654,321</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="amount-card">
+                <div class="amount-label">출금 금액</div>
+                <div class="amount-input-wrapper">
+                    <input type="text" class="amount-input" placeholder="0" id="withdraw-amount">
+                    <span class="amount-unit">원</span>
+                </div>
+                <div class="quick-amounts">
+                    <button class="quick-btn" onclick="addAmount(10000, 'withdraw')">+ 1만</button>
+                    <button class="quick-btn" onclick="addAmount(50000, 'withdraw')">+ 5만</button>
+                    <button class="quick-btn" onclick="addAmount(100000, 'withdraw')">+ 10만</button>
+                    <button class="quick-btn" onclick="addAmount(500000, 'withdraw')">+ 50만</button>
+                    <button class="quick-btn" onclick="addAmount(1000000, 'withdraw')">+ 100만</button>
+                    <button class="quick-btn all" onclick="setMaxAmount('withdraw')">전액</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-button-container">
+        <button class="main-button" id="main-action-btn" onclick="showConfirm()">
+            <span id="btn-text">ISA 입금하기</span>
+        </button>
+    </div>
+
+    <script>
+        let currentTab = 'deposit';
+
+        function switchTab(tab) {
+            currentTab = tab;
+            
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            if (tab === 'deposit') {
+                document.getElementById('deposit-screen').classList.add('active');
+                document.getElementById('btn-text').textContent = 'ISA 입금하기';
+            } else {
+                document.getElementById('withdraw-screen').classList.add('active');
+                document.getElementById('btn-text').textContent = 'ISA에서 출금하기';
+            }
+        }
+
+        function addAmount(amount, type) {
+            const input = document.getElementById(type + '-amount');
+            let current = parseInt(input.value.replace(/,/g, '')) || 0;
+            current += amount;
+            input.value = current.toLocaleString();
+        }
+
+        function setMaxAmount(type) {
+            const input = document.getElementById(type + '-amount');
+            const maxAmount = type === 'deposit' ? 1234567890 : 5678900;
+            input.value = maxAmount.toLocaleString();
+        }
+
+        function showConfirm() {
+            const amount = currentTab === 'deposit' 
+                ? document.getElementById('deposit-amount').value
+                : document.getElementById('withdraw-amount').value;
+            
+            if (!amount || amount === '0') {
+                alert('금액을 입력해주세요');
+                return;
+            }
+            
+            // Save data for confirm screen
+            sessionStorage.setItem('transferType', currentTab);
+            sessionStorage.setItem('transferAmount', amount);
+            window.location.href = 'isa-transfer-confirm.html';
+        }
+
+        // Amount input formatting
+        document.querySelectorAll('.amount-input').forEach(input => {
+            input.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/,/g, '');
+                if (value && !isNaN(value)) {
+                    e.target.value = parseInt(value).toLocaleString();
+                }
+            });
+        });
+
+        // Account item selection
+        document.querySelectorAll('.account-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const parent = this.parentElement;
+                parent.querySelectorAll('.account-item').forEach(i => i.classList.remove('selected'));
+                this.classList.add('selected');
+            });
+        });
+    </script>
+</body>
+</html>

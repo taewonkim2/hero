@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>하단 메뉴 UI 패턴 샘플</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #F5F5F5;
+      min-height: 100vh;
+    }
+
+    /* 패턴 선택 헤더 */
+    .pattern-selector {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: #1A1A1A;
+      color: white;
+      padding: 12px 16px;
+      z-index: 1000;
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+    }
+
+    .pattern-btn {
+      padding: 8px 16px;
+      border: 1px solid #444;
+      background: transparent;
+      color: #888;
+      border-radius: 20px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .pattern-btn.active {
+      background: #FFFFFF;
+      color: #1A1A1A;
+      border-color: #FFFFFF;
+      font-weight: 600;
+    }
+
+    .pattern-container {
+      display: none;
+      padding-top: 52px;
+    }
+
+    .pattern-container.active {
+      display: block;
+    }
+
+    /* 공통 컨테이너 */
+    .container {
+      max-width: 430px;
+      margin: 0 auto;
+      background: #FFFFFF;
+      min-height: calc(100vh - 52px);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      box-shadow: 0 0 40px rgba(0,0,0,0.1);
+    }
+
+    /* 상태바 */
+    .status-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 20px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    /* 심플 헤더 */
+    .simple-header {
+      display: flex;
+      align-items: center;
+      padding: 12px 20px;
+      border-bottom: 1px solid #F0F0F0;
+    }
+
+    .simple-header .back-btn {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      margin-right: 12px;
+    }
+
+    .simple-header .title {
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    /* 콘텐츠 영역 */
+    .content-area {
+      flex: 1;
+      padding: 20px;
+      padding-bottom: 160px;
+    }
+
+    .content-area h3 {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .content-area p {
+      color: #888;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .sample-list {
+      margin-top: 20px;
+    }
+
+    .sample-item {
+      display: flex;
+      align-items: center;
+      padding: 16px;
+      background: #F8F8F8;
+      border-radius: 12px;
+      margin-bottom: 12px;
+    }
+
+    .sample-item .icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      margin-right: 12px;
+    }
+
+    .sample-item .info {
+      flex: 1;
+    }
+
+    .sample-item .name {
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .sample-item .desc {
+      font-size: 12px;
+      color: #888;
+    }
+
+    /* ========================================
+       패턴 A: 하단 탭바 (토스/카카오뱅크 스타일)
+       ======================================== */
+    .bottom-tabs {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 430px;
+      background: #FFFFFF;
+      border-top: 1px solid #F0F0F0;
+      padding-bottom: 28px;
+    }
+
+    .tabs-row {
+      display: flex;
+      padding: 12px 8px 8px 8px;
+    }
+
+    .tab-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 8px 4px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      border-radius: 12px;
+      transition: all 0.2s;
+    }
+
+    .tab-item:hover {
+      background: #F5F5F5;
+    }
+
+    .tab-item.active {
+      background: #F0F4FF;
+    }
+
+    .tab-item .tab-icon {
+      font-size: 20px;
+      opacity: 0.5;
+    }
+
+    .tab-item.active .tab-icon {
+      opacity: 1;
+    }
+
+    .tab-item .tab-label {
+      font-size: 10px;
+      color: #888;
+      font-weight: 500;
+      text-align: center;
+      line-height: 1.2;
+    }
+
+    .tab-item.active .tab-label {
+      color: #1A5DC7;
+      font-weight: 700;
+    }
+
+    /* ========================================
+       패턴 B: 플로팅 칩 + 바텀시트
+       ======================================== */
+    .floating-chip {
+      position: fixed;
+      bottom: 100px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #1A1A1A;
+      color: white;
+      padding: 14px 24px;
+      border-radius: 30px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+      z-index: 100;
+    }
+
+    .floating-chip:hover {
+      transform: translateX(-50%) scale(1.05);
+    }
+
+    .floating-chip .chip-icon {
+      font-size: 16px;
+    }
+
+    /* 바텀시트 */
+    .bottom-sheet-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s;
+      z-index: 200;
+    }
+
+    .bottom-sheet-overlay.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .bottom-sheet {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%) translateY(100%);
+      width: 100%;
+      max-width: 430px;
+      background: #FFFFFF;
+      border-radius: 24px 24px 0 0;
+      padding: 20px;
+      padding-bottom: 40px;
+      transition: transform 0.3s ease-out;
+      z-index: 201;
+    }
+
+    .bottom-sheet.show {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .sheet-handle {
+      width: 40px;
+      height: 4px;
+      background: #E0E0E0;
+      border-radius: 2px;
+      margin: 0 auto 20px auto;
+    }
+
+    .sheet-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    .sheet-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .sheet-item {
+      display: flex;
+      align-items: center;
+      padding: 16px;
+      background: #F8F8F8;
+      border-radius: 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 2px solid transparent;
+    }
+
+    .sheet-item:hover {
+      background: #F0F0F0;
+    }
+
+    .sheet-item.active {
+      background: #F0F4FF;
+      border-color: #1A5DC7;
+    }
+
+    .sheet-item .item-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      margin-right: 12px;
+    }
+
+    .sheet-item .item-info {
+      flex: 1;
+    }
+
+    .sheet-item .item-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .sheet-item .item-desc {
+      font-size: 11px;
+      color: #888;
+    }
+
+    /* ========================================
+       패턴 C: 스와이프 + 페이지 인디케이터
+       ======================================== */
+    .swipe-container {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .swipe-content {
+      display: flex;
+      transition: transform 0.3s ease;
+    }
+
+    .swipe-page {
+      min-width: 100%;
+      padding: 20px;
+      padding-bottom: 140px;
+    }
+
+    .page-indicator {
+      position: fixed;
+      bottom: 100px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+      background: rgba(255,255,255,0.95);
+      padding: 12px 20px;
+      border-radius: 30px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      z-index: 100;
+    }
+
+    .indicator-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #E0E0E0;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .indicator-dot.active {
+      width: 24px;
+      border-radius: 4px;
+      background: #1A5DC7;
+    }
+
+    .swipe-label {
+      position: fixed;
+      bottom: 145px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 12px;
+      font-weight: 600;
+      color: #1A5DC7;
+      background: rgba(255,255,255,0.95);
+      padding: 6px 14px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      z-index: 100;
+    }
+
+    /* 공통 하단 네비게이션 */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 430px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 12px 0 28px 0;
+      background: #FFFFFF;
+      border-top: 1px solid #F0F0F0;
+      z-index: 50;
+    }
+
+    .nav-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px 12px;
+    }
+
+    .nav-btn .icon {
+      font-size: 20px;
+    }
+
+    .nav-btn .label {
+      font-size: 11px;
+      font-weight: 500;
+      color: #AAAAAA;
+    }
+
+    .nav-btn.active .label {
+      font-weight: 700;
+      color: #1A1A1A;
+    }
+
+    /* 패턴 설명 박스 */
+    .pattern-info {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 20px;
+      border-radius: 16px;
+      margin-bottom: 20px;
+    }
+
+    .pattern-info h4 {
+      font-size: 16px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .pattern-info p {
+      font-size: 13px;
+      opacity: 0.9;
+      line-height: 1.5;
+    }
+
+    .pattern-info .pros {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .pattern-info .pros span {
+      display: inline-block;
+      background: rgba(255,255,255,0.2);
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      margin-right: 6px;
+      margin-bottom: 6px;
+    }
+  </style>
+</head>
+<body>
+  <!-- 패턴 선택 헤더 -->
+  <div class="pattern-selector">
+    <button class="pattern-btn active" data-pattern="A">패턴 A</button>
+    <button class="pattern-btn" data-pattern="B">패턴 B</button>
+    <button class="pattern-btn" data-pattern="C">패턴 C</button>
+  </div>
+
+  <!-- ========================================
+       패턴 A: 하단 탭바 (토스/카카오뱅크 스타일)
+       ======================================== -->
+  <div class="pattern-container active" id="patternA">
+    <div class="container">
+      <div class="status-bar">
+        <span>9:41</span>
+        <span>📶 🔋</span>
+      </div>
+
+      <div class="simple-header">
+        <button class="back-btn">←</button>
+        <span class="title">ISA발견</span>
+      </div>
+
+      <div class="content-area">
+        <div class="pattern-info">
+          <h4>💡 패턴 A: 하단 탭바</h4>
+          <p>토스, 카카오뱅크 스타일. 4개 메뉴를 하단에 아이콘+텍스트로 배치. 현재 선택된 탭이 시각적으로 강조됨.</p>
+          <div class="pros">
+            <span>✓ 직관적</span>
+            <span>✓ 빠른 전환</span>
+            <span>✓ 현재 위치 명확</span>
+            <span>✓ 익숙한 패턴</span>
+          </div>
+        </div>
+
+        <h3>절세끝판왕 해외펀드</h3>
+        <p>해외 ETF와 펀드로 절세 혜택을 누려보세요</p>
+
+        <div class="sample-list">
+          <div class="sample-item">
+            <div class="icon"></div>
+            <div class="info">
+              <div class="name">TIGER 미국S&P500</div>
+              <div class="desc">12,345만원 거래</div>
+            </div>
+          </div>
+          <div class="sample-item">
+            <div class="icon"></div>
+            <div class="info">
+              <div class="name">KODEX 미국나스닥100</div>
+              <div class="desc">9,876만원 거래</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 하단 탭바 -->
+      <div class="bottom-tabs">
+        <div class="tabs-row">
+          <button class="tab-item active">
+            <span class="tab-icon">🌍</span>
+            <span class="tab-label">절세끝판왕<br>해외펀드</span>
+          </button>
+          <button class="tab-item">
+            <span class="tab-icon">💵</span>
+            <span class="tab-label">따박따박<br>배당</span>
+          </button>
+          <button class="tab-item">
+            <span class="tab-icon">🏦</span>
+            <span class="tab-label">안정적인<br>이자</span>
+          </button>
+          <button class="tab-item">
+            <span class="tab-icon">👑</span>
+            <span class="tab-label">ISA고수의<br>PICK</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================
+       패턴 B: 플로팅 칩 + 바텀시트
+       ======================================== -->
+  <div class="pattern-container" id="patternB">
+    <div class="container">
+      <div class="status-bar">
+        <span>9:41</span>
+        <span>📶 🔋</span>
+      </div>
+
+      <div class="simple-header">
+        <button class="back-btn">←</button>
+        <span class="title">ISA발견</span>
+      </div>
+
+      <div class="content-area">
+        <div class="pattern-info" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);">
+          <h4>💡 패턴 B: 플로팅 칩 + 바텀시트</h4>
+          <p>현재 메뉴를 플로팅 버튼으로 표시. 클릭 시 바텀시트가 올라와 메뉴 선택. 화면 공간을 최대한 활용.</p>
+          <div class="pros">
+            <span>✓ 공간 효율적</span>
+            <span>✓ 깔끔한 UI</span>
+            <span>✓ 확장 가능</span>
+            <span>✓ 모던한 느낌</span>
+          </div>
+        </div>
+
+        <h3>절세끝판왕 해외펀드</h3>
+        <p>해외 ETF와 펀드로 절세 혜택을 누려보세요</p>
+
+        <div class="sample-list">
+          <div class="sample-item">
+            <div class="icon"></div>
+            <div class="info">
+              <div class="name">TIGER 미국S&P500</div>
+              <div class="desc">12,345만원 거래</div>
+            </div>
+          </div>
+          <div class="sample-item">
+            <div class="icon"></div>
+            <div class="info">
+              <div class="name">KODEX 미국나스닥100</div>
+              <div class="desc">9,876만원 거래</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 플로팅 칩 -->
+      <div class="floating-chip" id="floatingChip">
+        <span class="chip-icon">🌍</span>
+        <span>절세끝판왕 해외펀드</span>
+        <span style="opacity: 0.5;">▼</span>
+      </div>
+
+      <!-- 바텀시트 오버레이 -->
+      <div class="bottom-sheet-overlay" id="sheetOverlay"></div>
+
+      <!-- 바텀시트 -->
+      <div class="bottom-sheet" id="bottomSheet">
+        <div class="sheet-handle"></div>
+        <div class="sheet-title">카테고리 선택</div>
+        <div class="sheet-grid">
+          <div class="sheet-item active" data-menu="절세끝판왕 해외펀드">
+            <div class="item-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">🌍</div>
+            <div class="item-info">
+              <div class="item-title">절세끝판왕 해외펀드</div>
+              <div class="item-desc">해외 ETF·펀드</div>
+            </div>
+          </div>
+          <div class="sheet-item" data-menu="따박따박 배당">
+            <div class="item-icon" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);">💵</div>
+            <div class="item-info">
+              <div class="item-title">따박따박 배당</div>
+              <div class="item-desc">배당주·배당ETF</div>
+            </div>
+          </div>
+          <div class="sheet-item" data-menu="안정적인 이자">
+            <div class="item-icon" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">🏦</div>
+            <div class="item-info">
+              <div class="item-title">안정적인 이자</div>
+              <div class="item-desc">채권·RP</div>
+            </div>
+          </div>
+          <div class="sheet-item" data-menu="ISA고수의 PICK">
+            <div class="item-icon" style="background: linear-gradient(135deg, #f5af19 0%, #f12711 100%);">👑</div>
+            <div class="item-info">
+              <div class="item-title">ISA고수의 PICK</div>
+              <div class="item-desc">인기 종목</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bottom-nav">
+        <button class="nav-btn"><span class="icon">☰</span><span class="label">메뉴</span></button>
+        <button class="nav-btn active"><span class="icon">🔍</span><span class="label">ISA발견</span></button>
+        <button class="nav-btn"><span class="icon">💰</span><span class="label">ISA잔고</span></button>
+        <button class="nav-btn"><span class="icon">🚀</span><span class="label">ISA시작</span></button>
+        <button class="nav-btn"><span class="icon">📋</span><span class="label">ISA업무</span></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================
+       패턴 C: 스와이프 + 페이지 인디케이터
+       ======================================== -->
+  <div class="pattern-container" id="patternC">
+    <div class="container">
+      <div class="status-bar">
+        <span>9:41</span>
+        <span>📶 🔋</span>
+      </div>
+
+      <div class="simple-header">
+        <button class="back-btn">←</button>
+        <span class="title">ISA발견</span>
+      </div>
+
+      <div class="swipe-container">
+        <div class="swipe-content" id="swipeContent">
+          <!-- 페이지 1 -->
+          <div class="swipe-page">
+            <div class="pattern-info" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+              <h4>💡 패턴 C: 스와이프 + 인디케이터</h4>
+              <p>좌우 스와이프로 메뉴 전환. 하단 도트 인디케이터로 현재 위치 표시. 제스처 기반의 자연스러운 탐색.</p>
+              <div class="pros">
+                <span>✓ 자연스러운 UX</span>
+                <span>✓ 몰입감</span>
+                <span>✓ 제스처 친화적</span>
+                <span>✓ 콘텐츠 중심</span>
+              </div>
+            </div>
+
+            <h3>🌍 절세끝판왕 해외펀드</h3>
+            <p>해외 ETF와 펀드로 절세 혜택을 누려보세요</p>
+            <div class="sample-list">
+              <div class="sample-item">
+                <div class="icon"></div>
+                <div class="info">
+                  <div class="name">TIGER 미국S&P500</div>
+                  <div class="desc">12,345만원 거래</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 페이지 2 -->
+          <div class="swipe-page">
+            <h3>💵 따박따박 배당</h3>
+            <p>안정적인 배당 수익을 받아보세요</p>
+            <div class="sample-list">
+              <div class="sample-item">
+                <div class="icon" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);"></div>
+                <div class="info">
+                  <div class="name">삼성전자</div>
+                  <div class="desc">주당 1,444원 배당</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 페이지 3 -->
+          <div class="swipe-page">
+            <h3>🏦 안정적인 이자</h3>
+            <p>채권과 RP로 안정적인 수익을 확보하세요</p>
+            <div class="sample-list">
+              <div class="sample-item">
+                <div class="icon" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);"></div>
+                <div class="info">
+                  <div class="name">퍼스트 발행어음</div>
+                  <div class="desc">연 3.40%</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 페이지 4 -->
+          <div class="swipe-page">
+            <h3>👑 ISA고수의 PICK</h3>
+            <p>투자 고수들이 선택한 인기 종목</p>
+            <div class="sample-list">
+              <div class="sample-item">
+                <div class="icon" style="background: linear-gradient(135deg, #f5af19 0%, #f12711 100%);"></div>
+                <div class="info">
+                  <div class="name">TIGER 미국S&P500</div>
+                  <div class="desc">가장 많이 산 종목</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 현재 메뉴 라벨 -->
+      <div class="swipe-label" id="swipeLabel">절세끝판왕 해외펀드</div>
+
+      <!-- 페이지 인디케이터 -->
+      <div class="page-indicator">
+        <div class="indicator-dot active" data-page="0"></div>
+        <div class="indicator-dot" data-page="1"></div>
+        <div class="indicator-dot" data-page="2"></div>
+        <div class="indicator-dot" data-page="3"></div>
+      </div>
+
+      <div class="bottom-nav">
+        <button class="nav-btn"><span class="icon">☰</span><span class="label">메뉴</span></button>
+        <button class="nav-btn active"><span class="icon">🔍</span><span class="label">ISA발견</span></button>
+        <button class="nav-btn"><span class="icon">💰</span><span class="label">ISA잔고</span></button>
+        <button class="nav-btn"><span class="icon">🚀</span><span class="label">ISA시작</span></button>
+        <button class="nav-btn"><span class="icon">📋</span><span class="label">ISA업무</span></button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 패턴 선택
+    document.querySelectorAll('.pattern-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.pattern-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.pattern-container').forEach(c => c.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('pattern' + btn.dataset.pattern).classList.add('active');
+      });
+    });
+
+    // 패턴 A: 탭 클릭
+    document.querySelectorAll('.tab-item').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+      });
+    });
+
+    // 패턴 B: 플로팅 칩 + 바텀시트
+    const floatingChip = document.getElementById('floatingChip');
+    const sheetOverlay = document.getElementById('sheetOverlay');
+    const bottomSheet = document.getElementById('bottomSheet');
+
+    floatingChip?.addEventListener('click', () => {
+      sheetOverlay.classList.add('show');
+      bottomSheet.classList.add('show');
+    });
+
+    sheetOverlay?.addEventListener('click', () => {
+      sheetOverlay.classList.remove('show');
+      bottomSheet.classList.remove('show');
+    });
+
+    document.querySelectorAll('.sheet-item').forEach(item => {
+      item.addEventListener('click', () => {
+        document.querySelectorAll('.sheet-item').forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+        floatingChip.querySelector('span:nth-child(2)').textContent = item.dataset.menu;
+        sheetOverlay.classList.remove('show');
+        bottomSheet.classList.remove('show');
+      });
+    });
+
+    // 패턴 C: 스와이프 + 인디케이터
+    const swipeContent = document.getElementById('swipeContent');
+    const swipeLabel = document.getElementById('swipeLabel');
+    const labels = ['절세끝판왕 해외펀드', '따박따박 배당', '안정적인 이자', 'ISA고수의 PICK'];
+    let currentPage = 0;
+
+    document.querySelectorAll('.indicator-dot').forEach(dot => {
+      dot.addEventListener('click', () => {
+        currentPage = parseInt(dot.dataset.page);
+        updateSwipe();
+      });
+    });
+
+    function updateSwipe() {
+      swipeContent.style.transform = `translateX(-${currentPage * 100}%)`;
+      document.querySelectorAll('.indicator-dot').forEach((d, i) => {
+        d.classList.toggle('active', i === currentPage);
+      });
+      swipeLabel.textContent = labels[currentPage];
+    }
+
+    // 터치 스와이프 지원
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    swipeContent?.addEventListener('touchstart', e => {
+      touchStartX = e.changedTouches[0].screenX;
+    });
+
+    swipeContent?.addEventListener('touchend', e => {
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipe();
+    });
+
+    function handleSwipe() {
+      const diff = touchStartX - touchEndX;
+      if (Math.abs(diff) > 50) {
+        if (diff > 0 && currentPage < 3) {
+          currentPage++;
+        } else if (diff < 0 && currentPage > 0) {
+          currentPage--;
+        }
+        updateSwipe();
+      }
+    }
+  </script>
+</body>
+</html>

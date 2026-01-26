@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>외화RP 자동재투자 - 최적화 플로우</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+            background: #f8f9fa;
+            max-width: 420px;
+            margin: 0 auto;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        /* 공통 컨테이너 */
+        .screen {
+            display: none;
+            min-height: 100vh;
+            background: white;
+            padding-bottom: 80px;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        /* 헤더 */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px;
+            border-bottom: 1px solid #f0f0f0;
+            background: white;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .back-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #333;
+        }
+
+        .header-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .header-action {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        /* 프로그레스 바 */
+        .progress-container {
+            padding: 20px 16px;
+            background: white;
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: #e9ecef;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #2196F3;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            margin-top: 8px;
+            font-size: 13px;
+            color: #666;
+            text-align: right;
+        }
+
+        /* 컨텐츠 영역 */
+        .content {
+            padding: 24px 20px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .section-subtitle {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 24px;
+        }
+
+        /* 상품 카드 */
+        .product-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 16px;
+            padding: 24px;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .product-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-bottom: 12px;
+        }
+
+        .product-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .rate-display {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .rate-label {
+            font-size: 13px;
+            opacity: 0.9;
+            margin-bottom: 4px;
+        }
+
+        .rate-value {
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+        .rate-detail {
+            font-size: 13px;
+            opacity: 0.8;
+            margin-top: 4px;
+        }
+
+        /* 통화 테이블 */
+        .currency-table {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #e9ecef;
+        }
+
+        .currency-row {
+            display: grid;
+            grid-template-columns: 80px 1fr 90px;
+            align-items: center;
+            padding: 16px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .currency-row:last-child {
+            border-bottom: none;
+        }
+
+        .currency-code {
+            font-size: 15px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .currency-name {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .currency-status {
+            font-size: 13px;
+            color: #999;
+        }
+
+        .select-btn {
+            padding: 8px 16px;
+            border: 1px solid #e0e0e0;
+            background: white;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #333;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .select-btn:hover {
+            border-color: #2196F3;
+            color: #2196F3;
+        }
+
+        .select-btn.selected {
+            background: #2196F3;
+            color: white;
+            border-color: #2196F3;
+        }
+
+        /* 계좌 선택 */
+        .account-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .account-item {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            border: 1px solid #e9ecef;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .account-item:hover {
+            border-color: #2196F3;
+            background: #f8f9ff;
+        }
+
+        .account-item.selected {
+            border-color: #2196F3;
+            background: #f0f4ff;
+        }
+
+        .account-radio {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ddd;
+            border-radius: 50%;
+            margin-right: 12px;
+            position: relative;
+        }
+
+        .account-item.selected .account-radio {
+            border-color: #2196F3;
+        }
+
+        .account-item.selected .account-radio::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 10px;
+            height: 10px;
+            background: #2196F3;
+            border-radius: 50%;
+        }
+
+        .account-info {
+            flex: 1;
+        }
+
+        .account-number {
+            font-size: 15px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .account-name {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .account-badge {
+            padding: 4px 8px;
+            background: #e3f2fd;
+            color: #1976d2;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        /* 약관 동의 */
+        .terms-section {
+            margin-bottom: 24px;
+        }
+
+        .terms-group {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+
+        .terms-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 0;
+        }
+
+        .terms-item:not(:last-child) {
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .checkbox {
+            width: 22px;
+            height: 22px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            margin-right: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .checkbox.checked {
+            background: #2196F3;
+            border-color: #2196F3;
+        }
+
+        .checkbox.checked::after {
+            content: '✓';
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .terms-text {
+            flex: 1;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .terms-link {
+            padding: 6px 12px;
+            border: 1px solid #e0e0e0;
+            background: white;
+            border-radius: 6px;
+            font-size: 12px;
+            color: #666;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .terms-link:hover {
+            background: #f8f9fa;
+        }
+
+        .terms-detail {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .terms-detail.expanded {
+            max-height: 400px;
+        }
+
+        .terms-content {
+            margin-top: 12px;
+            padding: 16px;
+            background: white;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* 확인 페이지 */
+        .confirm-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .confirm-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .confirm-row:last-child {
+            border-bottom: none;
+        }
+
+        .confirm-label {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .confirm-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            text-align: right;
+        }
+
+        .highlight {
+            color: #2196F3;
+            font-size: 16px;
+        }
+
+        /* 완료 페이지 */
+        .complete-container {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .complete-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            font-size: 40px;
+        }
+
+        .complete-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .complete-subtitle {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 32px;
+        }
+
+        /* 바텀 버튼 */
+        .bottom-bar {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 420px;
+            background: white;
+            padding: 12px 16px;
+            border-top: 1px solid #e9ecef;
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #666;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .btn-primary {
+            background: #2196F3;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1976D2;
+        }
+
+        .btn-primary:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* 바텀시트 */
+        .bottom-sheet {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 20px 20px 0 0;
+            padding: 24px;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .bottom-sheet.active {
+            transform: translateY(0);
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            z-index: 999;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        .sheet-header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .sheet-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .risk-gauge {
+            width: 200px;
+            height: 120px;
+            margin: 20px auto;
+            position: relative;
+        }
+
+        .gauge-bg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .risk-description {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.6;
+            padding: 16px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        /* 특징 리스트 */
+        .feature-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .feature-icon {
+            width: 32px;
+            height: 32px;
+            background: #e3f2fd;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .feature-content {
+            flex: 1;
+        }
+
+        .feature-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .feature-desc {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .close-btn {
+            width: 28px;
+            height: 28px;
+            border: none;
+            background: #f0f0f0;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <!-- 1단계: 상품 소개 -->
+    <div class="screen active" id="screen1">
+        <div class="header">
+            <button class="back-btn" onclick="history.back()">←</button>
+            <div class="header-title">외화RP 자동재투자</div>
+            <button class="header-action">ℹ️</button>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 16.6%"></div>
+            </div>
+            <div class="progress-text">1/6 단계</div>
+        </div>
+
+        <div class="content">
+            <div class="product-card">
+                <div class="product-badge">USD 추천</div>
+                <div class="product-title">편안 하루만 맡겨도<br>매일 이자가 나와요</div>
+                
+                <div class="rate-display">
+                    <div class="rate-label">예상 연 3.65%</div>
+                    <div class="rate-value">3.65%</div>
+                    <div class="rate-detail">최저 3.0% | 최고 3.7%</div>
+                </div>
+            </div>
+
+            <div class="section-title">이렇게 쉬워요 😊</div>
+            <div class="feature-list">
+                <div class="feature-item">
+                    <div class="feature-icon">1️⃣</div>
+                    <div class="feature-content">
+                        <div class="feature-title">외화 RP 신청할 계좌를 선택하고</div>
+                        <div class="feature-desc">해외주식 거래가 신청되어 있어야 해요</div>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">2️⃣</div>
+                    <div class="feature-content">
+                        <div class="feature-title">거래 신청하면</div>
+                        <div class="feature-desc">투자 성향을 확인해요</div>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">3️⃣</div>
+                    <div class="feature-content">
+                        <div class="feature-title">신청완료!</div>
+                        <div class="feature-desc">자동으로 거래해요. 직접 매도도 가능해요</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-title" style="margin-top: 32px;">다른 외화 RP 상품 금리는?</div>
+            <div class="feature-list">
+                <div class="feature-item">
+                    <div class="feature-icon">🇨🇳</div>
+                    <div class="feature-content">
+                        <div class="feature-title">위안화(CNY/위안) 자동매수형</div>
+                        <div class="feature-desc" style="color: #d32f2f; font-weight: 600;">연 3.69%</div>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🇪🇺</div>
+                    <div class="feature-content">
+                        <div class="feature-title">유로화(EUR/유로) 자동매수형</div>
+                        <div class="feature-desc" style="color: #d32f2f; font-weight: 600;">연 3.65%</div>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🇯🇵</div>
+                    <div class="feature-content">
+                        <div class="feature-title">일본엔(JPY/엔) 자동매수형</div>
+                        <div class="feature-desc" style="color: #d32f2f; font-weight: 600;">연 3.60%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bottom-bar">
+            <button class="btn btn-primary" onclick="nextScreen(2)">다음</button>
+        </div>
+    </div>
+
+    <!-- 2단계: 통화 및 계좌 선택 -->
+    <div class="screen" id="screen2">
+        <div class="header">
+            <button class="back-btn" onclick="prevScreen(1)">←</button>
+            <div class="header-title">외화RP 자동재투자</div>
+            <button class="header-action">ℹ️</button>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 33.3%"></div>
+            </div>
+            <div class="progress-text">2/6 단계</div>
+        </div>
+
+        <div class="content">
+            <div class="section-title">신청통화 약정 현황</div>
+            <div class="section-subtitle">통화를 선택하고 거래를 신청해주세요</div>
+
+            <div class="currency-table">
+                <div class="currency-row">
+                    <div>
+                        <div class="currency-code">CNY</div>
+                    </div>
+                    <div>
+                        <div class="currency-name">미등록</div>
+                    </div>
+                    <div>
+                        <button class="select-btn" onclick="selectCurrency('CNY', this)">신청</button>
+                    </div>
+                </div>
+                <div class="currency-row">
+                    <div>
+                        <div class="currency-code">EUR</div>
+                    </div>
+                    <div>
+                        <div class="currency-name">미등록</div>
+                    </div>
+                    <div>
+                        <button class="select-btn" onclick="selectCurrency('EUR', this)">신청</button>
+                    </div>
+                </div>
+                <div class="currency-row">
+                    <div>
+                        <div class="currency-code">HKD</div>
+                    </div>
+                    <div>
+                        <div class="currency-name">미등록</div>
+                    </div>
+                    <div>
+                        <button class="select-btn" onclick="selectCurrency('HKD', this)">신청</button>
+                    </div>
+                </div>
+                <div class="currency-row">
+                    <div>
+                        <div class="currency-code">JPY</div>
+                    </div>
+                    <div>
+                        <div class="currency-name">미등록</div>
+                    </div>
+                    <div>
+                        <button class="select-btn" onclick="selectCurrency('JPY', this)">신청</button>
+                    </div>
+                </div>
+                <div class="currency-row">
+                    <div>
+                        <div class="currency-code">USD</div>
+                    </div>
+                    <div>
+                        <div class="currency-name">미등록</div>
+                    </div>
+                    <div>
+                        <button class="select-btn selected" onclick="selectCurrency('USD', this)">신청</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-title" style="margin-top: 32px;">계좌 선택</div>
+            <div class="section-subtitle">상품을 가입할 계좌번호를 선택해주세요</div>
+
+            <div class="account-list">
+                <div class="account-item" onclick="selectAccount(this)">
+                    <div class="account-radio"></div>
+                    <div class="account-info">
+                        <div class="account-number">47241352-01 위탁</div>
+                        <div class="account-name">김태원</div>
+                    </div>
+                    <div class="account-badge">해외주식거래신청</div>
+                </div>
+                <div class="account-item" onclick="selectAccount(this)">
+                    <div class="account-radio"></div>
+                    <div class="account-info">
+                        <div class="account-number">64202030-01 위탁</div>
+                        <div class="account-name">김태원</div>
+                    </div>
+                </div>
+                <div class="account-item selected" onclick="selectAccount(this)">
+                    <div class="account-radio"></div>
+                    <div class="account-info">
+                        <div class="account-number">70383214-01 위탁</div>
+                        <div class="account-name">김태원</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bottom-bar">
+            <button class="btn btn-secondary" onclick="prevScreen(1)">이전</button>
+            <button class="btn btn-primary" onclick="showRiskProfile()">다음</button>
+        </div>
+    </div>
+
+    <!-- 3단계: 약관 동의 (간소화) -->
+    <div class="screen" id="screen3">
+        <div class="header">
+            <button class="back-btn" onclick="prevScreen(2)">←</button>
+            <div class="header-title">약관 동의</div>
+            <div style="width: 32px;"></div>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 50%"></div>
+            </div>
+            <div class="progress-text">3/6 단계</div>
+        </div>
+
+        <div class="content">
+            <div class="section-title">금융 상품의 자세한 정보,</div>
+            <div class="section-subtitle">투자설명서를 확인해 주세요.</div>
+
+            <!-- 핵심 약관 (필수) -->
+            <div class="terms-section">
+                <div class="terms-group">
+                    <div class="terms-item">
+                        <div class="checkbox" id="check-all" onclick="toggleCheckAll()"></div>
+                        <div class="terms-text" style="font-weight: 600;">전체 동의</div>
+                    </div>
+                </div>
+
+                <div class="terms-group">
+                    <div class="terms-item">
+                        <div class="checkbox" class="terms-check" onclick="toggleCheck(this)"></div>
+                        <div class="terms-text">상품설명서 확인 (필수)</div>
+                        <button class="terms-link" onclick="toggleDetail('detail1')">보기</button>
+                    </div>
+                    <div class="terms-detail" id="detail1">
+                        <div class="terms-content">
+                            <strong>외화RP 자동매수형 상품설명서</strong><br><br>
+                            • 상품명: 외화 자동매수형 RP(USD)<br>
+                            • 수익률: 연 3.0% ~ 3.7% (시장 상황에 따라 변동)<br>
+                            • 투자기간: 수시 (자동 재투자)<br>
+                            • 최소금액: 300달러 이상<br>
+                            • 수수료: 없음<br><br>
+                            
+                            <strong>주요 특징</strong><br>
+                            - 해외주식 잔고가 자동으로 RP에 투자됩니다<br>
+                            - 매일 이자가 발생하여 복리 효과가 있습니다<br>
+                            - 언제든 환매 가능합니다
+                        </div>
+                    </div>
+                </div>
+
+                <div class="terms-group">
+                    <div class="terms-item">
+                        <div class="checkbox" class="terms-check" onclick="toggleCheck(this)"></div>
+                        <div class="terms-text">투자 위험 및 유의사항 (필수)</div>
+                        <button class="terms-link" onclick="toggleDetail('detail2')">보기</button>
+                    </div>
+                    <div class="terms-detail" id="detail2">
+                        <div class="terms-content">
+                            <strong style="color: #d32f2f;">⚠️ 투자 위험 안내</strong><br><br>
+                            
+                            1. <strong>원금손실 위험</strong><br>
+                            - 발행사(은행)의 신용 위험이 있습니다<br>
+                            - 예금자보호법 적용 대상이 아닙니다<br><br>
+                            
+                            2. <strong>환율 변동 위험</strong><br>
+                            - 환율 변동에 따라 원화 기준 손실이 발생할 수 있습니다<br><br>
+                            
+                            3. <strong>중도 환매</strong><br>
+                            - 중도 환매 시 수익률이 낮아질 수 있습니다<br>
+                            - 시장 상황에 따라 환매가 지연될 수 있습니다
+                        </div>
+                    </div>
+                </div>
+
+                <div class="terms-group">
+                    <div class="terms-item">
+                        <div class="checkbox" class="terms-check" onclick="toggleCheck(this)"></div>
+                        <div class="terms-text">
+                            전자문서로 약관 및 설명서를 교부 받음에 동의하며, 제공받았음을 확인합니다
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 상세 약관 (선택 - 접기) -->
+            <details style="margin-top: 20px; opacity: 0.7;">
+                <summary style="cursor: pointer; font-size: 14px; color: #666; padding: 12px 0;">
+                    📄 상세 약관 보기 (선택)
+                </summary>
+                <div style="padding: 12px 0;">
+                    <div class="terms-item" style="padding: 8px 0;">
+                        <a href="#" class="terms-link" style="display: inline-block; margin-bottom: 8px;">
+                            📋 대고객 환매조건부 외화채권 매매약관 (PDF)
+                        </a>
+                    </div>
+                    <div class="terms-item" style="padding: 8px 0;">
+                        <a href="#" class="terms-link" style="display: inline-block;">
+                            📘 외화RP 설명서 (PDF)
+                        </a>
+                    </div>
+                </div>
+            </details>
+        </div>
+
+        <div class="bottom-bar">
+            <button class="btn btn-secondary" onclick="prevScreen(2)">이전</button>
+            <button class="btn btn-primary" id="terms-next-btn" onclick="nextScreen(4)" disabled>다음</button>
+        </div>
+    </div>
+
+    <!-- 4단계: 신청 확인 -->
+    <div class="screen" id="screen4">
+        <div class="header">
+            <button class="back-btn" onclick="prevScreen(3)">←</button>
+            <div class="header-title">신청 확인</div>
+            <div style="width: 32px;"></div>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 66.6%"></div>
+            </div>
+            <div class="progress-text">4/6 단계</div>
+        </div>
+
+        <div class="content">
+            <div class="section-title">외화RP(USD) 자동매매(개인)</div>
+            <div class="section-subtitle">신청내역을 확인해주세요</div>
+
+            <div style="text-align: center; margin: 32px 0;">
+                <div style="font-size: 14px; color: #666; margin-bottom: 8px;">예상 수익률</div>
+                <div style="font-size: 36px; font-weight: 700; color: #d32f2f;">연 3.55%</div>
+            </div>
+
+            <div class="confirm-card">
+                <div class="confirm-row">
+                    <div class="confirm-label">상품명</div>
+                    <div class="confirm-value">외화RP(USD)자동매매(개인)</div>
+                </div>
+                <div class="confirm-row">
+                    <div class="confirm-label">계좌번호</div>
+                    <div class="confirm-value">위탁계좌 70383214-01</div>
+                </div>
+                <div class="confirm-row">
+                    <div class="confirm-label">투자기간</div>
+                    <div class="confirm-value">수시</div>
+                </div>
+                <div class="confirm-row">
+                    <div class="confirm-label">자동매매 최소금액</div>
+                    <div class="confirm-value highlight">300달러</div>
+                </div>
+                <div class="confirm-row">
+                    <div class="confirm-label">자동매매 최대금액</div>
+                    <div class="confirm-value highlight">5,000만 달러</div>
+                </div>
+            </div>
+
+            <div class="terms-item" style="margin-top: 24px; padding: 16px; background: #f8f9fa; border-radius: 8px;">
+                <div class="checkbox" id="final-confirm" onclick="toggleCheck(this)"></div>
+                <div class="terms-text">신청 내역을 확인했습니다</div>
+            </div>
+        </div>
+
+        <div class="bottom-bar">
+            <button class="btn btn-secondary" onclick="prevScreen(3)">이전</button>
+            <button class="btn btn-primary" id="confirm-btn" onclick="nextScreen(5)" disabled>신청하기</button>
+        </div>
+    </div>
+
+    <!-- 5단계: 완료 -->
+    <div class="screen" id="screen5">
+        <div class="header">
+            <div style="width: 32px;"></div>
+            <div class="header-title">신청 완료</div>
+            <button class="close-btn" onclick="location.reload()">✕</button>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 100%"></div>
+            </div>
+            <div class="progress-text">완료</div>
+        </div>
+
+        <div class="complete-container">
+            <div class="complete-icon">✓</div>
+            <div class="complete-title">외화RP(USD) 자동매매<br>신청이 완료되었습니다</div>
+            <div class="complete-subtitle">위탁계좌 70383214-01</div>
+
+            <div class="confirm-card" style="text-align: left; max-width: 340px; margin: 0 auto;">
+                <div class="confirm-row">
+                    <div class="confirm-label">상품명</div>
+                    <div class="confirm-value">외화RP(USD)자동매매</div>
+                </div>
+                <div class="confirm-row">
+                    <div class="confirm-label">예상 수익률</div>
+                    <div class="confirm-value" style="color: #d32f2f;">연 3.55%</div>
+                </div>
+                <div class="confirm-row">
+                    <div class="confirm-label">신청일시</div>
+                    <div class="confirm-value">2025.01.06 14:52</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bottom-bar">
+            <button class="btn btn-primary" onclick="location.reload()">확인</button>
+        </div>
+    </div>
+
+    <!-- 투자성향 바텀시트 -->
+    <div class="overlay" id="overlay" onclick="closeBottomSheet()"></div>
+    <div class="bottom-sheet" id="risk-sheet">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div class="sheet-title">고객님의 투자성향과<br>상품의 위험 등급을 확인해 주세요.</div>
+            <button class="close-btn" onclick="closeBottomSheet()">✕</button>
+        </div>
+
+        <div style="background: #fff3cd; padding: 16px; border-radius: 8px; margin-bottom: 20px;">
+            <div style="font-size: 14px; font-weight: 600; color: #856404; margin-bottom: 8px;">
+                김태원님의 투자성향
+            </div>
+            <div style="font-size: 13px; color: #856404;">
+                고객님의 투자성향은 <strong>투자권유 희망, 성장형</strong>입니다.
+            </div>
+        </div>
+
+        <div class="risk-gauge">
+            <svg viewBox="0 0 200 120" class="gauge-bg">
+                <!-- 게이지 배경 -->
+                <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#e9ecef" stroke-width="20"/>
+                <!-- 위험 등급 (빨강) -->
+                <path d="M 20 100 A 80 80 0 0 1 60 40" fill="none" stroke="#dc3545" stroke-width="20"/>
+                <!-- 중립 (노랑) -->
+                <path d="M 60 40 A 80 80 0 0 1 100 20" fill="none" stroke="#ffc107" stroke-width="20"/>
+                <!-- 안전 (초록) -->
+                <path d="M 100 20 A 80 80 0 0 1 180 100" fill="none" stroke="#28a745" stroke-width="20"/>
+                <!-- 바늘 -->
+                <line x1="100" y1="100" x2="140" y2="50" stroke="#333" stroke-width="3"/>
+                <circle cx="100" cy="100" r="8" fill="#333"/>
+            </svg>
+        </div>
+
+        <div style="text-align: center; margin-bottom: 20px;">
+            <div style="display: inline-block; padding: 8px 20px; background: #28a745; color: white; border-radius: 20px; font-weight: 600;">
+                낮은위험
+            </div>
+        </div>
+
+        <div class="risk-description">
+            <strong style="color: #28a745;">성장형</strong>은 시장평균 수익률을 웃도는 높은 수준의 투자수익을 추구하며, 이를 위해 자산가치의 변동에 따른 손실 위험을 적극 수용, 투자자금 대부분을 주식, 주식형펀드 또는 파생상품 등의 위험자산에 투자하는 고객 유형입니다.
+        </div>
+
+        <div style="margin-top: 24px; display: flex; gap: 8px;">
+            <button class="btn btn-secondary" style="flex: 0.4;" onclick="closeBottomSheet()">
+                투자성향 재진단 →
+            </button>
+            <button class="btn btn-primary" style="flex: 1;" onclick="closeBottomSheet(); nextScreen(3);">
+                확인, 다음
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let selectedCurrency = 'USD';
+        let selectedAccount = '70383214-01';
+
+        function nextScreen(num) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById('screen' + num).classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        function prevScreen(num) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById('screen' + num).classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        function selectCurrency(currency, btn) {
+            document.querySelectorAll('.select-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            selectedCurrency = currency;
+        }
+
+        function selectAccount(item) {
+            document.querySelectorAll('.account-item').forEach(i => i.classList.remove('selected'));
+            item.classList.add('selected');
+        }
+
+        function showRiskProfile() {
+            document.getElementById('overlay').classList.add('active');
+            document.getElementById('risk-sheet').classList.add('active');
+        }
+
+        function closeBottomSheet() {
+            document.getElementById('overlay').classList.remove('active');
+            document.getElementById('risk-sheet').classList.remove('active');
+        }
+
+        function toggleCheck(checkbox) {
+            checkbox.classList.toggle('checked');
+            checkAllTerms();
+        }
+
+        function toggleCheckAll() {
+            const checkAll = document.getElementById('check-all');
+            const isChecked = checkAll.classList.contains('checked');
+            
+            document.querySelectorAll('.terms-check').forEach(check => {
+                if (isChecked) {
+                    check.classList.remove('checked');
+                } else {
+                    check.classList.add('checked');
+                }
+            });
+            
+            checkAll.classList.toggle('checked');
+            checkAllTerms();
+        }
+
+        function checkAllTerms() {
+            const allChecks = document.querySelectorAll('.terms-check');
+            const checkedCount = document.querySelectorAll('.terms-check.checked').length;
+            const nextBtn = document.getElementById('terms-next-btn');
+            
+            if (checkedCount === allChecks.length) {
+                nextBtn.disabled = false;
+                document.getElementById('check-all').classList.add('checked');
+            } else {
+                nextBtn.disabled = true;
+                document.getElementById('check-all').classList.remove('checked');
+            }
+        }
+
+        function toggleDetail(id) {
+            const detail = document.getElementById(id);
+            detail.classList.toggle('expanded');
+        }
+
+        // 최종 확인 체크
+        document.getElementById('final-confirm')?.addEventListener('click', function() {
+            const confirmBtn = document.getElementById('confirm-btn');
+            if (this.classList.contains('checked')) {
+                confirmBtn.disabled = false;
+            } else {
+                confirmBtn.disabled = true;
+            }
+        });
+    </script>
+</body>
+</html>

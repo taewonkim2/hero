@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ISA 약관/설명서 UI 패턴</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Apple SD Gothic Neo", sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+
+        .pattern-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .pattern-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: relative;
+            min-height: 200px;
+        }
+
+        .pattern-title {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        /* 패턴 1: 텍스트 링크 */
+        .text-links {
+            text-align: right;
+            margin-top: 40px;
+        }
+
+        .doc-link {
+            color: #999;
+            font-size: 13px;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .doc-link:hover {
+            color: #333;
+            text-decoration: underline;
+        }
+
+        .separator {
+            color: #ddd;
+            margin: 0 8px;
+        }
+
+        /* 패턴 2: 통합 버튼 */
+        .docs-btn {
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            color: #666;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .docs-btn:hover {
+            background: #e9ecef;
+            border-color: #ccc;
+        }
+
+        .docs-modal {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            margin-top: 8px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            padding: 12px;
+            min-width: 200px;
+            z-index: 10;
+        }
+
+        .docs-modal.active {
+            display: block;
+        }
+
+        .docs-modal a {
+            display: block;
+            padding: 10px 12px;
+            color: #333;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+
+        .docs-modal a:hover {
+            background: #f5f5f5;
+        }
+
+        /* 패턴 3: 정보 아이콘 */
+        .info-wrapper {
+            position: relative;
+        }
+
+        .info-icon {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #f0f0f0;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.2s;
+        }
+
+        .info-icon:hover {
+            background: #e0e0e0;
+        }
+
+        .popover {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: -10px;
+            margin-top: 8px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+            padding: 8px;
+            min-width: 180px;
+            z-index: 10;
+        }
+
+        .popover.active {
+            display: block;
+        }
+
+        .popover a {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 12px;
+            color: #333;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 13px;
+            transition: background 0.2s;
+        }
+
+        .popover a:hover {
+            background: #f5f5f5;
+        }
+
+        /* 패턴 4: 접기 메뉴 */
+        details {
+            margin-top: 40px;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+
+        details:hover {
+            opacity: 1;
+        }
+
+        summary {
+            cursor: pointer;
+            font-size: 13px;
+            color: #666;
+            padding: 8px 0;
+            list-style: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        summary::-webkit-details-marker {
+            display: none;
+        }
+
+        summary::before {
+            content: '▶';
+            font-size: 10px;
+            transition: transform 0.2s;
+        }
+
+        details[open] summary::before {
+            transform: rotate(90deg);
+        }
+
+        .details-content {
+            padding: 12px 0 0 20px;
+        }
+
+        .details-content a {
+            display: block;
+            padding: 6px 0;
+            color: #555;
+            text-decoration: none;
+            font-size: 13px;
+        }
+
+        .details-content a:hover {
+            color: #000;
+            text-decoration: underline;
+        }
+
+        /* 샘플 컨텐츠 */
+        .sample-content {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            color: #666;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .pdf-icon {
+            color: #d32f2f;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📄 ISA 약관/설명서 UI 패턴 비교</h1>
+        
+        <div class="pattern-grid">
+            <!-- 패턴 1 -->
+            <div class="pattern-card">
+                <div class="pattern-title">1. 텍스트 링크 (가장 간결)</div>
+                <div class="sample-content">
+                    ISA 메인 컨텐츠 영역
+                </div>
+                <div class="text-links">
+                    <a href="#" class="doc-link" onclick="showPDF('약관'); return false;">중개형ISA 약관</a>
+                    <span class="separator">|</span>
+                    <a href="#" class="doc-link" onclick="showPDF('설명서'); return false;">중개형ISA 설명서</a>
+                </div>
+            </div>
+
+            <!-- 패턴 2 -->
+            <div class="pattern-card">
+                <div class="pattern-title">2. 통합 버튼 + 드롭다운</div>
+                <div class="sample-content">
+                    ISA 메인 컨텐츠 영역
+                </div>
+                <div style="margin-top: 20px; position: relative;">
+                    <button class="docs-btn" onclick="toggleModal(event)">
+                        <span>📄</span>
+                        <span>약관 및 설명서</span>
+                    </button>
+                    <div class="docs-modal" id="docsModal">
+                        <a href="#" onclick="showPDF('약관'); return false;">📋 중개형ISA 약관</a>
+                        <a href="#" onclick="showPDF('설명서'); return false;">📘 중개형ISA 설명서</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 패턴 3 -->
+            <div class="pattern-card">
+                <div class="pattern-title">3. 우측 상단 정보 아이콘 (추천)</div>
+                <div class="info-wrapper">
+                    <button class="info-icon" onclick="togglePopover(event)">ℹ️</button>
+                    <div class="popover" id="popover">
+                        <a href="#" onclick="showPDF('약관'); return false;">
+                            <span class="pdf-icon">📋</span>
+                            <span>중개형ISA 약관</span>
+                        </a>
+                        <a href="#" onclick="showPDF('설명서'); return false;">
+                            <span class="pdf-icon">📘</span>
+                            <span>중개형ISA 설명서</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="sample-content">
+                    ISA 메인 컨텐츠 영역
+                </div>
+            </div>
+
+            <!-- 패턴 4 -->
+            <div class="pattern-card">
+                <div class="pattern-title">4. 접기 가능한 섹션</div>
+                <div class="sample-content">
+                    ISA 메인 컨텐츠 영역
+                </div>
+                <details>
+                    <summary>📂 관련 문서 보기</summary>
+                    <div class="details-content">
+                        <a href="#" onclick="showPDF('약관'); return false;">📋 중개형ISA 약관 (PDF)</a>
+                        <a href="#" onclick="showPDF('설명서'); return false;">📘 중개형ISA 설명서 (PDF)</a>
+                    </div>
+                </details>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showPDF(type) {
+            alert(`${type} PDF를 엽니다`);
+        }
+
+        function toggleModal(event) {
+            event.stopPropagation();
+            const modal = document.getElementById('docsModal');
+            modal.classList.toggle('active');
+        }
+
+        function togglePopover(event) {
+            event.stopPropagation();
+            const popover = document.getElementById('popover');
+            popover.classList.toggle('active');
+        }
+
+        // 외부 클릭 시 닫기
+        document.addEventListener('click', function() {
+            document.getElementById('docsModal')?.classList.remove('active');
+            document.getElementById('popover')?.classList.remove('active');
+        });
+    </script>
+</body>
+</html>

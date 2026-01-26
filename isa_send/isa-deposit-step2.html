@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ISA 입금 - 계좌확인</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background: #FAFAFA;
+            color: #1A1C1E;
+            max-width: 420px;
+            margin: 0 auto;
+            padding-bottom: 80px;
+        }
+
+        .top-nav {
+            background: white;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #E0E0E0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .back-btn {
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-title {
+            flex: 1;
+            font-size: 18px;
+            font-weight: 600;
+            color: #1A1C1E;
+            text-align: center;
+            margin-right: 36px;
+        }
+
+        .progress-bar-container {
+            background: white;
+            padding: 16px 16px 12px;
+            border-bottom: 1px solid #E0E0E0;
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .progress-step {
+            flex: 1;
+            height: 3px;
+            background: #E0E0E0;
+            margin: 0 2px;
+            border-radius: 2px;
+        }
+
+        .progress-step.active {
+            background: #333;
+        }
+
+        .progress-text {
+            font-size: 12px;
+            color: #999;
+            text-align: center;
+        }
+
+        .content {
+            padding: 20px 16px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1A1C1E;
+            margin-bottom: 8px;
+        }
+
+        .section-subtitle {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+
+        .account-summary {
+            background: white;
+            border: 1px solid #E0E0E0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        }
+
+        .summary-label {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .summary-account-number {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1A1C1E;
+            margin-bottom: 4px;
+        }
+
+        .summary-account-type {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .summary-balance {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid #F0F0F0;
+        }
+
+        .summary-balance-label {
+            font-size: 13px;
+            color: #999;
+        }
+
+        .summary-balance-amount {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1A1C1E;
+        }
+
+        .direction-arrow {
+            text-align: center;
+            margin: 16px 0;
+            font-size: 24px;
+            color: #CCC;
+        }
+
+        .isa-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            background: #F5F5F5;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .bottom-button-container {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 420px;
+            padding: 12px 16px;
+            background: white;
+            border-top: 1px solid #E0E0E0;
+            z-index: 90;
+        }
+
+        .main-button {
+            width: 100%;
+            padding: 16px;
+            background: #333;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <button class="back-btn" onclick="history.back()">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M15 18l-6-6 6-6"></path>
+            </svg>
+        </button>
+        <div class="nav-title">ISA 입금</div>
+    </nav>
+
+    <div class="progress-bar-container">
+        <div class="progress-steps">
+            <div class="progress-step active"></div>
+            <div class="progress-step active"></div>
+            <div class="progress-step"></div>
+            <div class="progress-step"></div>
+            <div class="progress-step"></div>
+        </div>
+        <div class="progress-text">2/5 단계</div>
+    </div>
+
+    <div class="content">
+        <div class="section-title">입금 정보를 확인하세요</div>
+        <div class="section-subtitle">선택하신 계좌에서 ISA로 입금됩니다</div>
+
+        <div class="account-summary">
+            <div class="summary-label">출금 계좌</div>
+            <div class="summary-account-number" id="from-account"></div>
+            <div class="summary-account-type" id="from-name"></div>
+            <div class="summary-balance">
+                <span class="summary-balance-label">출금가능</span>
+                <span class="summary-balance-amount" id="from-balance"></span>
+            </div>
+        </div>
+
+        <div class="direction-arrow">↓</div>
+
+        <div class="account-summary">
+            <div class="isa-badge">ISA</div>
+            <div class="summary-account-number">102-01-999888</div>
+            <div class="summary-account-type">홍길동 · 중개형 ISA</div>
+            <div class="summary-balance">
+                <span class="summary-balance-label">납입가능금액</span>
+                <span class="summary-balance-amount">1,500,000원</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-button-container">
+        <button class="main-button" onclick="goNext()">다음</button>
+    </div>
+
+    <script>
+        // Load account data from sessionStorage
+        window.onload = function() {
+            const accountData = JSON.parse(sessionStorage.getItem('isaDepositAccount'));
+            if (accountData) {
+                document.getElementById('from-account').textContent = accountData.number;
+                document.getElementById('from-name').textContent = accountData.name + ' · ' + accountData.type;
+                document.getElementById('from-balance').textContent = accountData.balance + '원';
+            } else {
+                // No data, go back to step 1
+                alert('계좌 정보가 없습니다. 다시 선택해주세요.');
+                window.location.href = 'isa-deposit-step1.html';
+            }
+        };
+
+        function goNext() {
+            window.location.href = 'isa-deposit-step3.html';
+        }
+    </script>
+</body>
+</html>

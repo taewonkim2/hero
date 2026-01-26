@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ISA 잔고</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <style>
         :root {
             --primary: #1a73e8;
@@ -43,8 +45,8 @@
             position: sticky;
             top: 0;
             /* background: var(--bg-white); */
-            background-color:rgb(6, 38, 97);
-            color:white;
+            background-color: rgb(6, 38, 97);
+            color: white;
             z-index: 100;
             display: flex;
             align-items: center;
@@ -85,7 +87,7 @@
             padding: 8px;
             cursor: pointer;
             /* color: var(--secondary-color); */
-            color:white;
+            color: white;
         }
 
         /* Account Header */
@@ -142,7 +144,7 @@
             border-radius: var(--card-radius);
             padding: 24px 20px;
             /* color: white; */
-            color:black;
+            color: black;
             position: relative;
         }
 
@@ -168,7 +170,7 @@
         }
 
         .refresh-btn {
-            background: rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.2);
             border: none;
             /* border-color: gray; */
             border-radius: 50%;
@@ -178,7 +180,7 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            color:black;
+            color: black;
         }
 
         .asset-card-value {
@@ -194,7 +196,7 @@
 
         .asset-card-change .highlight {
             /* color: #fcd34d; */
-            color:red;
+            color: red;
             font-weight: 600;
         }
 
@@ -231,7 +233,7 @@
             cursor: pointer;
             white-space: nowrap;
             scroll-snap-align: start;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
             transition: all 0.2s;
         }
 
@@ -307,6 +309,7 @@
             font-weight: 600;
             border-bottom: 1px solid var(--border-color);
         }
+
         .holdings-header-noline {
             padding: 0 20px 4px;
             margin-top: 16px;
@@ -365,7 +368,7 @@
             padding: 16px;
             background: #f0f4ff;
             border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         }
 
         .tab-summary-row1 {
@@ -397,8 +400,13 @@
             font-weight: 600;
         }
 
-        .tab-summary-change.positive { color: var(--positive); }
-        .tab-summary-change.negative { color: var(--negative); }
+        .tab-summary-change.positive {
+            color: var(--positive);
+        }
+
+        .tab-summary-change.negative {
+            color: var(--negative);
+        }
 
         .tab-summary-row2 {
             display: flex;
@@ -483,7 +491,7 @@
         /* Holding Item Card (개별 카드 스타일) */
         .holding-item-card {
             background: var(--bg-white);
-            border-color:var(--border-color);
+            border-color: var(--border-color);
             border-width: 1px;
             border-style: solid;
             border-radius: var(--card-radius);
@@ -589,8 +597,13 @@
             font-weight: 500;
         }
 
-        .holding-profit.positive { color: var(--positive); }
-        .holding-profit.negative { color: var(--negative); }
+        .holding-profit.positive {
+            color: var(--positive);
+        }
+
+        .holding-profit.negative {
+            color: var(--negative);
+        }
 
         .holding-toggle {
             font-size: 12px;
@@ -662,12 +675,12 @@
             opacity: 0.9;
         }
 
-        .action-btn.sell { 
+        .action-btn.sell {
             background: var(--negative);
             color: white;
         }
-        
-        .action-btn.buy { 
+
+        .action-btn.buy {
             background: var(--positive);
             color: white;
         }
@@ -684,7 +697,7 @@
             border-radius: 12px;
             padding: 16px;
             margin: 16px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         }
 
         .notice-title {
@@ -715,12 +728,13 @@
             max-width: 480px;
             display: flex;
             /* background: var(--bg-white); */
-            background-color:rgb(6, 38, 97);
+            background-color: rgb(6, 38, 97);
             border-top: 1px solid var(--border-color);
             padding: 8px 0 6px;
         }
 
-        .menu-tab, .tab-item {
+        .menu-tab,
+        .tab-item {
             flex: 1;
             display: flex;
             flex-direction: column;
@@ -728,20 +742,20 @@
             gap: 4px;
             padding: 8px;
             cursor: pointer;
-            color:white;
+            color: white;
             font-size: 14px;
         }
 
         .tab-label {
             font-size: 11px;
             /* color: var(--secondary-color); */
-            color:white;
+            color: white;
             font-size: 14px;
         }
 
         .tab-item.active .tab-label {
             color: var(--primary-color);
-            color:white;
+            color: white;
             font-weight: 600;
             font-size: 14px;
         }
@@ -763,11 +777,12 @@
         .menu-label {
             font-size: 11px;
             /* color: var(--secondary-color); */
-            color:white;
+            color: white;
             font-size: 14px;
         }
     </style>
 </head>
+
 <body>
     <!-- Top Navigation Bar -->
     <nav class="top-nav">
@@ -819,7 +834,8 @@
                 <div class="asset-card-date">
                     <span>기준일 2025.12.24</span>
                     <button class="refresh-btn">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
                             <path d="M23 4v6h-6"></path>
                             <path d="M1 20v-6h6"></path>
                             <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
@@ -862,7 +878,7 @@
         </div> -->
 
         <!-- Holdings Card -->
-        <p class="holdings-header-noline">&bull;    보유상품</p>
+        <p class="holdings-header-noline">&bull; 보유상품</p>
         <div class="holdings-card">
             <!-- <div class="holdings-header">보유 상품</div> -->
 
@@ -1011,7 +1027,8 @@
                 <div class="holding-item-card">
                     <div class="holding-main">
                         <div class="holding-icon fund">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
                                 <path d="M3 3v18h18"></path>
                                 <path d="M18 17V9"></path>
                                 <path d="M13 17V5"></path>
@@ -1053,7 +1070,8 @@
                 <div class="holding-item-card">
                     <div class="holding-main">
                         <div class="holding-icon fund">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
                                 <path d="M3 3v18h18"></path>
                                 <path d="M18 17V9"></path>
                                 <path d="M13 17V5"></path>
@@ -1099,7 +1117,8 @@
                 <div class="holding-item-card">
                     <div class="holding-main">
                         <div class="holding-icon els">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
                                 <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
                             </svg>
                         </div>
@@ -1137,7 +1156,8 @@
                 <div class="holding-item-card">
                     <div class="holding-main">
                         <div class="holding-icon els">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
                                 <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
                             </svg>
                         </div>
@@ -1179,7 +1199,8 @@
                 <div class="holding-item-card">
                     <div class="holding-main">
                         <div class="holding-icon bond">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
                                 <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
                                 <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
                             </svg>
@@ -1219,7 +1240,8 @@
                 <div class="holding-item-card">
                     <div class="holding-main">
                         <div class="holding-icon bond">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
                                 <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
                                 <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
                             </svg>
@@ -1387,7 +1409,8 @@
         <div class="deposit-protection-notice">
             <div class="notice-title">예금자 보호안내</div>
             <div class="notice-content">
-                이 금융상품은 예금자보호법에 따라 보호되지 않습니다. 다만, 이 예탁금 중 증권매수 미사용 현금잔액은 예금자보호법에 따라 원금과 소정의 이자를 합하여 1인당 <span class="notice-highlight">"1억원"</span>까지(본 금융회사의 여타 보호상품과 합산) 보호됩니다.
+                이 금융상품은 예금자보호법에 따라 보호되지 않습니다. 다만, 이 예탁금 중 증권매수 미사용 현금잔액은 예금자보호법에 따라 원금과 소정의 이자를 합하여 1인당 <span
+                    class="notice-highlight">"1억원"</span>까지(본 금융회사의 여타 보호상품과 합산) 보호됩니다.
             </div>
         </div>
     </main>
@@ -1403,11 +1426,11 @@
             <span class="menu-label">메뉴</span>
         </div>
         <div class="tab-item">
-            <span class="tab-label" onclick = "location.href='rp_list.html'" >RP검색</span>
+            <span class="tab-label" onclick="location.href='rp_list.html'">RP검색</span>
         </div>
         <div class="tab-item active">
             <span class="tab-label">RP잔고</span>
-        <!-- </div>
+            <!-- </div>
         <div class="tab-item">
             <span class="tab-label">ISA가입/이전</span>
         </div>
@@ -1419,42 +1442,42 @@
     <script>
         // 탭별 요약 데이터
         const tabSummaryData = {
-            stock: { 
-                asset: '23,550,000원', 
-                profit: '1,567,500원', 
-                rate: '+7.13%', 
+            stock: {
+                asset: '23,550,000원',
+                profit: '1,567,500원',
+                rate: '+7.13%',
                 isPositive: true,
                 purchase: '21,982,500원',
                 evaluation: '23,550,000원'
             },
-            fund: { 
-                asset: '13,170,000원', 
-                profit: '1,170,000원', 
-                rate: '+9.75%', 
+            fund: {
+                asset: '13,170,000원',
+                profit: '1,170,000원',
+                rate: '+9.75%',
                 isPositive: true,
                 purchase: '12,000,000원',
                 evaluation: '13,170,000원'
             },
-            els: { 
-                asset: '3,170,000원', 
-                profit: '170,000원', 
-                rate: '+5.67%', 
+            els: {
+                asset: '3,170,000원',
+                profit: '170,000원',
+                rate: '+5.67%',
                 isPositive: true,
                 purchase: '3,000,000원',
                 evaluation: '3,170,000원'
             },
-            bond: { 
-                asset: '8,210,000원', 
-                profit: '210,000원', 
-                rate: '+2.63%', 
+            bond: {
+                asset: '8,210,000원',
+                profit: '210,000원',
+                rate: '+2.63%',
                 isPositive: true,
                 purchase: '8,000,000원',
                 evaluation: '8,210,000원'
             },
-            rp: { 
-                asset: '8,015,500원', 
-                profit: '15,500원', 
-                rate: '+0.19%', 
+            rp: {
+                asset: '8,015,500원',
+                profit: '15,500원',
+                rate: '+0.19%',
                 isPositive: true,
                 purchase: '8,000,000원',
                 evaluation: '8,015,500원'
@@ -1477,12 +1500,12 @@
                 // 요약 정보 업데이트
                 const data = tabSummaryData[category];
                 document.getElementById('summaryAsset').textContent = data.asset;
-                
+
                 const changeEl = document.getElementById('summaryChange');
                 const arrow = data.isPositive ? '▲' : '▼';
                 changeEl.textContent = `(${arrow}${data.profit}/${data.rate})`;
                 changeEl.className = 'tab-summary-change ' + (data.isPositive ? 'positive' : 'negative');
-                
+
                 document.getElementById('summaryPurchase').textContent = data.purchase;
                 document.getElementById('summaryEvaluation').textContent = data.evaluation;
             });
@@ -1490,11 +1513,11 @@
 
         // 보유종목 상세 토글
         document.querySelectorAll('.holding-toggle').forEach(toggle => {
-            toggle.addEventListener('click', function(e) {
+            toggle.addEventListener('click', function (e) {
                 e.stopPropagation();
                 const targetId = this.dataset.target;
                 const details = document.getElementById(targetId);
-                
+
                 if (details) {
                     details.classList.toggle('collapsed');
                     this.classList.toggle('collapsed');
@@ -1503,13 +1526,13 @@
         });
 
         // 재조회 버튼
-        document.querySelector('.refresh-btn').addEventListener('click', function() {
+        document.querySelector('.refresh-btn').addEventListener('click', function () {
             // 새로고침 애니메이션
             this.style.transform = 'rotate(360deg)';
             setTimeout(() => {
                 this.style.transform = 'rotate(0deg)';
             }, 500);
-            
+
             // 실제 데이터 새로고침 로직
             alert('데이터를 새로고침합니다.');
         });
@@ -1544,17 +1567,17 @@
 
         // 통화 필터 기능
         document.querySelectorAll('.currency-tab').forEach(tab => {
-            tab.addEventListener('click', function() {
+            tab.addEventListener('click', function () {
                 const currency = this.dataset.currency;
-                
+
                 // 탭 활성화
                 document.querySelectorAll('.currency-tab').forEach(t => t.classList.remove('active'));
                 this.classList.add('active');
-                
+
                 // 종목 필터링
                 const rpSection = document.querySelector('.holdings-section[data-category="rp"]');
                 const items = rpSection.querySelectorAll('.holding-item-card[data-currency]');
-                
+
                 items.forEach(item => {
                     if (currency === 'all' || item.dataset.currency === currency) {
                         item.classList.remove('hidden');
@@ -1566,4 +1589,5 @@
         });
     </script>
 </body>
+
 </html>

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ISA 입금 - 확인</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background: rgba(0,0,0,0.5);
+            color: #1A1C1E;
+            max-width: 420px;
+            margin: 0 auto;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 360px;
+            overflow: hidden;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            padding: 24px 24px 20px;
+            text-align: center;
+            border-bottom: 1px solid #F0F0F0;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1A1C1E;
+        }
+
+        .modal-content {
+            padding: 24px;
+        }
+
+        .amount-display {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .amount-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #D32F2F;
+            margin-bottom: 8px;
+        }
+
+        .amount-question {
+            font-size: 15px;
+            color: #666;
+        }
+
+        .account-info-box {
+            background: #F8F8F8;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+        }
+
+        .info-row:first-child {
+            padding-top: 0;
+        }
+
+        .info-row:last-child {
+            padding-bottom: 0;
+        }
+
+        .info-label {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .info-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1A1C1E;
+            text-align: right;
+        }
+
+        .info-value.highlight {
+            color: #D32F2F;
+        }
+
+        .divider {
+            height: 1px;
+            background: #E0E0E0;
+            margin: 12px 0;
+        }
+
+        .modal-buttons {
+            display: flex;
+            border-top: 1px solid #F0F0F0;
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: 16px;
+            background: white;
+            border: none;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+
+        .modal-btn:first-child {
+            color: #666;
+            border-right: 1px solid #F0F0F0;
+        }
+
+        .modal-btn:last-child {
+            color: #454C73;
+            font-weight: 700;
+        }
+
+        .modal-btn:active {
+            background: #F5F5F5;
+        }
+    </style>
+</head>
+<body>
+    <div class="modal">
+        <div class="modal-header">
+            <div class="modal-title">입금 확인</div>
+        </div>
+
+        <div class="modal-content">
+            <div class="amount-display">
+                <div class="amount-value" id="confirm-amount">20,820원</div>
+                <div class="amount-question">입금 받으시겠습니까?</div>
+            </div>
+
+            <div class="account-info-box">
+                <div class="info-row">
+                    <span class="info-label">보내는 계좌</span>
+                    <span class="info-value" id="from-account">3022-0602 김태원<br>[위탁]</span>
+                </div>
+                <div class="divider"></div>
+                <div class="info-row">
+                    <span class="info-label">받는계좌</span>
+                    <span class="info-value highlight">6496-8447 김태원<br>[중개형ISA]</span>
+                </div>
+                <div class="divider"></div>
+                <div class="info-row">
+                    <span class="info-label">수수료</span>
+                    <span class="info-value">면제</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">받는계좌 표기</span>
+                    <span class="info-value">김태원</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">내계좌 표기</span>
+                    <span class="info-value">김태원</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-buttons">
+            <button class="modal-btn" onclick="goBack()">취소</button>
+            <button class="modal-btn" onclick="executeTransfer()">입금하기</button>
+        </div>
+    </div>
+
+    <script>
+        window.onload = function() {
+            const accountData = JSON.parse(sessionStorage.getItem('isaDepositFromAccount'));
+            const amount = sessionStorage.getItem('isaDepositAmount');
+            
+            if (!accountData || !amount) {
+                alert('입금 정보가 없습니다.');
+                window.location.href = 'isa-deposit-mts-step1.html';
+                return;
+            }
+            
+            document.getElementById('confirm-amount').textContent = amount + '원';
+            document.getElementById('from-account').innerHTML = 
+                accountData.number + ' ' + accountData.name + '<br>[' + accountData.type + ']';
+        };
+
+        function goBack() {
+            history.back();
+        }
+
+        function executeTransfer() {
+            const now = new Date();
+            const timeStr = now.getFullYear() + '.' + 
+                          String(now.getMonth() + 1).padStart(2, '0') + '.' + 
+                          String(now.getDate()).padStart(2, '0') + ' ' +
+                          String(now.getHours()).padStart(2, '0') + ':' +
+                          String(now.getMinutes()).padStart(2, '0');
+            sessionStorage.setItem('isaDepositTime', timeStr);
+            
+            window.location.href = 'isa-deposit-mts-step4.html';
+        }
+    </script>
+</body>
+</html>
