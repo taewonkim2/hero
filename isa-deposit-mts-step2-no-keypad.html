@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ISA 입금 - 금액입력</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background: white;
+            color: #1A1C1E;
+            max-width: 420px;
+            margin: 0 auto;
+            padding-bottom: 80px;
+        }
+
+        .top-nav {
+            background: #454C73;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            color: white;
+        }
+
+        .back-btn {
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .nav-title {
+            flex: 1;
+            font-size: 16px;
+            font-weight: 500;
+            text-align: center;
+            margin-right: 36px;
+        }
+
+        .content {
+            padding: 20px 16px;
+        }
+
+        .section-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1A1C1E;
+            margin-bottom: 12px;
+        }
+
+        .account-selector {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px;
+            background: #F8F8F8;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+
+        .account-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #FFD700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            margin-right: 12px;
+        }
+
+        .account-selector-info {
+            flex: 1;
+            display: flex;
+            align-items: center;
+        }
+
+        .account-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1A1C1E;
+        }
+
+        .account-number {
+            font-size: 14px;
+            color: #1A1C1E;
+            margin-top: 2px;
+        }
+
+        .account-arrow {
+            color: #999;
+            font-size: 20px;
+        }
+
+        .refresh-row {
+            text-align: center;
+            color: #999;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+
+        .refresh-icon {
+            display: inline-block;
+            cursor: pointer;
+            margin-left: 4px;
+        }
+
+        .amount-section {
+            margin-bottom: 24px;
+        }
+
+        .amount-input-container {
+            position: relative;
+            margin-bottom: 12px;
+        }
+
+        .amount-input {
+            width: 100%;
+            padding: 12px 40px 12px 12px;
+            border: 1px solid #E0E0E0;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 600;
+            text-align: right;
+            font-family: 'Noto Sans KR', sans-serif;
+            color: #1A1C1E;
+        }
+
+        .amount-input:focus {
+            outline: none;
+            border-color: #454C73;
+        }
+
+        .amount-unit {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 14px;
+            color: #999;
+        }
+
+        .balance-info {
+            text-align: right;
+            font-size: 13px;
+            color: #666;
+            margin-top: 8px;
+        }
+
+        .balance-info-link {
+            color: #454C73;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        .isa-account {
+            padding: 20px 16px;
+            background: #F8F9FA;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .isa-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .isa-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #454C73;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: 700;
+            margin-right: 12px;
+        }
+
+        .isa-badge {
+            background: #454C73;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .isa-info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #E0E0E0;
+        }
+
+        .isa-info-row:last-child {
+            border-bottom: none;
+        }
+
+        .isa-info-label {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .isa-info-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1A1C1E;
+        }
+
+        .info-notice {
+            background: #FFF9E6;
+            border-left: 3px solid #FFB800;
+            padding: 12px 16px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        .info-notice-text {
+            font-size: 12px;
+            color: #5C4D00;
+            line-height: 1.6;
+        }
+
+        .notice-section {
+            margin-top: 24px;
+            padding: 16px;
+            background: #F8F8F8;
+            border-radius: 8px;
+        }
+
+        .notice-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #1A1C1E;
+            margin-bottom: 8px;
+        }
+
+        .notice-content {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .notice-list {
+            margin-top: 8px;
+            padding-left: 12px;
+        }
+
+        .notice-list li {
+            margin-bottom: 4px;
+        }
+
+        .bottom-button-container {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 420px;
+            padding: 12px 16px;
+            background: white;
+            border-top: 1px solid #E0E0E0;
+        }
+
+        .main-button {
+            width: 100%;
+            padding: 16px;
+            background: #454C73;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+
+        .main-button:active {
+            background: #363B5C;
+        }
+
+        .main-button:disabled {
+            background: #CCC;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <button class="back-btn" onclick="history.back()">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M15 18l-6-6 6-6"></path>
+            </svg>
+        </button>
+        <div class="nav-title">입출금</div>
+    </nav>
+
+    <div class="content">
+        <div class="section-title">가져오는 계좌</div>
+        <div class="account-selector" onclick="changeFromAccount()">
+            <div class="account-selector-info">
+                <div class="account-icon">K</div>
+                <div>
+                    <div class="account-number" id="from-account-number">3022-0602 김태원</div>
+                    <div class="account-name" id="from-account-type">[위탁]</div>
+                </div>
+            </div>
+            <div class="account-arrow">›</div>
+        </div>
+
+        <div class="refresh-row">
+            출금가능금액 <span id="available-balance">1,416원</span> 
+            <span class="refresh-icon" onclick="refreshBalance()">↻</span>
+        </div>
+
+        <div class="section-title">입금 금액</div>
+        <div class="amount-section">
+            <div class="amount-input-container">
+                <input type="text" class="amount-input" id="amount-input" placeholder="0" onclick="showKeypad()">
+                <span class="amount-unit">원</span>
+            </div>
+            <div class="balance-info">
+                메도대금 대출은 이체 시 <span class="balance-info-link" onclick="showAmountInfo()">금액확인</span>
+            </div>
+        </div>
+
+        <div class="section-title">받는 계좌</div>
+        <div class="isa-account">
+            <div class="isa-header">
+                <div style="display: flex; align-items: center;">
+                    <div class="isa-icon">K</div>
+                    <div>
+                        <div class="account-number">6496-8447 김태원</div>
+                        <div class="account-name">[중개형ISA]</div>
+                    </div>
+                </div>
+                <div class="isa-badge">ISA</div>
+            </div>
+            <div class="isa-info-row">
+                <span class="isa-info-label">납입한도</span>
+                <span class="isa-info-value">20,000,000원</span>
+            </div>
+            <div class="isa-info-row">
+                <span class="isa-info-label">납입가능금액</span>
+                <span class="isa-info-value">15,552,623원</span>
+            </div>
+            <div class="isa-info-row">
+                <span class="isa-info-label">예수금</span>
+                <span class="isa-info-value">447,377원</span>
+            </div>
+        </div>
+
+        <div class="info-notice">
+            <div class="info-notice-text">
+                💡 ISA 계좌는 연간 납입한도가 있습니다. 납입가능금액을 확인하고 입금해주세요.
+            </div>
+        </div>
+
+        <div class="notice-section">
+            <div class="notice-title">이체 유의사항</div>
+            <div class="notice-content">
+                이체 기능사면 = 은행 서비스로 시간 단축 가능<br>
+                통장(연결된) 07:00~16:50, 17:00~23:30,<br>
+                00:30~07:00
+                <ul class="notice-list">
+                    <li>토/일/공휴일 : 은행별 서비스 시간 준수</li>
+                    <li>OTP 사용 시 "긴급실명" 발생 검증하는 이용중지 기관에 온라인으로는 이체할 수 없습니다</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-button-container">
+        <button class="main-button" id="mainButton" onclick="showKeypad()" disabled>금액 입력하기</button>
+    </div>
+
+    <script>
+        window.onload = function() {
+            const accountData = JSON.parse(sessionStorage.getItem('isaDepositFromAccount'));
+            if (accountData) {
+                document.getElementById('from-account-number').textContent = accountData.number + ' ' + accountData.name;
+                document.getElementById('from-account-type').textContent = '[' + accountData.type + ']';
+                document.getElementById('available-balance').textContent = accountData.balance + '원';
+            }
+        };
+
+        function showKeypad() {
+            // 키패드가 있는 버전으로 이동
+            window.location.href = 'isa-deposit-mts-step2.html';
+        }
+
+        function changeFromAccount() {
+            alert('계좌 변경 기능');
+        }
+
+        function refreshBalance() {
+            alert('잔액 새로고침');
+        }
+
+        function showAmountInfo() {
+            alert('메도대금 대출 금액 확인 기능');
+        }
+
+        // 금액 입력 감지
+        document.getElementById('amount-input').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/,/g, '');
+            if (value && !isNaN(value)) {
+                let numValue = parseInt(value);
+                if (numValue > 15552623) numValue = 15552623;
+                e.target.value = numValue.toLocaleString();
+                document.getElementById('mainButton').disabled = numValue === 0;
+                document.getElementById('mainButton').textContent = '다음';
+            } else if (value === '') {
+                document.getElementById('mainButton').disabled = true;
+                document.getElementById('mainButton').textContent = '금액 입력하기';
+            }
+        });
+    </script>
+</body>
+</html>

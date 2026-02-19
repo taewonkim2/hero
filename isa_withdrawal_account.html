@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ISA입금 - 출금계좌선택</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f5f5f5;
+            max-width: 480px;
+            margin: 0 auto;
+            background: #fff;
+        }
+
+        /* 헤더 */
+        .header {
+            background: #3d3089;
+            color: white;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .back-button {
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .header-title {
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .menu-button {
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        /* 진행 표시 */
+        .progress-container {
+            padding: 20px 16px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .progress-text {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .progress-help {
+            width: 16px;
+            height: 16px;
+            border: 1px solid #666;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            cursor: pointer;
+        }
+
+        .progress-dots {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .progress-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #e0e0e0;
+        }
+
+        .progress-dot.active {
+            background: #3d3089;
+        }
+
+        /* 타이틀 섹션 */
+        .title-section {
+            padding: 24px 16px 16px;
+        }
+
+        .main-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #000;
+        }
+
+        .subtitle {
+            font-size: 13px;
+            color: #999;
+            line-height: 1.5;
+        }
+
+        /* 탭 */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 16px;
+            text-align: center;
+            font-size: 15px;
+            color: #999;
+            cursor: pointer;
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            color: #3d3089;
+            border-bottom-color: #3d3089;
+            font-weight: 600;
+        }
+
+        /* 계좌 리스트 */
+        .account-list {
+            padding: 0 16px;
+        }
+
+        .account-item {
+            display: flex;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+        }
+
+        .account-item:hover {
+            background: #fafafa;
+        }
+
+        .account-radio {
+            width: 24px;
+            height: 24px;
+            border: 2px solid #e0e0e0;
+            border-radius: 50%;
+            margin-right: 16px;
+            flex-shrink: 0;
+        }
+
+        .account-info {
+            flex: 1;
+        }
+
+        .account-name {
+            font-size: 15px;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .account-number {
+            font-size: 14px;
+            color: #999;
+            margin-bottom: 4px;
+        }
+
+        .account-balance-label {
+            font-size: 13px;
+            color: #999;
+        }
+
+        .account-balance {
+            font-size: 16px;
+            font-weight: 600;
+            color: #000;
+        }
+
+        .transfer-button {
+            background: none;
+            border: 1px solid #e0e0e0;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #666;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        /* 유의사항 */
+        .notice-section {
+            margin: 16px;
+            background: #f8f8f8;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .notice-header {
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .notice-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .notice-toggle {
+            font-size: 12px;
+            color: #666;
+            transition: transform 0.3s;
+        }
+
+        .notice-toggle.collapsed {
+            transform: rotate(180deg);
+        }
+
+        .notice-content {
+            padding: 0 16px 16px;
+            font-size: 13px;
+            color: #666;
+            line-height: 1.6;
+            max-height: 500px;
+            overflow: hidden;
+            transition: max-height 0.3s;
+        }
+
+        .notice-content.hidden {
+            max-height: 0;
+            padding: 0 16px;
+        }
+
+        .notice-content ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .notice-content li {
+            padding-left: 16px;
+            position: relative;
+            margin-bottom: 8px;
+        }
+
+        .notice-content li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #3d3089;
+        }
+
+        .notice-highlight {
+            color: #e74c3c;
+        }
+
+        /* 바텀 네비게이션 */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            max-width: 480px;
+            margin: 0 auto;
+            background: white;
+            display: flex;
+            border-top: 1px solid #e0e0e0;
+            padding: 8px 0;
+        }
+
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 8px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            color: #999;
+            font-size: 11px;
+        }
+
+        .nav-item.active {
+            color: #3d3089;
+        }
+
+        .nav-icon {
+            font-size: 20px;
+        }
+
+        /* 메인 버튼 */
+        .main-button {
+            position: fixed;
+            bottom: 80px;
+            right: 16px;
+            width: 56px;
+            height: 56px;
+            background: #3d3089;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(61, 48, 137, 0.3);
+        }
+
+        .content-wrapper {
+            padding-bottom: 80px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 헤더 -->
+    <div class="header">
+        <div class="header-left">
+            <span class="back-button">←</span>
+            <span class="header-title">ISA입금</span>
+        </div>
+        <span class="menu-button">⋮</span>
+    </div>
+
+    <div class="content-wrapper">
+        <!-- 진행 표시 -->
+        <div class="progress-container">
+            <div class="progress-text">
+                출금계좌선택
+                <span class="progress-help">i</span>
+            </div>
+            <div class="progress-dots">
+                <div class="progress-dot active"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+            </div>
+        </div>
+
+        <!-- 타이틀 -->
+        <div class="title-section">
+            <h1 class="main-title">출금할 계좌를 선택하세요</h1>
+            <p class="subtitle">ISA계좌로 입금할 금액을 출금할 계좌를 선택하세요</p>
+        </div>
+
+        <!-- 탭 -->
+        <div class="tabs">
+            <button class="tab active" id="tab-kiwoom">키움증권</button>
+            <button class="tab" id="tab-other">타금융기관</button>
+        </div>
+
+        <!-- 키움증권 계좌 리스트 -->
+        <div class="account-list" id="kiwoom-accounts">
+            <div class="account-item">
+                <div class="account-radio"></div>
+                <div class="account-info">
+                    <div class="account-name">김카톡</div>
+                    <div class="account-number">1234-5678 [위탁종합]</div>
+                    <div class="account-balance-label">출금가능</div>
+                    <div class="account-balance">123,123,123원</div>
+                </div>
+                <button class="transfer-button">이체내역 ></button>
+            </div>
+
+            <div class="account-item">
+                <div class="account-radio"></div>
+                <div class="account-info">
+                    <div class="account-name">김카톡</div>
+                    <div class="account-number">1234-5678 [위탁종합]</div>
+                    <div class="account-balance-label">출금가능</div>
+                    <div class="account-balance">123,123,123원</div>
+                </div>
+                <button class="transfer-button">이체내역 ></button>
+            </div>
+
+            <div class="account-item">
+                <div class="account-radio"></div>
+                <div class="account-info">
+                    <div class="account-name">김카톡</div>
+                    <div class="account-number">1234-5678 [위탁종합]</div>
+                </div>
+                <button class="transfer-button">이체내역 ></button>
+            </div>
+        </div>
+
+        <!-- 타금융기관 계좌 리스트 (처음엔 숨김) -->
+        <div class="account-list" id="other-accounts" style="display: none;">
+            <div class="account-item">
+                <div class="account-radio"></div>
+                <div class="account-info">
+                    <div class="account-name">삼성증권</div>
+                    <div class="account-number">1234-5678</div>
+                    <div class="account-balance-label">출금가능</div>
+                    <div class="account-balance">123,123,123원</div>
+                </div>
+                <button class="transfer-button">이체내역 ></button>
+            </div>
+
+            <div class="account-item">
+                <div class="account-radio"></div>
+                <div class="account-info">
+                    <div class="account-name">한국투자증권</div>
+                    <div class="account-number">1234-5678</div>
+                    <div class="account-balance-label">출금가능</div>
+                    <div class="account-balance">123,123,123원</div>
+                </div>
+                <button class="transfer-button">이체내역 ></button>
+            </div>
+
+            <div class="account-item">
+                <div class="account-radio"></div>
+                <div class="account-info">
+                    <div class="account-name">미래에셋증권</div>
+                    <div class="account-number">1234-5678</div>
+                    <div class="account-balance-label">출금가능</div>
+                    <div class="account-balance">123,123,123원</div>
+                </div>
+                <button class="transfer-button">이체내역 ></button>
+            </div>
+        </div>
+
+        <!-- 유의사항 (키움증권 탭에만 표시) -->
+        <div class="notice-section" id="notice-section">
+            <div class="notice-header" onclick="toggleNotice()">
+                <span class="notice-title">유의사항</span>
+                <span class="notice-toggle" id="notice-toggle">^</span>
+            </div>
+            <div class="notice-content" id="notice-content">
+                <ul>
+                    <li>마감까지 시간
+                        <div class="notice-highlight">평일 (주중일) 09:30 ~ 16:50, 17:20~21:30</div>
+                        주말/공휴일(공휴일제외) 05:30 ~ 23:30
+                    </li>
+                    <li>동일영업일 계좌간 입출금 시에만 가능합니다.</li>
+                    <li>금융거래중지계좌는 이체가 되지 않습니다.</li>
+                    <li>계좌당 1회 1억</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- 메인 버튼 -->
+    <button class="main-button">☰</button>
+
+    <!-- 바텀 네비게이션 -->
+    <div class="bottom-nav">
+        <button class="nav-item active">
+            <span class="nav-icon">⊕</span>
+            <span>ISA입금</span>
+        </button>
+        <button class="nav-item">
+            <span class="nav-icon">📄</span>
+            <span>ISA신규</span>
+        </button>
+        <button class="nav-item">
+            <span class="nav-icon">💼</span>
+            <span>ISA자산</span>
+        </button>
+        <button class="nav-item">
+            <span class="nav-icon">⚙</span>
+            <span>ISA관리</span>
+        </button>
+    </div>
+
+    <script>
+        // 탭 전환 기능
+        const tabKiwoom = document.getElementById('tab-kiwoom');
+        const tabOther = document.getElementById('tab-other');
+        const kiwoomAccounts = document.getElementById('kiwoom-accounts');
+        const otherAccounts = document.getElementById('other-accounts');
+        const noticeSection = document.getElementById('notice-section');
+
+        tabKiwoom.addEventListener('click', () => {
+            // 탭 활성화 상태 변경
+            tabKiwoom.classList.add('active');
+            tabOther.classList.remove('active');
+            
+            // 계좌 리스트 전환
+            kiwoomAccounts.style.display = 'block';
+            otherAccounts.style.display = 'none';
+            
+            // 유의사항 표시
+            noticeSection.style.display = 'block';
+        });
+
+        tabOther.addEventListener('click', () => {
+            // 탭 활성화 상태 변경
+            tabOther.classList.add('active');
+            tabKiwoom.classList.remove('active');
+            
+            // 계좌 리스트 전환
+            otherAccounts.style.display = 'block';
+            kiwoomAccounts.style.display = 'none';
+            
+            // 유의사항 숨김
+            noticeSection.style.display = 'none';
+        });
+
+        // 유의사항 토글 기능
+        function toggleNotice() {
+            const content = document.getElementById('notice-content');
+            const toggle = document.getElementById('notice-toggle');
+            
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                toggle.classList.remove('collapsed');
+            } else {
+                content.classList.add('hidden');
+                toggle.classList.add('collapsed');
+            }
+        }
+
+        // 계좌 선택 기능
+        document.querySelectorAll('.account-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                // 이체내역 버튼 클릭시 계좌 선택 안되게
+                if (e.target.classList.contains('transfer-button')) {
+                    return;
+                }
+                
+                // 모든 라디오 버튼 초기화
+                document.querySelectorAll('.account-radio').forEach(radio => {
+                    radio.style.background = 'white';
+                    radio.style.borderColor = '#e0e0e0';
+                });
+                
+                // 선택된 라디오 버튼 스타일
+                const radio = this.querySelector('.account-radio');
+                radio.style.background = '#3d3089';
+                radio.style.borderColor = '#3d3089';
+            });
+        });
+    </script>
+</body>
+</html>
